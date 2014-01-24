@@ -829,7 +829,8 @@ extern	char	end[];
 /* I'm not ready to add exits() to akaros yet. But maybe we should. */
 static inline void exits(char *mesg)
 {
-	fprintf(stderr, "Exits: %s\n", mesg);
+	void exit(int status);
+	printf("Exits: %s\n", mesg);
 	exit(1);
 }
 
