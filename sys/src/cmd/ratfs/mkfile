@@ -1,0 +1,13 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+TARG=ratfs
+OFILES=main.$O\
+	proto.$O\
+	misc.$O\
+	ctlfiles.$O\
+
+HFILES=ratfs.h\
+
+BIN=$NXM/$objtype/bin/upas
+<$NXM/sys/src/cmd/mkone

@@ -1,0 +1,18 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+LIB=$NXM/$objtype/lib/libl.a
+OFILES=\
+	allprint.$O\
+	main.$O\
+	reject.$O\
+	yyless.$O\
+	yywrap.$O\
+
+UPDATE=\
+	mkfile\
+	$HFILES\
+	${OFILES:%.$O=%.c}\
+	${LIB:$NXM/$objtype/%=/386/%}\
+
+<$NXM/sys/src/cmd/mksyslib

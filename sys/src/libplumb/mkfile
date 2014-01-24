@@ -1,0 +1,18 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+LIB=$NXM/$objtype/lib/libplumb.a
+OFILES=\
+	event.$O\
+	mesg.$O\
+	plumbsendtext.$O\
+
+HFILES=$NXM/sys/include/plumb.h
+
+UPDATE=\
+	mkfile\
+	$HFILES\
+	${OFILES:%.$O=%.c}\
+	${LIB:$NXM/$objtype/%=/386/%}\
+
+<$NXM/sys/src/cmd/mksyslib

@@ -1,0 +1,22 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+LIB=$NXM/$objtype/lib/libhtml.a
+
+OFILES=\
+	build.$O\
+	lex.$O\
+	strinttab.$O\
+	utils.$O\
+
+HFILES=\
+	$NXM/sys/include/html.h\
+	impl.h\
+
+UPDATE=\
+	mkfile\
+	$HFILES\
+	${OFILES:%.$O=%.c}\
+	${LIB:$NXM/$objtype/%=/386/%}\
+
+<$NXM/sys/src/cmd/mksyslib

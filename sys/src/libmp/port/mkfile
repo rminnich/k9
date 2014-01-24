@@ -1,0 +1,53 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+LIB=$NXM/$objtype/lib/libmp.a
+FILES=\
+	mpaux\
+	mpfmt\
+	strtomp\
+	mptobe\
+	mptole\
+	betomp\
+	letomp\
+	mpadd\
+	mpsub\
+	mpcmp\
+	mpfactorial\
+	mpmul\
+	mpleft\
+	mpright\
+	mpvecadd\
+	mpvecsub\
+	mpvecdigmuladd\
+	mpveccmp\
+	mpdigdiv\
+	mpdiv\
+	mpexp\
+	mpmod\
+	mpextendedgcd\
+	mpinvert\
+	mprand\
+	crt\
+	mptoi\
+	mptoui\
+	mptov\
+	mptouv\
+
+ALLOFILES=${FILES:%=%.$O}
+# cull things in the per-machine directories from this list
+OFILES=	`{rc ./reduce $O $objtype $ALLOFILES}
+
+HFILES=\
+	$NXM/$objtype/include/u.h\
+	$NXM/sys/include/mp.h\
+	dat.h\
+
+CFILES=${FILES:%=%.c}
+
+
+UPDATE=mkfile\
+	$HFILES\
+	$CFILES\
+
+<$NXM/sys/src/cmd/mksyslib

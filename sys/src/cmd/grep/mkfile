@@ -1,0 +1,18 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+TARG=grep
+HFILES=\
+	grep.h\
+
+OFILES=\
+	y.tab.$O\
+	main.$O\
+	comp.$O\
+	sub.$O\
+
+YFILES=grep.y\
+
+BIN=$NXM/$objtype/bin
+<$NXM/sys/src/cmd/mkone
+

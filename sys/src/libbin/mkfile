@@ -1,0 +1,17 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+LIB=$NXM/$objtype/lib/libbin.a
+OFILES=\
+	bin.$O\
+
+HFILES=\
+	$NXM/sys/include/bin.h\
+
+UPDATE=\
+	mkfile\
+	$HFILES\
+	${OFILES:%.$O=%.c}\
+	${LIB:$NXM/$objtype/%=/386/%}\
+
+<$NXM/sys/src/cmd/mksyslib

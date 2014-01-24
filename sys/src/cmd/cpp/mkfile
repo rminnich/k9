@@ -1,0 +1,18 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+TARG=cpp
+OFILES=\
+	cpp.$O\
+	lex.$O\
+	nlist.$O\
+	tokens.$O\
+	macro.$O\
+	eval.$O\
+	include.$O\
+	hideset.$O\
+
+HFILES=cpp.h
+
+BIN=$NXM/$objtype/bin
+<$NXM/sys/src/cmd/mkone

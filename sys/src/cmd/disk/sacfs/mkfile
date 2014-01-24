@@ -1,0 +1,21 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+HFILES=sac.h\
+	ssort.h\
+	sacfs.h\
+
+TARG=mksacfs\
+	sacfs\
+
+OFILES=
+
+PROGS=${TARG:%=$O.%}
+
+BIN=$NXM/$objtype/bin/disk
+
+<$NXM/sys/src/cmd/mkmany
+
+$O.mksacfs:	sac.$O ssort6.$O
+
+$O.sacfs:	unsac.$O

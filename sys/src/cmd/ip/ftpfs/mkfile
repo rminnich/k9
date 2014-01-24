@@ -1,0 +1,18 @@
+MKSHELL=rc
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+TARG=ftpfs
+HFILES=ftpfs.h
+OFILES=ftpfs.$O\
+	proto.$O\
+	file.$O\
+
+BIN=$NXM$NXM/$objtype/bin
+
+UPDATE=\
+	mkfile\
+	$HFILES\
+	${OFILES:%.$O=%.c}\
+
+<$NXM/sys/src/cmd/mkone

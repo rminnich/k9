@@ -1,0 +1,31 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+CFLAGS=-I $NXM/sys/src/libc/9syscall $CFLAGS
+
+TARG=syscall
+OFILES=syscall.$O\
+
+HFILES=tab.h\
+
+BIN=$NXM/$objtype/bin
+
+UPDATE=\
+	mkfile\
+	${OFILES:%.$O=%.c}\
+	${TARG:%=$NXM/386/bin/%}\
+
+<$NXM/sys/src/cmd/mkone
+
+SYSCALL=$NXM/sys/src/libc/9syscall/sys.h
+
+tab.h:	$SYSCALL
+	sed '/#define._X[0-9_]/d;
+		/#define.NIXSYSCALL/d;
+		/#define.NSYSCALL/d;
+		s/#define.([A-Z0-9_][A-Z0-9_]*).*/	"\1",	(int(*)(...))\1,/' $SYSCALL |
+		tr A-Z a-z > tab.h
+	echo '	"read",	(int(*)(...))read,' >> tab.h
+	echo '	"write",	(int(*)(...))write,' >> tab.h
+
+clean:V:
+	rm -f *.[$OS] [$OS].out $TARG $HFILES

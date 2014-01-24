@@ -1,0 +1,12 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+TARG=iostats
+OFILES=iostats.$O\
+	statsrv.$O\
+
+HFILES=statfs.h\
+
+BIN=$NXM/$objtype/bin
+<$NXM/sys/src/cmd/mkone
+

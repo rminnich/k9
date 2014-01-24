@@ -1,0 +1,30 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+TARG=lex
+OFILES=lmain.$O\
+	y.tab.$O\
+	sub1.$O\
+	sub2.$O\
+	header.$O\
+
+HFILES=ldefs.h\
+
+YFILES=parser.y\
+
+BIN=$NXM/$objtype/bin
+UPDATE=\
+	mkfile\
+	$HFILES\
+	lmain.c\
+	sub1.c\
+	sub2.c\
+	header.c\
+	${TARG:%=$NXM/386/bin/%}\
+
+<$NXM/sys/src/cmd/mkone
+
+installall:V:
+	for(objtype in $CPUS)
+		mk install
+	cp ncform /sys/lib/lex

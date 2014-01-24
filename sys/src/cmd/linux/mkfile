@@ -1,0 +1,21 @@
+<$NXM/$objtype/mkfile
+
+TARG=linux
+
+OFILES= \
+	callmain.$O\
+	calllinuxnoted.$O\
+	file.$O\
+	trace.$O\
+	proc.$O\
+	rlimit.$O\
+#	mem.$O\
+
+#LIB=libmach/libmach.a  \
+
+HFILES=\
+	fns.h\
+	dat.h\
+
+BIN=$NXM/$objtype/bin
+<$NXM/sys/src/cmd/mkmany

@@ -1,0 +1,16 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+TARG=proof
+OFILES=main.$O\
+	font.$O\
+	htroff.$O\
+	screen.$O\
+
+HFILES=proof.h
+
+BIN=$NXM/$objtype/bin
+<$NXM/sys/src/cmd/mkone
+
+$O.pout: $OFILES
+	$LD $LDFLAGS -o $O.pout -p $OFILES

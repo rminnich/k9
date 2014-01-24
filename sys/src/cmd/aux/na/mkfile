@@ -1,0 +1,14 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+TARG=na
+HFILES=\
+	na.h\
+
+OFILES=\
+	y.tab.$O\
+
+YFILES=na.y\
+
+BIN=$NXM/$objtype/bin/aux
+<$NXM/sys/src/cmd/mkone

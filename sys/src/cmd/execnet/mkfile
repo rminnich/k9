@@ -1,0 +1,21 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+TARG=execnet
+
+OFILES=\
+	client.$O\
+	fs.$O\
+	main.$O\
+	note.$O\
+
+HFILES=dat.h
+
+BIN=$NXM/$objtype/bin
+UPDATE=\
+	mkfile\
+	$HFILES\
+	${OFILES:%.$O=%.c}\
+	${TARG:%=$NXM/386/bin/%}\
+
+<$NXM/sys/src/cmd/mkone

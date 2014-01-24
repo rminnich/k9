@@ -1,0 +1,665 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+Answerr	dnresolve.c	/^	Answerr=	-1,$/;"	e	enum:__anon9	file:
+Answnone	dnresolve.c	/^	Answnone,$/;"	e	enum:__anon9	file:
+BYTES	convDNS2M.c	29;"	d	file:
+BYTES	convM2DNS.c	322;"	d	file:
+Defagefreq	dn.c	/^	Defagefreq	= 1<<30,	\/* age names this often (seconds) *\/$/;"	e	enum:__anon7	file:
+Defmaxage	dns.c	/^	Defmaxage=		60*60,	\/* default domain name max. age *\/$/;"	e	enum:__anon12	file:
+Deftarget	dn.c	/^	Deftarget	= 1<<30,	\/* effectively disable aging *\/$/;"	e	enum:__anon7	file:
+Dest	dnresolve.c	/^struct Dest$/;"	s	file:
+Dest	dnresolve.c	/^typedef struct Dest Dest;$/;"	t	typeref:struct:Dest	file:
+Destmagic	dnresolve.c	/^	Destmagic=	0xcafebabe,$/;"	e	enum:__anon9	file:
+Dict	convDNS2M.c	/^struct Dict$/;"	s	file:
+Dict	convDNS2M.c	/^typedef struct Dict	Dict;$/;"	t	typeref:struct:Dict	file:
+Dk	mkdb.c	/^	Dk,$/;"	e	enum:__anon17	file:
+Domain	mkdb.c	/^	Domain,$/;"	e	enum:__anon17	file:
+Empty	mkdb.c	/^	Empty,$/;"	e	enum:__anon17	file:
+FQDNMAX	inform.c	/^	FQDNMAX	= 255,$/;"	e	enum:__anon16	file:
+Flushreq	cs.c	/^typedef struct Flushreq	Flushreq;$/;"	t	typeref:struct:Flushreq	file:
+Forwtarg	dnudpserver.c	/^struct Forwtarg {$/;"	s	file:
+Forwtarg	dnudpserver.c	/^typedef struct Forwtarg Forwtarg;$/;"	t	typeref:struct:Forwtarg	file:
+Hurry	dnresolve.c	/^enum { Hurry, Patient, };$/;"	e	enum:__anon10	file:
+Inns	dnresolve.c	/^enum { Outns, Inns, };$/;"	e	enum:__anon11	file:
+Inprogress	dnudpserver.c	/^struct Inprogress$/;"	s	file:
+Inprogress	dnudpserver.c	/^typedef struct Inprogress Inprogress;$/;"	t	typeref:struct:Inprogress	file:
+Ip	mkdb.c	/^	Ip,$/;"	e	enum:__anon17	file:
+Ipaddr	dnresolve.c	/^struct Ipaddr {$/;"	s	file:
+Ipaddr	dnresolve.c	/^typedef struct Ipaddr Ipaddr;$/;"	t	typeref:struct:Ipaddr	file:
+Job	cs.c	/^struct Job$/;"	s	file:
+Job	cs.c	/^typedef struct Job	Job;$/;"	t	typeref:struct:Job	file:
+Job	dns.c	/^struct Job$/;"	s	file:
+Job	dns.c	/^typedef struct Job	Job;$/;"	t	typeref:struct:Job	file:
+Lock	dn.c	/^	Lock;$/;"	m	struct:__anon8	file:
+Lock	dns.c	/^	Lock;$/;"	m	struct:__anon13	file:
+Logqueries	dnudpserver.c	/^	Logqueries = 0,$/;"	e	enum:__anon15	file:
+MARK	dn.c	393;"	d	file:
+Maxattr	cs.c	/^	Maxattr=	32,$/;"	e	enum:__anon5	file:
+Maxdest	dnresolve.c	/^	Maxdest=	24,	\/* maximum destinations for a request message *\/$/;"	e	enum:__anon9	file:
+Maxfdata	cs.c	/^	Maxfdata=		8192,$/;"	e	enum:__anon3	file:
+Maxfdata	dns.c	/^	Maxfdata=		8192,$/;"	e	enum:__anon12	file:
+Maxhost	cs.c	/^	Maxhost=		64,		\/* maximum host name size *\/$/;"	e	enum:__anon3	file:
+Maxoutstanding	dnresolve.c	/^	Maxoutstanding=	15,	\/* max. outstanding queries per domain name *\/$/;"	e	enum:__anon9	file:
+Maxpath	cs.c	/^	Maxpath=		128,$/;"	e	enum:__anon3	file:
+Maxreply	cs.c	/^	Maxreply=		256,$/;"	e	enum:__anon3	file:
+Maxreply	dns.c	/^	Maxreply=		8192,		\/* was 512 *\/$/;"	e	enum:__anon12	file:
+Maxrequest	cs.c	/^	Maxrequest=		128,$/;"	e	enum:__anon3	file:
+Maxrequest	dns.c	/^	Maxrequest=		1024,$/;"	e	enum:__anon12	file:
+Maxrequest	dnsdebug.c	/^	Maxrequest=		128,$/;"	e	enum:__anon14	file:
+Maxretries	dnresolve.c	/^	Maxretries=	5, \/* cname+actual resends: was 32; have pity on user *\/$/;"	e	enum:__anon9	file:
+Maxrrr	dns.c	/^	Maxrrr=			32,		\/* was 16 *\/$/;"	e	enum:__anon12	file:
+Maxservice	cs.c	/^	Maxservice=		64,		\/* maximum service name size *\/$/;"	e	enum:__anon3	file:
+Maxtrans	dnresolve.c	/^	Maxtrans=	5,	\/* maximum transmissions to a server *\/$/;"	e	enum:__anon9	file:
+Maxwaitms	dnresolve.c	/^	Maxwaitms=	5000,	\/* wait no longer for a remote dns query *\/$/;"	e	enum:__anon9	file:
+Mfile	cs.c	/^struct Mfile$/;"	s	file:
+Mfile	cs.c	/^typedef struct Mfile	Mfile;$/;"	t	typeref:struct:Mfile	file:
+Mfile	dns.c	/^struct Mfile$/;"	s	file:
+Mfile	dns.c	/^typedef struct Mfile	Mfile;$/;"	t	typeref:struct:Mfile	file:
+Minage	dn.c	/^	Minage		= 1<<30,$/;"	e	enum:__anon7	file:
+Minwaitms	dnresolve.c	/^	Minwaitms=	500,	\/* willing to wait for a remote dns query *\/$/;"	e	enum:__anon9	file:
+Mlist	cs.c	/^struct Mlist$/;"	s	file:
+Mlist	cs.c	/^typedef struct Mlist	Mlist;$/;"	t	typeref:struct:Mlist	file:
+NAME	convDNS2M.c	26;"	d	file:
+NAME	convM2DNS.c	314;"	d	file:
+NFIELDS	mkdb.c	140;"	d	file:
+Ndict	convDNS2M.c	/^	Ndict=	64,$/;"	e	enum:__anon1	file:
+Network	cs.c	/^struct Network$/;"	s	file:
+Network	cs.c	/^typedef struct Network	Network;$/;"	t	typeref:struct:Network	file:
+Network	dns.c	/^typedef struct Network	Network;$/;"	t	typeref:struct:Network	file:
+Nibmask	dblookup.c	/^	Nibmask = (1<<Nibwidth) - 1,$/;"	e	enum:__anon6	file:
+Nibwidth	dblookup.c	/^	Nibwidth = 4,$/;"	e	enum:__anon6	file:
+Nreply	cs.c	/^	Nreply=			20,$/;"	e	enum:__anon3	file:
+Ntcp	cs.c	/^	Ntcp = 0,$/;"	e	enum:__anon4	file:
+Outns	dnresolve.c	/^enum { Outns, Inns, };$/;"	e	enum:__anon11	file:
+Patient	dnresolve.c	/^enum { Hurry, Patient, };$/;"	e	enum:__anon10	file:
+Ptrttl	dblookup.c	/^	Ptrttl = 120,$/;"	e	enum:__anon6	file:
+Qcs	cs.c	/^	Qcs=			1,$/;"	e	enum:__anon3	file:
+Qdir	cs.c	/^	Qdir=			0,$/;"	e	enum:__anon3	file:
+Qdir	dns.c	/^	Qdir=			0,$/;"	e	enum:__anon12	file:
+Qdns	dns.c	/^	Qdns=			1,$/;"	e	enum:__anon12	file:
+Query	dnresolve.c	/^struct Query {$/;"	s	file:
+Query	dnresolve.c	/^typedef struct Query Query;$/;"	t	typeref:struct:Query	file:
+Querymagic	dnresolve.c	/^	Querymagic=	0xdeadbeef,$/;"	e	enum:__anon9	file:
+REF	dn.c	480;"	d	file:
+Remntretry	dnresolve.c	/^	Remntretry=	15,	\/* min. sec.s between \/net.alt remount tries *\/$/;"	e	enum:__anon9	file:
+Restartmins	dn.c	/^	Restartmins	= 600,$/;"	e	enum:__anon7	file:
+STRING	convDNS2M.c	28;"	d	file:
+STRING	convM2DNS.c	316;"	d	file:
+SYMBOL	convDNS2M.c	27;"	d	file:
+SYMBOL	convM2DNS.c	315;"	d	file:
+Scan	convM2DNS.c	/^struct Scan$/;"	s	file:
+Scan	convM2DNS.c	/^typedef struct Scan	Scan;$/;"	t	typeref:struct:Scan	file:
+Sys	mkdb.c	/^	Sys,$/;"	e	enum:__anon17	file:
+Tcp	dnresolve.c	/^	Udp, Tcp,$/;"	e	enum:__anon9	file:
+UCHAR	convDNS2M.c	31;"	d	file:
+UCHAR	convM2DNS.c	319;"	d	file:
+ULONG	convDNS2M.c	32;"	d	file:
+ULONG	convM2DNS.c	318;"	d	file:
+USHORT	convDNS2M.c	30;"	d	file:
+USHORT	convM2DNS.c	317;"	d	file:
+Udp	dnresolve.c	/^	Udp, Tcp,$/;"	e	enum:__anon9	file:
+V4ADDR	convDNS2M.c	33;"	d	file:
+V4ADDR	convM2DNS.c	320;"	d	file:
+V6ADDR	convDNS2M.c	34;"	d	file:
+V6ADDR	convM2DNS.c	321;"	d	file:
+V6maxrevdomdepth	dblookup.c	/^	V6maxrevdomdepth = 128 \/ Nibwidth,	\/* bits \/ bits-per-nibble *\/$/;"	e	enum:__anon6	file:
+X	mkhosts.c	/^} X;$/;"	t	typeref:struct:x	file:
+a	dnresolve.c	/^	uchar	a[IPaddrlen];	\/* ip address *\/$/;"	m	struct:Dest	file:
+active	dn.c	/^	int	active;$/;"	m	struct:__anon8	file:
+addarea	dnarea.c	/^addarea(DN *dp, RR *rp, Ndbtuple *t)$/;"	f
+addforwtarg	dnudpserver.c	/^addforwtarg(char *host)$/;"	f
+addlocaldnsdomain	dblookup.c	/^addlocaldnsdomain(DN *dp, int class, char *domain)$/;"	f	file:
+addlocaldnsserver	dblookup.c	/^addlocaldnsserver(DN *dp, int class, char *ipaddr, int i)$/;"	f	file:
+addr	dnudpserver.c	/^	uchar	addr[IPaddrlen];$/;"	m	struct:Forwtarg	file:
+addrrr	dblookup.c	/^addrrr(Ndbtuple *entry, Ndbtuple *pair)$/;"	f	file:
+addserver	dn.c	/^addserver(Server **l, char *name)$/;"	f
+agefreq	dn.c	/^static ulong agefreq = Defagefreq;$/;"	v	file:
+all	query.c	/^static int all, multiple;$/;"	v	file:
+attribs	dblookup.c	/^char *attribs[] = {$/;"	v
+baddelegation	dblookup.c	/^baddelegation(RR *rp, RR *nsrp, uchar *addr)$/;"	f
+base	convM2DNS.c	/^	uchar	*base;		\/* input buffer *\/$/;"	m	struct:Scan	file:
+bout	query.c	/^static Biobuf bout;$/;"	v	file:
+buf	convDNS2M.c	/^	char	buf[16*1024];	\/* buffer for unpacked names (was 4k) *\/$/;"	m	struct:Dict	file:
+busy	cs.c	/^	int		busy;$/;"	m	struct:Mfile	file:
+bytes2nibbles	dblookup.c	/^bytes2nibbles(uchar *nibbles, uchar *bytes, int nbytes)$/;"	f
+cacheneg	dnresolve.c	/^cacheneg(DN *dp, int type, int rcode, RR *soarr)$/;"	f	file:
+caller	dnstcp.c	/^char	*caller = "";$/;"	v
+cfg	dns.c	/^Cfg	cfg;$/;"	v
+cfg	dnsdebug.c	/^Cfg cfg;$/;"	v
+cfg	dnstcp.c	/^Cfg cfg;$/;"	v
+cleanmf	cs.c	/^cleanmf(Mfile *mf)$/;"	f
+clientrxmit	dnudpserver.c	/^clientrxmit(DNSmsg *req, uchar *buf)$/;"	f	file:
+cnamerr	dblookup.c	/^cnamerr(Ndbtuple *entry, Ndbtuple *pair)$/;"	f	file:
+code	dnresolve.c	/^	int	code;		\/* response code; used to clear dp->respcode *\/$/;"	m	struct:Dest	file:
+considered	cs.c	/^	int		considered;		\/* flag: ignored for "net!"? *\/$/;"	m	struct:Network	file:
+contains	dnresolve.c	/^contains(RR *rp1, RR *rp2)$/;"	f
+convDNS2M	convDNS2M.c	/^convDNS2M(DNSmsg *m, uchar *buf, int len)$/;"	f
+convM2DNS	convM2DNS.c	/^convM2DNS(uchar *buf, int len, DNSmsg *m, int *codep)$/;"	f
+convM2Q	convM2DNS.c	/^convM2Q(Scan *sp)$/;"	f	file:
+convM2RR	convM2DNS.c	/^convM2RR(Scan *sp, char *what)$/;"	f	file:
+convQ2M	convDNS2M.c	/^convQ2M(RR *rp, uchar *p, uchar *ep, Dict *dp)$/;"	f	file:
+convRR2M	convDNS2M.c	/^convRR2M(RR *rp, uchar *p, uchar *ep, Dict *dp)$/;"	f	file:
+copyfid	dns.c	/^copyfid(Mfile *mf, int fid)$/;"	f
+copyserverlist	dn.c	/^copyserverlist(Server *s)$/;"	f
+createptrs	dblookup.c	/^createptrs(void)$/;"	f	file:
+createv4ptrs	dblookup.c	/^createv4ptrs(void)$/;"	f	file:
+createv6ptrs	dblookup.c	/^createv6ptrs(void)$/;"	f	file:
+curdest	dnresolve.c	/^	Dest	*curdest;	\/* pointer to next to fill *\/$/;"	m	struct:Query	file:
+currtarg	dnudpserver.c	/^int currtarg;$/;"	v
+db	cs.c	/^Ndb	*db, *netdb;$/;"	v
+db	dblookup.c	/^static Ndb *db;$/;"	v	file:
+db	mkhash.c	/^Ndb *db;$/;"	v
+db2cache	dblookup.c	/^db2cache(int doit)$/;"	f
+dbfile	cs.c	/^char	*dbfile;$/;"	v
+dbfile	dns.c	/^char	*dbfile;$/;"	v
+dbfile	dnsdebug.c	/^char	*dbfile;$/;"	v
+dbfile	dnstcp.c	/^char	*dbfile;$/;"	v
+dbfile2area	dblookup.c	/^dbfile2area(Ndb *db)$/;"	f	file:
+dbfile2cache	dblookup.c	/^dbfile2cache(Ndb *db)$/;"	f	file:
+dblock	cs.c	/^Lock	dblock;		\/* mutex on database operations *\/$/;"	v
+dblock	dblookup.c	/^static Lock	dblock;$/;"	v	file:
+dblookup	dblookup.c	/^dblookup(char *name, int class, int type, int auth, int ttl)$/;"	f
+dblookup1	dblookup.c	/^dblookup1(char *name, int type, int auth, int ttl)$/;"	f	file:
+dbpair2cache	dblookup.c	/^dbpair2cache(DN *dp, Ndbtuple *entry, Ndbtuple *pair)$/;"	f	file:
+dbtuple2cache	dblookup.c	/^dbtuple2cache(Ndbtuple *t)$/;"	f	file:
+debug	cs.c	/^int	debug;$/;"	v
+debug	dns.c	/^int	debug;$/;"	v
+debug	dnsdebug.c	/^int	debug;$/;"	v
+debug	dnstcp.c	/^int	debug;$/;"	v
+delegated	dnarea.c	/^Area *owned, *delegated;$/;"	v
+dest	dnresolve.c	/^	Dest	*dest;		\/* array of destinations *\/$/;"	m	struct:Query	file:
+destck	dnresolve.c	/^destck(Dest *p)$/;"	f	file:
+destinit	dnresolve.c	/^destinit(Dest *p)$/;"	f	file:
+ding	dn.c	/^ding(void*, char *msg)$/;"	f	file:
+ding	inform.c	/^ding(void *, char *msg)$/;"	f
+dnage	dn.c	/^dnage(DN *dp)$/;"	f
+dnageall	dn.c	/^dnageall(int doit)$/;"	f
+dnageallnever	dn.c	/^dnageallnever(void)$/;"	f
+dnagedb	dn.c	/^dnagedb(void)$/;"	f
+dnagenever	dn.c	/^dnagenever(DN *dp, int dolock)$/;"	f
+dnauthdb	dn.c	/^dnauthdb(void)$/;"	f
+dncheck	dn.c	/^dncheck(void *p, int dolock)$/;"	f
+dndump	dn.c	/^dndump(char *file)$/;"	f
+dnforceage	dblookup.c	/^dnforceage(void)$/;"	f
+dnhash	dn.c	/^dnhash(char *name)$/;"	f	file:
+dninit	dn.c	/^dninit(void)$/;"	f
+dnlock	dn.c	/^Lock	dnlock;$/;"	v
+dnlookup	dn.c	/^dnlookup(char *name, int class, int enter)$/;"	f
+dnname	dn.c	/^dnname(DN *dn)$/;"	f	file:
+dnnotify	dnnotify.c	/^dnnotify(DNSmsg *reqp, DNSmsg *repp, Request *)$/;"	f
+dnptr	dn.c	/^dnptr(uchar *net, uchar *mask, char *dom, int forwtype, int subdoms, int ttl)$/;"	f
+dnpurge	dn.c	/^dnpurge(void)$/;"	f
+dnresolve	dnresolve.c	/^dnresolve(char *name, int class, int type, Request *req, RR **cn, int depth,$/;"	f
+dnresolve1	dnresolve.c	/^dnresolve1(char *name, int class, int type, Request *req, int depth,$/;"	f	file:
+dns	dnsquery.c	/^static char *mtpt, *dns, *srv;$/;"	v	file:
+dnserver	dnserver.c	/^dnserver(DNSmsg *reqp, DNSmsg *repp, Request *req, uchar *srcip, int rcode)$/;"	f
+dnsip6lookup	cs.c	/^dnsip6lookup(char *mntpt, char *buf, Ndbtuple *t)$/;"	f	file:
+dnsiplookup	cs.c	/^dnsiplookup(char *host, Ndbs *s)$/;"	f
+dnslog	dn.c	/^dnslog(char *fmt, ...)$/;"	f
+dnsservers	dblookup.c	/^dnsservers(int class)$/;"	f
+dnstats	dn.c	/^dnstats(char *file)$/;"	f
+dnudpserver	dnudpserver.c	/^dnudpserver(char *mntpt)$/;"	f
+dnvars	dn.c	/^} dnvars;$/;"	v	typeref:struct:__anon8	file:
+dnzone	dnstcp.c	/^dnzone(DNSmsg *reqp, DNSmsg *repp, Request *req)$/;"	f	file:
+doaxfr	dblookup.c	/^doaxfr(Ndb *db, char *name)$/;"	f	file:
+docmd	dnsdebug.c	/^docmd(int n, char **f)$/;"	f
+doextquery	dnserver.c	/^doextquery(DNSmsg *mp, Request *req, int recurse)$/;"	f	file:
+domainlist	dblookup.c	/^domainlist(int class)$/;"	f
+domname	mkhosts.c	/^char *domname = "research.att.com";$/;"	v
+domnamlen	mkhosts.c	/^int domnamlen;$/;"	v
+domount	dnsquery.c	/^static int domount;$/;"	v	file:
+doquery	dnsdebug.c	/^doquery(char *name, char *tstr)$/;"	f
+dp	dnresolve.c	/^	DN	*dp;		\/* domain *\/$/;"	m	struct:Query	file:
+eaddr	cs.c	/^char	eaddr[16];		\/* ascii ethernet address *\/$/;"	v
+emalloc	cs.c	/^emalloc(int size)$/;"	f
+emalloc	dn.c	/^emalloc(int size)$/;"	f
+enter	mkhash.c	/^enter(char *val, ulong dboff)$/;"	f
+ep	convDNS2M.c	/^	char	*ep;		\/* first free char in buf *\/$/;"	m	struct:Dict	file:
+ep	convM2DNS.c	/^	uchar	*ep;		\/* byte after the end *\/$/;"	m	struct:Scan	file:
+err	convM2DNS.c	/^	char	*err;$/;"	m	struct:Scan	file:
+errbuf	convM2DNS.c	/^	char	errbuf[256];	\/* hold a formatted error sometimes *\/$/;"	m	struct:Scan	file:
+errmsgs	inform.c	/^char *errmsgs[] = {$/;"	v
+errneg	convM2DNS.c	/^errneg(RR *rp, Scan *sp, int actual)$/;"	f	file:
+error	cs.c	/^error(char *s)$/;"	f
+errtoolong	convM2DNS.c	/^errtoolong(RR *rp, Scan *sp, int remain, int need, char *where)$/;"	f	file:
+estrdup	cs.c	/^estrdup(char *s)$/;"	f
+estrdup	dn.c	/^estrdup(char *s)$/;"	f
+fasttimeouthack	cs.c	/^	int		fasttimeouthack;	\/* flag. was for IL *\/$/;"	m	struct:Network	file:
+fd	dnudpserver.c	/^	int	fd;$/;"	m	struct:Forwtarg	file:
+fid	cs.c	/^	int		fid;$/;"	m	struct:Mfile	file:
+fid	dns.c	/^	int		fid;$/;"	m	struct:Mfile	file:
+flushed	cs.c	/^	int	flushed;$/;"	m	struct:Job	file:
+flushed	dns.c	/^	int	flushed;$/;"	m	struct:Job	file:
+flushjob	cs.c	/^flushjob(int tag)$/;"	f
+flushjob	dns.c	/^flushjob(int tag)$/;"	f
+forwtarg	dnudpserver.c	/^Forwtarg forwtarg[10];$/;"	v
+freeanswers	dnresolve.c	/^freeanswers(DNSmsg *mp)$/;"	f
+freearea	dnarea.c	/^freearea(Area **l)$/;"	f
+freefid	dns.c	/^freefid(Mfile *mf)$/;"	f
+freejob	cs.c	/^freejob(Job *job)$/;"	f
+freejob	dns.c	/^freejob(Job *job)$/;"	f
+freeserverlist	dn.c	/^freeserverlist(Server *s)$/;"	f
+g16	inform.c	/^g16(uchar **p)$/;"	f
+gbytes	convM2DNS.c	/^gbytes(RR *rp, Scan *sp, uchar **p, int n)$/;"	f	file:
+gchar	convM2DNS.c	/^gchar(RR *rp, Scan *sp)$/;"	f	file:
+genquery	cs.c	/^genquery(Mfile *mf, char *query)$/;"	f
+getactivity	dn.c	/^getactivity(Request *req, int recursive)$/;"	f
+getcaller	dnstcp.c	/^getcaller(char *dir)$/;"	f	file:
+getdnsservers	dns.c	/^getdnsservers(int class)$/;"	f
+getdnsservers	dnsdebug.c	/^getdnsservers(int class)$/;"	f
+getdnsservers	dnstcp.c	/^getdnsservers(int class)$/;"	f
+glong	convM2DNS.c	/^glong(RR *rp, Scan *sp)$/;"	f	file:
+gname	convM2DNS.c	/^gname(char *to, RR *rp, Scan *sp)$/;"	f	file:
+gshort	convM2DNS.c	/^gshort(RR *rp, Scan *sp)$/;"	f	file:
+gstr	convM2DNS.c	/^gstr(RR *rp, Scan *sp)$/;"	f	file:
+gsym	convM2DNS.c	/^gsym(RR *rp, Scan *sp)$/;"	f	file:
+gv4addr	convM2DNS.c	/^gv4addr(RR *rp, Scan *sp)$/;"	f	file:
+gv6addr	convM2DNS.c	/^gv6addr(RR *rp, Scan *sp)$/;"	f	file:
+hint	dnserver.c	/^hint(RR **last, RR *rp)$/;"	f	file:
+hlen	mkhash.c	/^ulong hlen;$/;"	v
+hmsg	dnresolve.c	/^static char *hmsg = "headers";$/;"	v	file:
+hmsg	dnudpserver.c	/^static char *hmsg = "headers";$/;"	v	file:
+host	cs.c	/^	char		*host;$/;"	m	struct:Mfile	file:
+host	dnudpserver.c	/^	char	*host;$/;"	m	struct:Forwtarg	file:
+ht	dn.c	/^DN *ht[HTLEN];$/;"	v
+ht	mkhash.c	/^uchar *ht;$/;"	v
+id	dn.c	/^	ushort	id;		\/* same size as in packet *\/$/;"	m	struct:__anon8	file:
+id	dnudpserver.c	/^	int	id;$/;"	m	struct:Inprogress	file:
+implemented	dblookup.c	/^static int	implemented[Tall] =$/;"	v	file:
+in	mkdb.c	/^Biobuf in;$/;"	v
+indoms	dblookup.c	/^static Ndbtuple *indoms, *innmsrvs, *outnmsrvs;$/;"	v	file:
+initdnsmsg	dnresolve.c	/^initdnsmsg(DNSmsg *mp, RR *rp, int flags, ushort reqno)$/;"	f
+inmyarea	dnarea.c	/^inmyarea(char *name)$/;"	f
+innmsrvs	dblookup.c	/^static Ndbtuple *indoms, *innmsrvs, *outnmsrvs;$/;"	v	file:
+inprog	dnudpserver.c	/^Inprogress inprog[Maxactive+2];$/;"	v
+insideaddr	dblookup.c	/^insideaddr(char *dom)$/;"	f
+insidens	dblookup.c	/^insidens(uchar *ip)$/;"	f
+intval	dblookup.c	/^intval(Ndbtuple *entry, Ndbtuple *pair, char *attr, ulong def)$/;"	f	file:
+inuse	dns.c	/^	Mfile	*inuse;		\/* active mfile's *\/$/;"	m	struct:__anon13	file:
+inuse	dnudpserver.c	/^	int	inuse;$/;"	m	struct:Inprogress	file:
+inzone	dnstcp.c	/^inzone(DN *dp, char *name, int namelen, int depth)$/;"	f
+io	cs.c	/^io(void)$/;"	f
+io	dns.c	/^io(void)$/;"	f
+ip	dnresolve.c	/^	uchar	ip[IPaddrlen];$/;"	m	struct:Ipaddr	file:
+ipa	cs.c	/^uchar	ipa[IPaddrlen];		\/* binary internet address *\/$/;"	v
+ipaddr	cs.c	/^char	ipaddr[64];		\/* ascii internet address *\/$/;"	v
+ipaddr	dns.c	/^uchar	ipaddr[IPaddrlen];	\/* my ip address *\/$/;"	v
+ipaddr	dnsdebug.c	/^uchar	ipaddr[IPaddrlen];	\/* my ip address *\/$/;"	v
+ipaddr	dnstcp.c	/^uchar	ipaddr[IPaddrlen];	\/* my ip address *\/$/;"	v
+ipattrlookup	cs.c	/^ipattrlookup(Ndb *db, char *ipa, char *attr, char *val, int vlen)$/;"	f
+ipid	cs.c	/^ipid(void)$/;"	f
+ipifclock	cs.c	/^Lock ipifclock;$/;"	v
+ipifcs	cs.c	/^Ipifc *ipifcs;$/;"	v
+ipinfoquery	cs.c	/^ipinfoquery(Mfile *mf, char **list, int n)$/;"	f
+ipisbm	dnresolve.c	/^ipisbm(uchar *ip)$/;"	f
+iplookup	cs.c	/^iplookup(Network *np, char *host, char *serv, int nolookup)$/;"	f
+ipresolve	cs.c	/^ipresolve(char *attr, char *host)$/;"	f	file:
+ipserv	cs.c	/^ipserv(Network *np, char *name, char *buf, int blen)$/;"	f
+iptrans	cs.c	/^iptrans(Ndbtuple *t, Network *np, char *serv, char *rem, int hack)$/;"	f
+ipv6lookups	cs.c	/^int	ipv6lookups = 1;$/;"	v
+iscomment	mkdb.c	/^iscomment(char *name)$/;"	f
+isdk	mkdb.c	/^isdk(char *name)$/;"	f
+isdomain	mkdb.c	/^isdomain(char *name)$/;"	f
+isip	mkdb.c	/^isip(char *name)$/;"	f
+isnegrname	dnresolve.c	/^isnegrname(DNSmsg *mp)$/;"	f	file:
+isslave	cs.c	/^int	*isslave;	\/* *isslave non-zero means this is a slave process *\/$/;"	v
+issuequery	dnresolve.c	/^issuequery(Query *qp, char *name, int class, int depth, int recurse)$/;"	f	file:
+isvalidip	cs.c	/^isvalidip(uchar *ip)$/;"	f	file:
+it	mkhosts.c	/^	Ndbtuple *it;$/;"	m	struct:x	file:
+joblist	cs.c	/^Job	*joblist;$/;"	v
+joblist	dns.c	/^Job	*joblist;$/;"	v
+joblock	cs.c	/^Lock	joblock;$/;"	v
+joblock	dns.c	/^Lock	joblock;$/;"	v
+justremount	dns.c	/^justremount(char *service, char *mntpt)$/;"	f
+last	cs.c	/^Network *last;$/;"	v
+lastdial	dnudpserver.c	/^	ulong	lastdial;$/;"	m	struct:Forwtarg	file:
+lckindex	dnresolve.c	/^static int lckindex[Maxlcks] = {$/;"	v	file:
+likely	dnresolve.c	/^int likely[] = {$/;"	v
+linkrr	dblookup.c	/^linkrr(RR *rp, DN *dp, RR **l)$/;"	f	file:
+loaddomsrvs	dblookup.c	/^loaddomsrvs(void)$/;"	f	file:
+localserverprefix	dblookup.c	/^char *localserverprefix = "local#dns#server";$/;"	v
+localservers	dblookup.c	/^char *localservers =	  "local#dns#servers";$/;"	v
+locdns	dblookup.c	/^static char *locdns[20];$/;"	v	file:
+locdnslck	dblookup.c	/^static QLock locdnslck;$/;"	v	file:
+logfile	cs.c	/^char	*logfile = "cs";$/;"	v
+logfile	dns.c	/^char	*logfile = "dns";	\/* or "dns.test" *\/$/;"	v
+logfile	dnsdebug.c	/^char	*logfile = "dnsdebug";$/;"	v
+logfile	dnstcp.c	/^char	*logfile = "dns";$/;"	v
+logreply	dns.c	/^logreply(int id, uchar *addr, DNSmsg *mp)$/;"	f
+logreply	dnsdebug.c	/^logreply(int id, uchar *addr, DNSmsg *mp)$/;"	f
+logreply	dnstcp.c	/^logreply(int id, uchar *addr, DNSmsg *mp)$/;"	f
+logsection	dnsdebug.c	/^logsection(char *flag, RR *rp)$/;"	f
+logsend	dns.c	/^logsend(int id, int subid, uchar *addr, char *sname, char *rname, int type)$/;"	f
+logsend	dnsdebug.c	/^logsend(int id, int subid, uchar *addr, char *sname, char *rname, int type)$/;"	f
+logsend	dnstcp.c	/^logsend(int id, int subid, uchar *addr, char *sname, char *rname, int type)$/;"	f
+longtime	dnsdebug.c	/^longtime(long t)$/;"	f	file:
+look	dblookup.c	/^look(Ndbtuple *entry, Ndbtuple *line, char *attr)$/;"	f	file:
+lookforproto	cs.c	/^lookforproto(Ndbtuple *t, char *proto)$/;"	f
+lookup	cs.c	/^	Ndbtuple	*(*lookup)(Network*, char*, char*, int);$/;"	m	struct:Network	file:
+lookup	cs.c	/^lookup(Mfile *mf)$/;"	f
+lookupinfo	dblookup.c	/^lookupinfo(char *attr)$/;"	f
+lookupquerynew	dns.c	/^lookupquerynew(Job *job, Mfile *mf, Request *req, char *errbuf, char *p,$/;"	f	file:
+lookupqueryold	dns.c	/^lookupqueryold(Job *job, Mfile *mf, Request *req, char *errbuf, char *p,$/;"	f	file:
+loopbackmask	cs.c	/^static uchar loopbackmask[IPaddrlen] = {$/;"	v	file:
+loopbacknet	cs.c	/^static uchar loopbacknet[IPaddrlen] = {$/;"	v	file:
+magic	dnresolve.c	/^	ulong	magic;$/;"	m	struct:Dest	file:
+magic	dnresolve.c	/^	ulong	magic;$/;"	m	struct:Query	file:
+main	cs.c	/^main(int argc, char *argv[])$/;"	f
+main	csquery.c	/^main(int argc, char **argv)$/;"	f
+main	dns.c	/^main(int argc, char *argv[])$/;"	f
+main	dnsdebug.c	/^main(int argc, char *argv[])$/;"	f
+main	dnsquery.c	/^main(int argc, char *argv[])$/;"	f
+main	dnstcp.c	/^main(int argc, char *argv[])$/;"	f
+main	inform.c	/^main(int argc, char *argv[])$/;"	f
+main	ipquery.c	/^main(int argc, char **argv)$/;"	f
+main	mkdb.c	/^main(void)$/;"	f
+main	mkhash.c	/^main(int argc, char **argv)$/;"	f
+main	mkhosts.c	/^main(int argc, char *argv[])$/;"	f
+main	query.c	/^main(int argc, char **argv)$/;"	f
+masterjmp	cs.c	/^jmp_buf	masterjmp;	\/* return through here after a slave process has been created *\/$/;"	v
+maxage	dns.c	/^int	maxage = Defmaxage;$/;"	v
+maxage	dnsdebug.c	/^int	maxage  = 60*60;$/;"	v
+maxage	dnstcp.c	/^int	maxage = 60*60;$/;"	v
+mf	cs.c	/^	Mfile	mf;$/;"	m	struct:Mlist	file:
+mfalloc	dns.c	/^} mfalloc;$/;"	v	typeref:struct:__anon13
+mfd	cs.c	/^int	mfd[2];$/;"	v
+mfd	dns.c	/^int	mfd[2];$/;"	v
+mkptr	dn.c	/^mkptr(DN *dp, char *ptr, ulong ttl)$/;"	f	file:
+mkreq	dnresolve.c	/^mkreq(DN *dp, int type, uchar *buf, int flags, ushort reqno)$/;"	f
+mlist	cs.c	/^Mlist	*mlist;$/;"	v
+mntpt	cs.c	/^char	mntpt[Maxpath];$/;"	v
+mntpt	dns.c	/^char	mntpt[Maxpath];$/;"	v
+mntpt	dnsdebug.c	/^char	mntpt[Maxpath];$/;"	v
+mntpt	dnstcp.c	/^char	mntpt[Maxpath];$/;"	v
+mountinit	cs.c	/^mountinit(char *service, char *mntpt)$/;"	f
+mountinit	dns.c	/^mountinit(char *service, char *mntpt)$/;"	f
+mstypehack	convM2DNS.c	/^mstypehack(Scan *sp, ushort type, char *where)$/;"	f	file:
+mtpt	dnsquery.c	/^static char *mtpt, *dns, *srv;$/;"	v	file:
+multiple	query.c	/^static int all, multiple;$/;"	v	file:
+mutex	dn.c	/^	int	mutex;$/;"	m	struct:__anon8	file:
+mxrr	dblookup.c	/^mxrr(Ndbtuple *entry, Ndbtuple *pair)$/;"	f	file:
+myaddr	dblookup.c	/^myaddr(char *addr)$/;"	f
+mydnsquery	dnresolve.c	/^mydnsquery(Query *qp, int medium, uchar *udppkt, int len)$/;"	f	file:
+mysysname	cs.c	/^char	*mysysname;$/;"	v
+n	convDNS2M.c	/^	int	n;		\/* size of dictionary *\/$/;"	m	struct:Dict	file:
+name	convDNS2M.c	/^		char	*name;		\/* pointer to unpacked name in buf *\/$/;"	m	struct:Dict::__anon2	file:
+names	dn.c	/^	ulong	names;		\/* names allocated *\/$/;"	m	struct:__anon8	file:
+nbuf	mkhash.c	/^uchar nbuf[16*1024];$/;"	v
+ndbinit	cs.c	/^ndbinit(void)$/;"	f
+ndest	dnresolve.c	/^	int	ndest;		\/* transmit to this many on this round *\/$/;"	m	struct:Query	file:
+needrefresh	dns.c	/^int	needrefresh;$/;"	v
+needrefresh	dnsdebug.c	/^int	needrefresh;$/;"	v
+needrefresh	dnstcp.c	/^int	needrefresh;$/;"	v
+net	cs.c	/^	char		*net;$/;"	m	struct:Mfile	file:
+net	cs.c	/^	char		*net;$/;"	m	struct:Network	file:
+netadd	cs.c	/^netadd(char *p)$/;"	f
+netdb	cs.c	/^Ndb	*db, *netdb;$/;"	v
+netinit	cs.c	/^netinit(int background)$/;"	f
+netlist	cs.c	/^Network *netlist;		\/* networks ordered by preference *\/$/;"	v
+netlock	cs.c	/^Lock	netlock;	\/* mutex for netinit() *\/$/;"	v
+netndb	cs.c	/^char	netndb[Maxpath];$/;"	v
+netquery	dnresolve.c	/^netquery(Query *qp, int depth)$/;"	f	file:
+netqueryns	dnresolve.c	/^netqueryns(Query *qp, int depth, RR *nsrp)$/;"	f	file:
+network	cs.c	/^Network network[] = {$/;"	v
+newdnsmsg	dnresolve.c	/^newdnsmsg(RR *rp, int flags, ushort reqno)$/;"	f
+newfid	cs.c	/^newfid(int fid)$/;"	f
+newfid	dns.c	/^newfid(int fid, int needunused)$/;"	f
+newjob	cs.c	/^newjob(void)$/;"	f
+newjob	dns.c	/^newjob(void)$/;"	f
+next	cs.c	/^	Job	*next;$/;"	m	struct:Job	file:
+next	cs.c	/^	Mlist	*next;$/;"	m	struct:Mlist	file:
+next	cs.c	/^	Network		*next;$/;"	m	struct:Network	file:
+next	dnresolve.c	/^	Ipaddr *next;$/;"	m	struct:Ipaddr	file:
+next	dns.c	/^	Job	*next;$/;"	m	struct:Job	file:
+next	dns.c	/^	Mfile		*next;		\/* next free mfile *\/$/;"	m	struct:Mfile	file:
+nextchain	mkhash.c	/^ulong nextchain;$/;"	v
+nextnet	cs.c	/^	Network		*nextnet;$/;"	m	struct:Mfile	file:
+nibbles2bytes	dblookup.c	/^nibbles2bytes(uchar *bytes, uchar *nibbles, int nnibs)$/;"	f
+norecursion	dnserver.c	/^int	norecursion;		\/* don't allow recursive requests *\/$/;"	v
+noteinmem	dnresolve.c	/^noteinmem(void)$/;"	f	file:
+notestats	dnresolve.c	/^notestats(vlong start, int tmout, int type)$/;"	f	file:
+notify_areas	dnnotify.c	/^notify_areas(Area *a, Request *req)$/;"	f	file:
+notifyproc	dnnotify.c	/^notifyproc(void)$/;"	f
+now	dns.c	/^ulong	now;$/;"	v
+now	dnsdebug.c	/^ulong	now;$/;"	v
+now	dnstcp.c	/^ulong	now;$/;"	v
+nowns	dns.c	/^vlong	nowns;$/;"	v
+nowns	dnsdebug.c	/^vlong	nowns;$/;"	v
+nowns	dnstcp.c	/^vlong	nowns;$/;"	v
+nreply	cs.c	/^	int		nreply;$/;"	m	struct:Mfile	file:
+nrname	dn.c	/^unsigned nrname = nelem(rname);$/;"	v
+nrr	dns.c	/^	ushort		nrr;		\/* number of rr's *\/$/;"	m	struct:Mfile	file:
+nsrp	dnresolve.c	/^	RR	*nsrp;		\/* name servers to consult *\/$/;"	m	struct:Query	file:
+nsrr	dblookup.c	/^nsrr(Ndbtuple *entry, Ndbtuple *pair)$/;"	f	file:
+nstrcpy	cs.c	/^nstrcpy(char *to, char *from, int len)$/;"	f	file:
+nstrcpy	dblookup.c	/^nstrcpy(char *to, char *from, int len)$/;"	f	file:
+nt	mkhosts.c	/^	Ndbtuple *nt;$/;"	m	struct:x	file:
+ntup	mkdb.c	/^int ntup;$/;"	v
+nullrr	dblookup.c	/^nullrr(Ndbtuple *entry, Ndbtuple *pair)$/;"	f	file:
+numelem	dnstcp.c	/^numelem(char *name)$/;"	f	file:
+nx	dnresolve.c	/^	int	nx;		\/* number of transmissions *\/$/;"	m	struct:Dest	file:
+nx	mkhosts.c	/^int nx;$/;"	v
+offset	convDNS2M.c	/^		ushort	offset;		\/* pointer to packed name in message *\/$/;"	m	struct:Dict::__anon2	file:
+oldest	dn.c	/^	ulong	oldest;		\/* longest we'll leave a name around *\/$/;"	m	struct:__anon8	file:
+opendatabase	dblookup.c	/^opendatabase(void)$/;"	f
+opname	dn.c	/^char *opname[] =$/;"	v
+out	mkdb.c	/^Biobuf out;$/;"	v
+outnmsrvs	dblookup.c	/^static Ndbtuple *indoms, *innmsrvs, *outnmsrvs;$/;"	v	file:
+outsidens	dblookup.c	/^outsidens(int n)$/;"	f
+owned	dnarea.c	/^Area *owned, *delegated;$/;"	v
+owner	dnudpserver.c	/^	DN	*owner;$/;"	m	struct:Inprogress	file:
+p	convM2DNS.c	/^	uchar	*p;		\/* current position *\/$/;"	m	struct:Scan	file:
+p16	inform.c	/^p16(uchar **p, int n)$/;"	f
+p32	inform.c	/^p32(uchar **p, int n)$/;"	f
+paranoia	cs.c	/^int	paranoia;$/;"	v
+paranoiafile	cs.c	/^char	*paranoiafile = "cs.paranoia";$/;"	v
+parse	mkhosts.c	/^parse(char *file)$/;"	f
+pbytes	convDNS2M.c	/^pbytes(uchar *p, uchar *ep, uchar *np, int n)$/;"	f	file:
+pmem	inform.c	/^pmem(uchar **p, void *v, int len)$/;"	f
+pname	convDNS2M.c	/^pname(uchar *p, uchar *ep, char *np, Dict *dp)$/;"	f	file:
+pname	inform.c	/^pname(uchar **p, char *s)$/;"	f
+preloadserveraddrs	dnsdebug.c	/^preloadserveraddrs(void)$/;"	f
+prettyrrfmt	dnsdebug.c	/^prettyrrfmt(Fmt *f)$/;"	f
+printArecord	mkhosts.c	/^printArecord(int fd, X *p)$/;"	f
+printentry	mkhosts.c	/^printentry(int fd, X *p)$/;"	f
+printsys	mkhosts.c	/^printsys(int fd, X *p)$/;"	f
+printtxt	mkhosts.c	/^printtxt(int fd, X *p)$/;"	f
+prmatch	query.c	/^prmatch(Ndbtuple *nt, char *rattr)$/;"	f	file:
+procansw	dnresolve.c	/^procansw(Query *qp, DNSmsg *mp, uchar *srcip, int depth, Dest *p)$/;"	f	file:
+procgetname	dnresolve.c	/^procgetname(void)$/;"	f	file:
+procsetname	cs.c	/^procsetname(char *fmt, ...)$/;"	f
+procsetname	dn.c	/^procsetname(char *fmt, ...)$/;"	f
+pstr	convDNS2M.c	/^pstr(uchar *p, uchar *ep, char *np)$/;"	f	file:
+psym	convDNS2M.c	/^psym(uchar *p, uchar *ep, char *np)$/;"	f	file:
+ptrrr	dblookup.c	/^ptrrr(Ndbtuple *entry, Ndbtuple *pair)$/;"	f	file:
+puchar	convDNS2M.c	/^puchar(uchar *p, uchar *ep, int val)$/;"	f	file:
+pulong	convDNS2M.c	/^pulong(uchar *p, uchar *ep, int val)$/;"	f	file:
+pushort	convDNS2M.c	/^pushort(uchar *p, uchar *ep, int val)$/;"	f	file:
+putactivity	dn.c	/^putactivity(int recursive)$/;"	f
+pv4addr	convDNS2M.c	/^pv4addr(uchar *p, uchar *ep, char *name)$/;"	f	file:
+pv6addr	convDNS2M.c	/^pv6addr(uchar *p, uchar *ep, char *name)$/;"	f	file:
+qid	cs.c	/^	Qid		qid;$/;"	m	struct:Mfile	file:
+qid	dns.c	/^	Qid		qid;$/;"	m	struct:Mfile	file:
+qmatch	cs.c	/^qmatch(Ndbtuple *t, char **attr, char **val, int n)$/;"	f
+qreply	cs.c	/^qreply(Mfile *mf, Ndbtuple *t)$/;"	f
+qtype2lck	dnresolve.c	/^qtype2lck(int qtype)		\/* map query type to querylck index *\/$/;"	f	file:
+query	csquery.c	/^query(char *addr)$/;"	f
+query	dnsquery.c	/^query(int fd)$/;"	f	file:
+queryck	dnresolve.c	/^queryck(Query *qp)$/;"	f	file:
+querydestroy	dnresolve.c	/^querydestroy(Query *qp)$/;"	f	file:
+querydns	dnsquery.c	/^querydns(int fd, char *line, int n)$/;"	f	file:
+queryinit	dnresolve.c	/^queryinit(Query *qp, DN *dp, int type, Request *req)$/;"	f	file:
+queryns	dnresolve.c	/^queryns(Query *qp, int depth, uchar *ibuf, uchar *obuf, ulong waitms, int inns)$/;"	f	file:
+randomize	dn.c	/^randomize(RR *rp)$/;"	f
+rattach	cs.c	/^rattach(Job *job, Mfile *mf)$/;"	f
+rattach	dns.c	/^rattach(Job *job, Mfile *mf)$/;"	f
+rauth	cs.c	/^rauth(Job *job)$/;"	f
+rauth	dns.c	/^rauth(Job *job)$/;"	f
+rclunk	cs.c	/^rclunk(Job *job, Mfile *mf)$/;"	f
+rclunk	dns.c	/^rclunk(Job *job, Mfile *mf)$/;"	f
+rcode	convM2DNS.c	/^	int	rcode;		\/* outgoing response codes (reply flags) *\/$/;"	m	struct:Scan	file:
+rcreate	cs.c	/^rcreate(Job *job, Mfile *mf)$/;"	f
+rcreate	dns.c	/^rcreate(Job *job, Mfile *mf)$/;"	f
+readipinterfaces	cs.c	/^readipinterfaces(void)$/;"	f
+readmsg	dnstcp.c	/^readmsg(int fd, uchar *buf, int max)$/;"	f	file:
+readnet	dnresolve.c	/^readnet(Query *qp, int medium, uchar *ibuf, uvlong endms, uchar **replyp,$/;"	f	file:
+readreply	dnresolve.c	/^readreply(Query *qp, int medium, ushort req, uchar *ibuf, DNSmsg *mp,$/;"	f	file:
+redistrib	dnudpserver.c	/^redistrib(uchar *buf, int len)$/;"	f	file:
+ref	dns.c	/^	int		ref;$/;"	m	struct:Mfile	file:
+refresh_areas	dnarea.c	/^refresh_areas(Area *s)$/;"	f
+refreshmain	dnstcp.c	/^refreshmain(char *net)$/;"	f	file:
+rem	cs.c	/^	char		*rem;$/;"	m	struct:Mfile	file:
+reorder	cs.c	/^reorder(Ndbtuple *t, Ndbtuple *x)$/;"	f
+reply	cs.c	/^	Fcall	reply;$/;"	m	struct:Job	file:
+reply	cs.c	/^	char		*reply[Nreply];$/;"	m	struct:Mfile	file:
+reply	dns.c	/^	Fcall	reply;$/;"	m	struct:Job	file:
+reply	dns.c	/^	char		reply[Maxreply];$/;"	m	struct:Mfile	file:
+reply	dnstcp.c	/^reply(int fd, DNSmsg *rep, Request *req)$/;"	f	file:
+reply	dnudpserver.c	/^reply(int fd, uchar *buf, DNSmsg *rep, Request *reqp)$/;"	f	file:
+replylen	cs.c	/^	int		replylen[Nreply];$/;"	m	struct:Mfile	file:
+req	dnresolve.c	/^	Request *req;$/;"	m	struct:Query	file:
+request	cs.c	/^	Fcall	request;$/;"	m	struct:Job	file:
+request	dns.c	/^	Fcall	request;$/;"	m	struct:Job	file:
+respond	dns.c	/^respond(Job *job, Mfile *mf, RR *rp, char *errbuf, int status, int wantsav)$/;"	f	file:
+rflush	cs.c	/^rflush(Job *job)$/;"	f
+rflush	dns.c	/^rflush(Job *job)$/;"	f
+rname	dn.c	/^char *rname[Rmask+1] =$/;"	v
+ropen	cs.c	/^ropen(Job *job, Mfile *mf)$/;"	f
+ropen	dns.c	/^ropen(Job *job, Mfile *mf)$/;"	f
+rr	dns.c	/^	ushort		rr[Maxrrr];	\/* offset of rr's *\/$/;"	m	struct:Mfile	file:
+rralloc	dn.c	/^rralloc(int type)$/;"	f
+rrattach	dn.c	/^rrattach(RR *rp, int auth)$/;"	f
+rrattach1	dn.c	/^rrattach1(RR *new, int auth)$/;"	f	file:
+rravfmt	dn.c	/^rravfmt(Fmt *f)$/;"	f
+rrcat	dn.c	/^rrcat(RR **start, RR *rp)$/;"	f
+rrcopy	dn.c	/^rrcopy(RR *rp, RR **last)$/;"	f
+rrdelhead	dn.c	/^rrdelhead(RR **l)$/;"	f	file:
+rread	cs.c	/^rread(Job *job, Mfile *mf)$/;"	f
+rread	dns.c	/^rread(Job *job, Mfile *mf)$/;"	f
+rremove	cs.c	/^rremove(Job *job, Mfile *mf)$/;"	f
+rremove	dns.c	/^rremove(Job *job, Mfile *mf)$/;"	f
+rrequiv	dn.c	/^rrequiv(RR *r1, RR *r2)$/;"	f	file:
+rrfmt	dn.c	/^rrfmt(Fmt *f)$/;"	f
+rrfree	dn.c	/^rrfree(RR *rp)$/;"	f
+rrfreelist	dn.c	/^rrfreelist(RR *rp)$/;"	f
+rrfreelistptr	dnresolve.c	/^rrfreelistptr(RR **rpp)$/;"	f
+rrlistlen	dn.c	/^rrlistlen(RR *rp)$/;"	f
+rrlookup	dn.c	/^rrlookup(DN *dp, int type, int flag)$/;"	f
+rrloop	convDNS2M.c	/^rrloop(RR *rp, int *countp, uchar *p, uchar *ep, Dict *dp, int quest)$/;"	f	file:
+rrloop	convM2DNS.c	/^rrloop(Scan *sp, char *what, int count, int quest)$/;"	f	file:
+rrname	dn.c	/^rrname(int type, char *buf, int len)$/;"	f
+rronlist	dn.c	/^rronlist(RR *rp, RR *lp)$/;"	f	file:
+rrremneg	dn.c	/^rrremneg(RR **l)$/;"	f
+rrremtype	dn.c	/^rrremtype(RR **l, int type)$/;"	f
+rrsame	dn.c	/^rrsame(RR *rr1, RR *rr2)$/;"	f	file:
+rrsupported	dn.c	/^rrsupported(int type)$/;"	f
+rrtname	dn.c	/^char *rrtname[] =$/;"	v
+rrtype	dn.c	/^rrtype(char *atype)$/;"	f
+rstat	cs.c	/^rstat(Job *job, Mfile *mf)$/;"	f
+rstat	dns.c	/^rstat(Job *job, Mfile *mf)$/;"	f
+rversion	cs.c	/^rversion(Job *job)$/;"	f
+rversion	dns.c	/^rversion(Job *job)$/;"	f
+rwalk	cs.c	/^rwalk(Job *job, Mfile *mf)$/;"	f
+rwalk	dns.c	/^rwalk(Job *job, Mfile *mf)$/;"	f
+rwrite	cs.c	/^rwrite(Job *job, Mfile *mf)$/;"	f
+rwrite	dns.c	/^rwrite(Job *job, Mfile *mf, Request *req)$/;"	f
+rwstat	cs.c	/^rwstat(Job *job, Mfile *mf)$/;"	f
+rwstat	dns.c	/^rwstat(Job *job, Mfile *mf)$/;"	f
+s	dnresolve.c	/^	DN	*s;		\/* name server *\/$/;"	m	struct:Dest	file:
+search	ipquery.c	/^search(Ndb *db, char *attr, char *val, char **rattr, int nrattr)$/;"	f
+search	query.c	/^search(Ndb *db, char *attr, char *val, char *rattr)$/;"	f
+seerootns	dnresolve.c	/^seerootns(void)$/;"	f
+sencodefmt	dn.c	/^sencodefmt(Fmt *f)$/;"	f	file:
+send_notify	dnnotify.c	/^send_notify(char *slave, RR *soa, Request *req)$/;"	f	file:
+sendmsg	cs.c	/^sendmsg(Job *job, char *err)$/;"	f
+sendmsg	dns.c	/^sendmsg(Job *job, char *err)$/;"	f
+sendnotifies	dns.c	/^int	sendnotifies;$/;"	v
+serv	cs.c	/^	char		*serv;$/;"	m	struct:Mfile	file:
+server	csquery.c	/^char *server;$/;"	v
+serveraddrs	dnresolve.c	/^serveraddrs(Query *qp, int nd, int depth)$/;"	f	file:
+serveraddrs	dnsdebug.c	/^static RR *serveraddrs;$/;"	v	file:
+servername	dnsdebug.c	/^static char *servername;$/;"	v	file:
+serverrr	dnsdebug.c	/^static RR *serverrr;$/;"	v	file:
+setdestoutns	dnresolve.c	/^setdestoutns(Dest *p, int n)$/;"	f	file:
+setext	cs.c	/^setext(char *ext, int n, char *p)$/;"	f
+setext	dns.c	/^setext(char *ext, int n, char *p)$/;"	f
+setserver	dnsdebug.c	/^setserver(char *server)$/;"	f
+setup	dnsquery.c	/^setup(int argc, char **argv)$/;"	f	file:
+slave	cs.c	/^slave(char *host)$/;"	f
+slave	dn.c	/^slave(Request *req)$/;"	f
+soarr	dblookup.c	/^soarr(Ndbtuple *entry, Ndbtuple *pair)$/;"	f	file:
+squirrelserveraddrs	dnsdebug.c	/^squirrelserveraddrs(void)$/;"	f
+srv	dnsquery.c	/^static char *mtpt, *dns, *srv;$/;"	v	file:
+srvrr	dblookup.c	/^srvrr(Ndbtuple *entry, Ndbtuple *pair)$/;"	f	file:
+start	convDNS2M.c	/^	uchar	*start;		\/* start of packed message *\/$/;"	m	struct:Dict	file:
+start	dn.c	/^ulong start;$/;"	v
+status	csquery.c	/^char *status;$/;"	v
+statusonly	csquery.c	/^int statusonly;$/;"	v
+stop	convM2DNS.c	/^	int	stop;		\/* flag: stop processing *\/$/;"	m	struct:Scan	file:
+stop	dns.c	/^static volatile int stop;$/;"	v	file:
+subsume	dn.c	/^subsume(char *higher, char *lower)$/;"	f
+syserr	mkhash.c	/^syserr(void)$/;"	f
+system	dnresolve.c	/^system(int fd, char *cmd)$/;"	f
+t	mkhosts.c	/^	Ndbtuple *t;$/;"	m	struct:x	file:
+target	dn.c	/^ulong target = Deftarget;$/;"	v
+tcpctlfd	dnresolve.c	/^	int	tcpctlfd;$/;"	m	struct:Query	file:
+tcpfd	dnresolve.c	/^	int	tcpfd;		\/* if Tcp, read replies from here *\/$/;"	m	struct:Query	file:
+tcpip	dnresolve.c	/^	uchar	tcpip[IPaddrlen];$/;"	m	struct:Query	file:
+tcplock	dnresolve.c	/^	QLock	tcplock;	\/* only one tcp call at a time per query *\/$/;"	m	struct:Query	file:
+tcpquery	dnresolve.c	/^tcpquery(Query *qp, DNSmsg *mp, int depth, uchar *ibuf, uchar *obuf, int len,$/;"	f	file:
+tcpset	dnresolve.c	/^	int	tcpset;$/;"	m	struct:Query	file:
+telcolookup	cs.c	/^telcolookup(Network *np, char *host, char *serv, int nolookup)$/;"	f
+telcotrans	cs.c	/^telcotrans(Ndbtuple *t, Network *np, char *serv, char *rem, int)$/;"	f
+testing	dns.c	/^int	testing;$/;"	v
+testing	dnsdebug.c	/^int	testing;$/;"	v
+testing	dnstcp.c	/^int	testing;$/;"	v
+tprint	mkdb.c	/^tprint(void)$/;"	f
+trace	dns.c	/^char	*trace;$/;"	v
+trace	dnsdebug.c	/^char	*trace;$/;"	v
+traceactivity	dns.c	/^int	traceactivity;$/;"	v
+traceactivity	dnsdebug.c	/^int	traceactivity;$/;"	v
+traceactivity	dnstcp.c	/^int	traceactivity;$/;"	v
+trans	cs.c	/^	char		*(*trans)(Ndbtuple*, Network*, char*, char*, int);$/;"	m	struct:Network	file:
+trunc	convM2DNS.c	/^	int	trunc;		\/* flag: input truncated *\/$/;"	m	struct:Scan	file:
+tsame	dn.c	/^tsame(int t1, int t2)$/;"	f
+ttype	mkdb.c	/^int ttype[64];$/;"	v
+tup	mkdb.c	/^char tup[64][64];$/;"	v
+txtrr	dblookup.c	/^txtrr(Ndbtuple *entry, Ndbtuple *pair)$/;"	f	file:
+type	dnresolve.c	/^	ushort	type;		\/* and type to look up *\/$/;"	m	struct:Query	file:
+type	dns.c	/^	int		type;		\/* reply type *\/$/;"	m	struct:Mfile	file:
+type	dnudpserver.c	/^	ushort	type;$/;"	m	struct:Inprogress	file:
+udpannounce	dnudpserver.c	/^udpannounce(char *mntpt)$/;"	f	file:
+udpfd	dnresolve.c	/^	int	udpfd;$/;"	m	struct:Query	file:
+udpport	dnresolve.c	/^udpport(char *mtpt)$/;"	f
+udpquery	dnresolve.c	/^udpquery(Query *qp, char *mntpt, int depth, int patient, int inns)$/;"	f	file:
+uh	dnudpserver.c	/^	Udphdr	uh;$/;"	m	struct:Inprogress	file:
+unique	dn.c	/^unique(RR *rp)$/;"	f
+upper	mkhosts.c	/^upper(char *x)$/;"	f
+usage	cs.c	/^usage(void)$/;"	f
+usage	csquery.c	/^usage(void)$/;"	f
+usage	dns.c	/^usage(void)$/;"	f
+usage	dnsdebug.c	/^usage(void)$/;"	f
+usage	dnstcp.c	/^usage(void)$/;"	f
+usage	inform.c	/^usage(void)$/;"	f
+usage	ipquery.c	/^usage(void)$/;"	f
+usage	query.c	/^usage(void)$/;"	f
+user	cs.c	/^	char		*user;$/;"	m	struct:Mfile	file:
+user	dns.c	/^	char		*user;$/;"	m	struct:Mfile	file:
+v4ptrdom	dblookup.c	/^char *v4ptrdom = ".in-addr.arpa";$/;"	v
+v6ptrdom	dblookup.c	/^char *v6ptrdom = ".ip6.arpa";		\/* ip6.int deprecated, rfc 3152 *\/$/;"	v
+vers	cs.c	/^int vers;		\/* incremented each clone\/attach *\/$/;"	v
+vers	dns.c	/^int vers;		\/* incremented each clone\/attach *\/$/;"	v
+walkup	dnresolve.c	/^walkup(char *name)$/;"	f
+warning	dn.c	/^warning(char *fmt, ...)$/;"	f
+weight	dnresolve.c	/^weight(ulong ms, unsigned pcntprob)$/;"	f	file:
+x	convDNS2M.c	/^	} x[Ndict];$/;"	m	struct:Dict	typeref:struct:Dict::__anon2	file:
+x	mkhosts.c	/^X x[4096];$/;"	v
+x	mkhosts.c	/^typedef struct x$/;"	s	file:
+xmitquery	dnresolve.c	/^xmitquery(Query *qp, int medium, int depth, uchar *obuf, int inns, int len)$/;"	f	file:
+zonerefreshprogram	dns.c	/^char	*zonerefreshprogram;$/;"	v
+zonerefreshprogram	dnsdebug.c	/^char	*zonerefreshprogram;$/;"	v
+zonerefreshprogram	dnstcp.c	/^char	*zonerefreshprogram;$/;"	v

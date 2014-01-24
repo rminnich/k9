@@ -1,0 +1,52 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+MYLIBFILES=\
+	vacfile\
+#	patch\
+	vacfs\
+	vtfile\
+	vtcache
+
+#V=/sys/src/libventi
+#VC=/sys/src/cmd/venti/srv
+#
+#VLIB=${V}/file.$O\
+#	${VC}/trace.$O\
+#	${VC}/utils.$O\
+#	${VC}/stats.$O\
+#	${VC}/icache.$O\
+#	${VC}/httpd.$O\
+#	${VC}/index.$O\
+#	${VC}/clump.$O\
+#	${VC}/zblock.$O\
+#	${VC}/graph.$O\
+#	${VC}/ifile.$O\
+
+VLIB=$NXM/sys/src/cmd/venti/srv/libvs.a$O
+
+LIB=${MYLIBFILES:%=%.$O} ${VLIB} $NXM/sys/src/cmd/vac/pack.$O $NXM/sys/src/cmd/vac/error.$O
+
+HFILES=\
+	$NXM/sys/include/venti.h\
+	$NXM/sys/src/cmd/vac/stdinc.h\
+	$NXM/sys/src/cmd/vac/vac.h\
+	$NXM/sys/src/cmd/vac/dat.h\
+	$NXM/sys/src/cmd/vac/fns.h\
+	$NXM/sys/src/cmd/vac/error.h\
+
+TARG=vtvacfs
+BIN=$NXM/$objtype/bin
+
+CFILES=${TARG:%=%.c} ${MYLIBFILES:%=%.c}
+
+UPDATE=\
+	mkfile\
+	$CFILES\
+	$HFILES\
+	${TARG:%=$NXM/amd64/bin/%}
+
+default:V: all
+
+<$NXM/sys/src/cmd/mkmany
+

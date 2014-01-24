@@ -1,0 +1,33 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+LIBFILES=\
+	error\
+	file\
+	glob\
+	pack\
+
+LIB=${LIBFILES:%=%.$O}
+
+HFILES=\
+	$NXM/sys/include/venti.h\
+	stdinc.h\
+	error.h\
+	vac.h\
+	dat.h\
+	fns.h\
+
+TARG=vac unvac vacfs
+BIN=$NXM/$objtype/bin
+
+CFILES=${TARG:%=%.c} ${LIBFILES:%=%.c}
+
+UPDATE=\
+	mkfile\
+	$CFILES\
+	$HFILES\
+	${TARG:%=$NXM/386/bin/%}
+
+default:V: all
+
+<$NXM/sys/src/cmd/mkmany

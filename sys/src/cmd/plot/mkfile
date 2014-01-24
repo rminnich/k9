@@ -1,0 +1,25 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+TARG=plot
+OFILES=plot.$O\
+
+HFILES=plot.h\
+
+LIB=libplot.a$O
+
+BIN=$NXM/$objtype/bin
+<$NXM/sys/src/cmd/mkone
+
+$LIB:
+	cd libplot
+	mk install
+
+clean:V:
+	rm -f *.[$OS] [$OS].out y.tab.? y.debug y.output $TARG
+	cd libplot
+	mk clean
+
+nuke:V:
+	mk clean
+	rm -f libplot.a[$OS]

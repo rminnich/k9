@@ -1,0 +1,15 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+TARG=cec
+
+OFILES=\
+	cec.$O\
+	plan9.$O\
+	mux.$O\
+	utils.$O\
+
+HFILES=cec.h
+
+BIN=$NXM/$objtype/bin
+<$NXM/sys/src/cmd/mkone

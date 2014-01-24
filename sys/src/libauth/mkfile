@@ -1,0 +1,33 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+LIB=$NXM/$objtype/lib/libauth.a
+OFILES=\
+	amount.$O\
+	amount_getkey.$O\
+	attr.$O\
+	auth_attr.$O\
+	auth_challenge.$O\
+	auth_chuid.$O\
+	auth_getkey.$O\
+	auth_getuserpasswd.$O\
+	auth_proxy.$O\
+	auth_respond.$O\
+	auth_rpc.$O\
+	auth_userpasswd.$O\
+	auth_wep.$O\
+	login.$O\
+	newns.$O\
+	noworld.$O\
+
+HFILES=\
+	$NXM/sys/include/auth.h\
+	authlocal.h\
+
+UPDATE=\
+	mkfile\
+	$HFILES\
+	${OFILES:%.$O=%.c}\
+	${LIB:$NXM/$objtype/%=/386/%}\
+
+<$NXM/sys/src/cmd/mksyslib

@@ -1,0 +1,22 @@
+MKSHELL=rc
+BUILTINS=
+<$NXM/$objtype/mkfile
+
+BIN=$NXM/$objtype/bin/fs
+TARG=tarfs tpfs v6fs 32vfs cpiofs tapfs v10fs zipfs
+OFILES=\
+	fs.$O\
+	util.$O
+
+HFILES=\
+	tapefs.h\
+
+UPDATE=\
+	mkfile\
+	$HFILES\
+	${OFILES:%.$O=%.c}\
+	${TARG:%=%.c}\
+
+<$NXM/sys/src/cmd/mkmany
+
+zipfs.$O:	zip.h

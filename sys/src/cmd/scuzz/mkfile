@@ -1,0 +1,16 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+TARG =	scuzz
+
+HFILES = scsireq.h
+OFILES = scuzz.$O cdaudio.$O cdr.$O changer.$O scsireq.$O sense.$O
+
+BIN=$NXM/$objtype/bin
+UPDATE=\
+	mkfile\
+	$HFILES\
+	${OFILES:%.$O=%.c}\
+	${TARG:%=$NXM/386/bin/%}\
+
+<$NXM/sys/src/cmd/mkone

@@ -1,0 +1,31 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+BIN=$NXM/$objtype/bin
+
+TARG=rio
+OFILES=\
+	rio.$O\
+	data.$O\
+	fsys.$O\
+	scrl.$O\
+	time.$O\
+	util.$O\
+	wctl.$O\
+	wind.$O\
+	xfid.$O\
+
+HFILES=dat.h\
+	fns.h\
+
+UPDATE=\
+	mkfile\
+	$HFILES\
+	${OFILES:%.$O=%.c}\
+
+<$NXM/sys/src/cmd/mkone
+
+$O.out: $NXM/$objtype/lib/libdraw.a $NXM/$objtype/lib/libframe.a \
+ $NXM/$objtype/lib/libthread.a $NXM/$objtype/lib/libplumb.a $NXM/$objtype/lib/libc.a
+syms:V:
+	$CC -a $CFLAGS rio.c	> syms
+	$CC -aa $CFLAGS *.c 	>>syms

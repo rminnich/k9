@@ -1,0 +1,12 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+BIN=$NXM/$objtype/bin
+TARG=\
+	tarcat\
+	tarsplit\
+
+HFILES=tar.h
+OFILES=tarsub.$O
+
+<$NXM/sys/src/cmd/mkmany

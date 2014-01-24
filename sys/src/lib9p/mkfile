@@ -1,0 +1,33 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+LIB=$NXM/$objtype/lib/lib9p.a
+OFILES=\
+	auth.$O\
+	dirread.$O\
+	fid.$O\
+	file.$O\
+	intmap.$O\
+	listen.$O\
+	mem.$O\
+	req.$O\
+	parse.$O\
+	post.$O\
+	rfork.$O\
+	srv.$O\
+	thread.$O\
+	uid.$O\
+	util.$O\
+
+HFILES=$NXM/sys/include/9p.h
+
+UPDATE=\
+	mkfile\
+	$HFILES\
+	${OFILES:%.$O=%.c}\
+	${LIB:$NXM/$objtype/%=/386/%}\
+
+<$NXM/sys/src/cmd/mksyslib
+
+$O.ramfs: ramfs.$O $LIB
+	$LD -o $target $prereq

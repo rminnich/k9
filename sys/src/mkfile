@@ -1,0 +1,102 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+LIBS=\
+	lib9p\
+	libString\
+	libauth\
+	libauthsrv\
+	libavl\
+	libbin\
+	libbio\
+	libc\
+	libcomplete\
+	libcontrol\
+	libdisk\
+	libdraw\
+	liberror\
+	libflate\
+	libframe\
+	libgeometry\
+	libhtml\
+	libhttpd\
+	libip\
+	liblex\
+	libmemdraw\
+	libmemlayer\
+	libmp\
+	libndb\
+	liboventi\
+	libplumb\
+	libregexp\
+	libsec\
+	libseg\
+	libstdio\
+	libsunrpc\
+	libthread\
+	libtube\
+	libventi\
+	libworker\
+	libmach\
+
+NO=\
+	games\
+
+CMDS=cmd\
+
+SUBSYS=ape\
+
+NOSUBSYS=/acme\
+
+none:VQ:
+	echo mk all, install, clean, nuke, release, kernels, or libs
+
+all install clean nuke:VQ:
+	date
+	for (i in $LIBS $SUBSYS $CMDS) @{
+		cd $i
+		echo cd $i
+		mk $target
+	}
+	date
+
+installall:V:
+	echo "installall not supported"
+
+release:V:
+	mk nuke
+	rm -f $NXM/$objtype/lib/ape/*.a
+	rm -f $NXM/$objtype/lib/*.a
+	mk install
+	mk clean
+
+kernels:V:
+	for (i in nxm/k10 ) @{
+		cd $i
+		mk clean
+		mk install
+		mk all
+		mk clean
+	}
+
+libs:V:
+	date
+	for (i in $LIBS) @{
+		cd $i
+		mk clean
+		mk install
+		mk clean
+	}
+	date
+
+cleanlibs:V:
+	for (i in $LIBS) @{
+		cd $i
+		mk clean
+	}
+
+updatelibs:V:
+	for (i in $LIBS) @{
+		cd $i
+		mk update
+	}

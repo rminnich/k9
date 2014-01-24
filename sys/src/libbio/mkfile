@@ -1,0 +1,33 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+LIB=$NXM/$objtype/lib/libbio.a
+OFILES=\
+	bbuffered.$O\
+	bfildes.$O\
+	bflush.$O\
+	bgetrune.$O\
+	bgetc.$O\
+	bgetd.$O\
+	binit.$O\
+	boffset.$O\
+	bprint.$O\
+	bputrune.$O\
+	bputc.$O\
+	brdline.$O\
+	brdstr.$O\
+	bread.$O\
+	bseek.$O\
+	bwrite.$O\
+	bvprint.$O\
+
+HFILES=$NXM/sys/include/bio.h
+
+UPDATE=\
+	mkfile\
+	$HFILES\
+	${OFILES:%.$O=%.c}\
+	${LIB:$NXM/$objtype/%=/386/%}\
+
+<$NXM/sys/src/cmd/mksyslib
+

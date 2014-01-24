@@ -1,0 +1,19 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+TARG=exportfs
+OFILES=\
+	exportfs.$O\
+	exportsrv.$O\
+	pattern.$O\
+
+HFILES=exportfs.h\
+
+BIN=$NXM/$objtype/bin
+
+UPDATE=\
+	mkfile\
+	$HFILES\
+	${OFILES:%.$O=%.c}\
+
+<$NXM/sys/src/cmd/mkone

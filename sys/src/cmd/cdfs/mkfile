@@ -1,0 +1,17 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+TARG=cdfs
+
+OFILES=\
+	buf.$O\
+	main.$O\
+	mmc.$O\
+
+HFILES=\
+	dat.h\
+	fns.h\
+	../scuzz/scsireq.h\
+
+BIN=$NXM/$objtype/bin
+<$NXM/sys/src/cmd/mkone

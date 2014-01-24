@@ -1,0 +1,9 @@
+<$NXM/$objtype/mkfile
+
+BIN=$NXM/$objtype/bin/aux
+
+TARG=realemu
+OFILES=decode.$O arg.$O xec.$O fmt.$O pit.$O main.$O
+HFILES=dat.h fns.h
+
+<$NXM/sys/src/cmd/mkone

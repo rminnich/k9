@@ -1,0 +1,30 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+LIB=usb.a$O
+OFILES=\
+	dev.$O\
+	devs.$O\
+	dump.$O\
+	parse.$O\
+	fs.$O\
+	fsdir.$O\
+
+HFILES=\
+	usb.h\
+	usbfs.h\
+
+
+UPDATE=\
+	$HFILES\
+	${OFILES:%.$O=%.c}\
+	mkfile\
+
+<$NXM/sys/src/cmd/mklib
+
+install:V:	$LIB
+	date
+safeinstall:V: install
+safeinstallall:V: installall
+nuke:V:
+	rm -f *.[$OS] y.tab.? y.output y.error *.a[$OS]

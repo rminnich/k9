@@ -1,0 +1,30 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+LIB=$NXM/$objtype/lib/libmemlayer.a
+
+OFILES=\
+	draw.$O\
+	lalloc.$O\
+	layerop.$O\
+	ldelete.$O\
+	lhide.$O\
+	line.$O\
+	load.$O\
+	lorigin.$O\
+	lsetrefresh.$O\
+	ltofront.$O\
+	ltorear.$O\
+	unload.$O\
+
+HFILES=\
+	$NXM/sys/include/memlayer.h\
+	$NXM/sys/include/memdraw.h\
+	$NXM/sys/include/draw.h
+
+UPDATE=\
+	mkfile\
+	$HFILES\
+	${OFILES:%.$O=%.c}\
+
+<$NXM/sys/src/cmd/mksyslib

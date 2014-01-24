@@ -1,0 +1,22 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+LIB=$NXM/$objtype/lib/libframe.a
+OFILES=\
+	frbox.$O\
+	frdraw.$O\
+	frdelete.$O\
+	frinit.$O\
+	frinsert.$O\
+	frptofchar.$O\
+	frselect.$O\
+	frstr.$O\
+	frutil.$O\
+
+UPDATE=\
+	mkfile\
+	$HFILES\
+	${OFILES:%.$O=%.c}\
+	${LIB:$NXM/$objtype/%=/386/%}\
+
+< $NXM/sys/src/cmd/mksyslib

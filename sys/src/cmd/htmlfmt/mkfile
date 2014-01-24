@@ -1,0 +1,29 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+TARG=htmlfmt
+OFILES=\
+	main.$O\
+	html.$O\
+	util.$O\
+
+HFILES=\
+	dat.h\
+	$NXM/sys/include/html.h\
+
+LIB=
+
+BIN=$NXM/$objtype/bin
+
+UPDATE=\
+	mkfile\
+	$HFILES\
+	${OFILES:%.$O=%.c}\
+	${TARG:%=$NXM/386/bin/%}\
+
+<$NXM/sys/src/cmd/mkone
+
+CFLAGS=$CFLAGS
+
+$O.out: $OFILES
+	$LD $LDFLAGS -o $target  $LDFLAGS $OFILES

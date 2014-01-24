@@ -1,0 +1,20 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+TARG=5a
+OFILES=\
+	y.tab.$O\
+	lex.$O\
+
+HFILES=\
+	../5c/5.out.h\
+	y.tab.h\
+	a.h\
+
+YFILES=a.y\
+
+BIN=$NXM/$objtype/bin
+<$NXM/sys/src/cmd/mkone
+YFLAGS=-D1 -d
+
+lex.$O:	../cc/macbody ../cc/lexbody

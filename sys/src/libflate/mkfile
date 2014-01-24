@@ -1,0 +1,28 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+LIB=$NXM/$objtype/lib/libflate.a
+OFILES=\
+	deflate.$O\
+	deflatezlib.$O\
+	deflateblock.$O\
+	deflatezlibblock.$O\
+	inflate.$O\
+	inflatezlib.$O\
+	inflateblock.$O\
+	inflatezlibblock.$O\
+	flateerr.$O\
+	crc.$O\
+	adler.$O\
+
+HFILES=\
+	$NXM/sys/include/flate.h\
+	zlib.h\
+
+UPDATE=\
+	mkfile\
+	$HFILES\
+	${OFILES:%.$O=%.c}\
+	${LIB:$NXM/$objtype/%=/386/%}\
+
+<$NXM/sys/src/cmd/mksyslib

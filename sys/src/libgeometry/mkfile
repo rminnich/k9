@@ -1,0 +1,24 @@
+MKSHELL=rc
+<$NXM/$objtype/mkfile
+
+LIB=$NXM/$objtype/lib/libgeometry.a
+OFILES=\
+	arith3.$O\
+	matrix.$O\
+	qball.$O\
+	quaternion.$O\
+	transform.$O\
+	tstack.$O\
+
+HFILES=$NXM/sys/include/geometry.h
+
+<$NXM/sys/src/cmd/mksyslib
+
+UPDATE=\
+	mkfile\
+	$HFILES\
+	${OFILES:%.$O=%.c}\
+	${LIB:$NXM/$objtype/%=/386/%}\
+
+listing:V:
+	pr mkfile $HFILES $CFILES|lp -du
