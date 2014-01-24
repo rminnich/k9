@@ -1,9 +1,6 @@
-#pragma	lib	"libc.a"
-#pragma	src	"/sys/src/libc"
+#include <stdio.h>
 
 #define	nelem(x)	(sizeof(x)/sizeof((x)[0]))
-#define	offsetof(s, m)	(ulong)(&(((s*)0)->m))
-#define	assert(x)	if(x){}else _assert("x")
 
 /*
  * mem routines
@@ -370,7 +367,7 @@ extern	int	enc32(char*, int, uchar*, int);
 extern	int	dec16(uchar*, int, char*, int);
 extern	int	enc16(char*, int, uchar*, int);
 extern	int	encodefmt(Fmt*);
-extern	void	exits(char*);
+//extern	void	exits(char*);
 extern	double	frexp(double, int*);
 extern	uintptr	getcallerpc(void*);
 extern	int	getcoreno(int*);
@@ -389,7 +386,6 @@ extern	int	netcrypt(void*, void*);
 extern	void	notejmp(void*, jmp_buf, int);
 extern	void	perror(char*);
 extern	int	postnote(int, int, char *);
-extern	double	pow10(int);
 extern	int	putenv(char*, char*);
 extern	void	qsort(void*, long, long, int (*)(void*, void*));
 extern	int	setjmp(jmp_buf);
@@ -667,7 +663,6 @@ extern	int	create(char*, int, ulong);
 extern	int	dup(int, int);
 extern	int	errstr(char*, uint);
 extern	int	exec(char*, char*[]);
-extern	int	execl(char*, ...);
 extern	int	fork(void);
 extern	int	rfork(int);
 extern	int	fauth(int, char*);
@@ -830,3 +825,12 @@ extern char *argv0;
 
 /* this is used by sbrk and brk,  it's a really bad idea to redefine it */
 extern	char	end[];
+
+/* I'm not ready to add exits() to akaros yet. But maybe we should. */
+static inline void exits(char *mesg)
+{
+	fprintf(stderr, "Exits: %s\n", mesg);
+	exit(1);
+}
+
+#define sysfatal(fmt...)do {printf(fmt); exit(1);} while(0)
