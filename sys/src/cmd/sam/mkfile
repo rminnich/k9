@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=sam
 OFILES=sam.$O\
@@ -27,7 +26,7 @@ HFILES=sam.h\
 	errors.h\
 	mesg.h\
 
-BIN=$NXM/$objtype/bin
+BIN=/$objtype/bin
 
 UPDATE=\
 	mkfile\
@@ -35,7 +34,7 @@ UPDATE=\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 
 address.$O cmd.$O parse.$O xec.$O unix.$O:	parse.h
 

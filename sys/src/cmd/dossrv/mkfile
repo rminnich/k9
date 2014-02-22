@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=dossrv
 OFILES=\
@@ -17,14 +16,14 @@ HFILES=dat.h\
 	fns.h\
 	iotrack.h\
 
-BIN=$NXM/$objtype/bin
+BIN=/$objtype/bin
 
 UPDATE=\
 	mkfile\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
-	${TARG:%=$NXM/386/bin/%}\
+	${TARG:%=/386/bin/%}\
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 
 xfssrv.$O:	errstr.h

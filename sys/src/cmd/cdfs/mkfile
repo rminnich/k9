@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=cdfs
 
@@ -7,11 +6,12 @@ OFILES=\
 	buf.$O\
 	main.$O\
 	mmc.$O\
+	scsi.$O\
 
 HFILES=\
 	dat.h\
 	fns.h\
 	../scuzz/scsireq.h\
 
-BIN=$NXM/$objtype/bin
-<$NXM/sys/src/cmd/mkone
+BIN=/$objtype/bin
+</sys/src/cmd/mkone

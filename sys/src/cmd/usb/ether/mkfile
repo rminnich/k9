@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=ether
 OFILES=\
@@ -8,6 +7,7 @@ OFILES=\
 LIBDOFILES=\
 	ether.$O\
 	asix.$O\
+	smsc.$O\
 	cdc.$O\
 
 HFILES=\
@@ -21,9 +21,9 @@ LIB=\
 	$LIBD\
 	$LIBU\
 
-BIN=$NXM/$objtype/bin/usb
+BIN=/$objtype/bin/usb
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 CFLAGS=-I../lib $CFLAGS
 
 $LIBU:

@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=ki
 OFILES= ki.$O\
@@ -15,14 +14,14 @@ OFILES= ki.$O\
 
 HFILES=sparc.h\
 
-BIN=$NXM/$objtype/bin
+BIN=/$objtype/bin
 
 UPDATE=\
 	mkfile\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 
 acid:	
 	$CC -a run.c > acid.def

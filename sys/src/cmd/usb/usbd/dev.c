@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * Framework for USB devices.
  * Some of them may be embedded into usbd and some of
@@ -65,6 +74,8 @@ devmatch(Devtab *dt, Usbdev *d)
 	int c;
 	Conf *cp;
 
+	if(dt->noauto)
+		return 0;
 	if(dt->vid != -1 && d->vid != dt->vid)
 		return 0;
 	if(dt->did != -1 && d->did != dt->did)

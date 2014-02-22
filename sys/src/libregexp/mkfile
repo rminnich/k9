@@ -1,7 +1,6 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
-LIB=$NXM/$objtype/lib/libregexp.a
+LIB=/$objtype/lib/libregexp.a
 OFILES=\
 	regcomp.$O\
 	regerror.$O\
@@ -11,16 +10,16 @@ OFILES=\
 	rregexec.$O\
 	rregsub.$O\
 
-HFILES=$NXM/sys/include/regexp.h\
+HFILES=/sys/include/regexp.h\
 	regcomp.h\
 
 UPDATE=\
 	mkfile\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
-	${LIB:$NXM/$objtype/%=/386/%}\
+	${LIB:/$objtype/%=/386/%}\
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib
 
 test: test.$O $OFILES
 	$LD -o test $prereq

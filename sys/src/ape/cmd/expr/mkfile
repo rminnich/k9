@@ -1,5 +1,4 @@
-MKSHELL=rc
-APE=$NXM/sys/src/ape
+APE=/sys/src/ape
 <$APE/config
 
 TARG=expr
@@ -8,7 +7,7 @@ YFILES=expr.y
 HFILES=regexp.h
 
 BIN=$APEBIN
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 
 YFLAGS=-S
-CFLAGS=-B -c $CFLAGS
+CFLAGS=-B -c

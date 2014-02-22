@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <draw.h>
@@ -260,7 +269,7 @@ xfidread(Xfid *x)
 	int n, q;
 	uint off;
 	char *b;
-	char buf[128];
+	char buf[256];
 	Window *w;
 
 	q = FILE(x->f->qid);
@@ -369,11 +378,42 @@ xfidread(Xfid *x)
 	winunlock(w);
 }
 
+static Rune*
+fullrunewrite(Xfid *x, int *inr)
+{
+	int q, cnt, c, nb, nr;
+	Rune *r;
+
+	q = x->f->nrpart;
+	cnt = x->count;
+	if(q > 0){
+		memmove(x->data+q, x->data, cnt);	/* there's room; see fsysproc */
+		memmove(x->data, x->f->rpart, q);
+		cnt += q;
+		x->f->nrpart = 0;
+	}
+	r = runemalloc(cnt);
+	cvttorunes(x->data, cnt-UTFmax, r, &nb, &nr, nil);
+	/* approach end of buffer */
+	while(fullrune(x->data+nb, cnt-nb)){
+		c = nb;
+		nb += chartorune(&r[nr], x->data+c);
+		if(r[nr])
+			nr++;
+	}
+	if(nb < cnt){
+		memmove(x->f->rpart, x->data+nb, cnt-nb);
+		x->f->nrpart = cnt-nb;
+	}
+	*inr = nr;
+	return r;
+}
+
 void
 xfidwrite(Xfid *x)
 {
 	Fcall fc;
-	int c, cnt, qid, q, nb, nr, eval;
+	int c, qid, nb, nr, eval;
 	char buf[64], *err;
 	Window *w;
 	Rune *r;
@@ -429,7 +469,7 @@ xfidwrite(Xfid *x)
 
 	case Qeditout:
 	case QWeditout:
-		r = bytetorune(x->data, &nr);
+		r = fullrunewrite(x, &nr);
 		if(w)
 			err = edittext(w, w->wrselrange.q1, r, nr);
 		else
@@ -504,27 +544,7 @@ xfidwrite(Xfid *x)
 		goto BodyTag;
 
 	BodyTag:
-		q = x->f->nrpart;
-		cnt = x->count;
-		if(q > 0){
-			memmove(x->data+q, x->data, cnt);	/* there's room; see fsysproc */
-			memmove(x->data, x->f->rpart, q);
-			cnt += q;
-			x->f->nrpart = 0;
-		}
-		r = runemalloc(cnt);
-		cvttorunes(x->data, cnt-UTFmax, r, &nb, &nr, nil);
-		/* approach end of buffer */
-		while(fullrune(x->data+nb, cnt-nb)){
-			c = nb;
-			nb += chartorune(&r[nr], x->data+c);
-			if(r[nr])
-				nr++;
-		}
-		if(nb < cnt){
-			memmove(x->f->rpart, x->data+nb, cnt-nb);
-			x->f->nrpart = cnt-nb;
-		}
+		r = fullrunewrite(x, &nr);
 		if(nr > 0){
 			wincommit(w, t);
 			if(qid == QWwrsel){

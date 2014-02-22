@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * This allocator takes blocks from a coarser allocator (p->alloc) and
  * uses them as arenas.
@@ -977,6 +986,11 @@ poolallocl(Pool *p, ulong dsize)
 	Free *fb;
 	Alloc *ab;
 
+	if(dsize >= 0x80000000UL){	/* for sanity, overflow */
+		werrstr("invalid allocation size");
+		return nil;
+	}
+
 	bsize = dsize2bsize(p, dsize);
 
 	fb = treelookupgt(p->freeroot, bsize);
@@ -1095,7 +1109,7 @@ alignptr(void *v, ulong align, long offset)
 	return c;
 }
 
-/* poolspanallocl: allocate as described below; assumes pool locked */
+/* poolallocalignl: allocate as described below; assumes pool locked */
 static void*
 poolallocalignl(Pool *p, ulong dsize, ulong align, long offset, ulong span)
 {

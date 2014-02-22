@@ -1,3 +1,4 @@
+LDFLAGS=
 YFLAGS=-d
 AFLAGS=
 
@@ -13,9 +14,6 @@ $O.out:	$OFILES $LIB
 %.$O:	%.c
 	$CC $CFLAGS $stem.c
 
-%.$O:	%.g
-	$GC $GFLAGS $stem.g
-
 %.$O:	%.s
 	$AS $AFLAGS $stem.s
 
@@ -28,7 +26,6 @@ lex.yy.c:	$LFILES
 install:V:	$BIN/$TARG
 
 $BIN/$TARG:	$O.out
-	mkdir -p $BIN
 	cp $prereq $BIN/$TARG
 
 installall:V:

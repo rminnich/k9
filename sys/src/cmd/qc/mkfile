@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=qc
 OFILES=\
@@ -23,8 +22,8 @@ HFILES=\
 
 LIB=../cc/cc.a$O
 
-BIN=$NXM/$objtype/bin
-<$NXM/sys/src/cmd/mkone
+BIN=/$objtype/bin
+</sys/src/cmd/mkone
 
 $LIB:
 	cd ../cc
@@ -36,7 +35,7 @@ $LIB:
 
 t:V:	$O.out
 	$O.out -S t
-	$LD $LDFLAGS -o t.out t.$O
+	$LD -o t.out t.$O
 	t.out
 
 enam.c:	q.out.h

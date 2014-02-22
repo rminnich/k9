@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * 6in4 - tunnel client for automatic 6to4 or configured v6-in-v4 tunnels.
  *	see rfc3056.
@@ -160,7 +169,7 @@ setup(int *v6net, int *tunp)
 	char buf[128], path[64];
 
 	/*
-	 * gain access to IPv6-in-IPv4 packets
+	 * gain access to IPv6-in-IPv4 packets via ipmux
 	 */
 	p = seprint(buf, buf + sizeof buf, "%s/ipmux!proto=%2.2x|%2.2x;dst=%V",
 		net, IP_IPV6PROTO, IP_ICMPV6PROTO, myip + IPv4off);
@@ -269,6 +278,7 @@ main(int argc, char **argv)
 	procargs(argc, argv);
 	setup(&v6net, &tunnel);
 	runtunnel(v6net, tunnel);
+	exits(0);
 }
 
 /*
@@ -317,6 +327,7 @@ ip2tunnel(int in, int out)
 	op = (Iphdr*)buf;
 	op->vihl = IP_VER4 | 5;		/* hdr is 5 longs? */
 	memcpy(op->src, myip + IPv4off, sizeof op->src);
+	op->proto = IP_IPV6PROTO;	/* inner protocol */
 	op->ttl = 100;
 
 	/* get a V6 packet destined for the tunnel */
@@ -334,16 +345,20 @@ ip2tunnel(int in, int out)
 			n = m;
 
 		/* drop if v6 source or destination address is naughty */
-		if (badipv6(ip->src) ||
-		    (!equivip6(ip->dst, remote6) && badipv6(ip->dst))) {
-			syslog(0, "6in4", "egress filtered %I -> %I",
+		if (badipv6(ip->src)) {
+			syslog(0, "6in4", "egress filtered %I -> %I; bad src",
 				ip->src, ip->dst);
 			continue;
 		}
+		if ((!equivip6(ip->dst, remote6) && badipv6(ip->dst))) {
+			syslog(0, "6in4", "egress filtered %I -> %I; "
+				"bad dst not remote", ip->src, ip->dst);
+			continue;
+		}
 
-		op->proto = ip->proto;
 		if (debug > 1)
 			fprint(2, "v6 to tunnel %I -> %I\n", ip->src, ip->dst);
+
 		/* send 6to4 packets directly to ipv4 target */
 		if ((ip->dst[0]<<8 | ip->dst[1]) == V6to4pfx)
 			memcpy(op->dst, ip->dst+2, sizeof op->dst);
@@ -389,8 +404,12 @@ tunnel2ip(int in, int out)
 
 		/* if not IPv4 nor IPv4 protocol IPv6 nor ICMPv6, drop it */
 		if ((ip->vihl & 0xF0) != IP_VER4 ||
-		    ip->proto != IP_IPV6PROTO && ip->proto != IP_ICMPV6PROTO)
+		    ip->proto != IP_IPV6PROTO && ip->proto != IP_ICMPV6PROTO) {
+			syslog(0, "6in4",
+				"dropping pkt from tunnel with inner proto %d",
+				ip->proto);
 			continue;
+		}
 
 		/* check length: drop if too short, trim if too long */
 		m = nhgets(ip->length);
@@ -408,8 +427,8 @@ tunnel2ip(int in, int out)
 		 */
 		maskip(op->dst, localmask, a);
 		if (!equivip6(a, localnet)) {
-			syslog(0, "6in4", "ingress filtered %I -> %I",
-				op->src, op->dst);
+			syslog(0, "6in4", "ingress filtered %I -> %I; "
+				"dst not on local net", op->src, op->dst);
 			continue;
 		}
 		if (debug > 1)

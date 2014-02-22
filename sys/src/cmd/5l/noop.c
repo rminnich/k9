@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include	"l.h"
 
 static	Sym*	sym_div;
@@ -300,6 +309,30 @@ noops(void)
 			p->to.type = D_REG;
 			p->to.reg = REGLINK;
 
+			break;
+
+		/*
+		 * 5c code generation for unsigned -> double made the
+		 * unfortunate assumption that single and double floating
+		 * point registers are aliased - true for emulated 7500
+		 * but not for vfp.  Now corrected, but this test is
+		 * insurance against old 5c compiled code in libraries.
+		 */
+		case AMOVWD:
+			if((q = p->link) != P && q->as == ACMP)
+			if((q = q->link) != P && q->as == AMOVF)
+			if((q1 = q->link) != P && q1->as == AADDF)
+			if(q1->to.type == D_FREG && q1->to.reg == p->to.reg) {
+				q1->as = AADDD;
+				q1 = prg();
+				q1->scond = q->scond;
+				q1->line = q->line;
+				q1->as = AMOVFD;
+				q1->from = q->to;
+				q1->to = q1->from;
+				q1->link = q->link;
+				q->link = q1;
+			}
 			break;
 
 		case ADIV:

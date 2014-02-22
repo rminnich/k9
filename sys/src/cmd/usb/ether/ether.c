@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * usb/ether - usb ethernet adapter.
  * BUG: This should use /dev/etherfile to
@@ -73,6 +82,15 @@ Cinfo cinfo[] =
 	{0x1737, 0x0039, A88178},
 	{0x2001, 0x3c05, A88772},
 	{0x6189, 0x182d, A8817x},
+
+	/* SMSC controllers.
+	 * LAN95xx family
+	 */
+	{0x0424, 0xec00, S95xx},	/* LAN9512 (as in raspberry pi) */
+	{0x0424, 0x9500, S95xx},
+	{0x0424, 0x9505, S95xx},
+	{0x0424, 0x9E00, S95xx},
+	{0x0424, 0x9E01, S95xx},
 	{0, 0, 0},
 };
 
@@ -111,6 +129,7 @@ int etherdebug;
 Resetf ethers[] =
 {
 	asixreset,
+	smscreset,
 	cdcreset,	/* keep last */
 };
 
@@ -155,7 +174,7 @@ allocbuf(Ether *e)
 	bp = nbrecvp(e->bc);
 	if(bp == nil){
 		qlock(e);
-		if(e->nabufs < Nconns){
+		if(e->nabufs < Nbufs){
 			bp = emallocz(sizeof(Buf), 1);
 			e->nabufs++;
 			setmalloctag(bp, getcallerpc(&e));
@@ -163,8 +182,10 @@ allocbuf(Ether *e)
 		}
 		qunlock(e);
 	}
-	if(bp == nil)
+	if(bp == nil){
+		deprint(2, "%s: blocked waiting for allocbuf\n", argv0);
 		bp = recvp(e->bc);
+	}
 	bp->rp = bp->data + Hdrsize;
 	bp->ndata = 0;
 	if(0)deprint(2, "%s: allocbuf %#p\n", argv0, bp);
@@ -186,7 +207,7 @@ newconn(Ether *e)
 		if(c == nil || c->ref == 0){
 			if(c == nil){
 				c = emallocz(sizeof(Conn), 1);
-				c->rc = chancreate(sizeof(Buf*), 2);
+				c->rc = chancreate(sizeof(Buf*), 16);
 				c->nb = i;
 			}
 			c->ref = 1;
@@ -249,7 +270,7 @@ seprintstats(char *s, char *se, Ether *e)
 	s = seprint(s, se, "input errs: %ld\n", e->nierrs);
 	s = seprint(s, se, "output errs: %ld\n", e->noerrs);
 	s = seprint(s, se, "mbps: %d\n", e->mbps);
-	s = seprint(s, se, "prom: %d\n", e->prom.ref);
+	s = seprint(s, se, "prom: %ld\n", e->prom.ref);
 	s = seprint(s, se, "addr: ");
 	s = seprintaddr(s, se, e->addr);
 	s = seprint(s, se, "\n");
@@ -277,7 +298,7 @@ seprintifstats(char *s, char *se, Ether *e)
 		if(c->ref == 0)
 			s = seprint(s, se, "c[%d]: free\n", i);
 		else{
-			s = seprint(s, se, "c[%d]: refs %d t %#x h %d p %d\n",
+			s = seprint(s, se, "c[%d]: refs %ld t %#x h %d p %d\n",
 				c->nb, c->ref, c->type, c->headersonly, c->prom);
 		}
 	}
@@ -791,6 +812,7 @@ fswrite(Usbfs *fs, Fid *fid, void *data, long count, vlong)
 			sendp(e->wc, bp);
 		else if(nbsendp(e->wc, bp) == 0){
 			deprint(2, "%s: (out) packet lost\n", argv0);
+			e->noerrs++;
 			freebuf(e, bp);
 		}
 		break;
@@ -860,7 +882,7 @@ openeps(Ether *e, int epin, int epout)
 static int
 usage(void)
 {
-	werrstr("usage: usb/ether [-d] [-N nb]");
+	werrstr("usage: usb/ether [-a addr] [-d] [-N nb]");
 	return -1;
 }
 
@@ -937,6 +959,7 @@ etherwriteproc(void *a)
 	Buf *bp;
 	Channel *wc;
 
+	threadsetname("etherwrite");
 	wc = e->wc;
 	while(e->exiting == 0){
 		bp = recvp(wc);
@@ -987,6 +1010,7 @@ etherreadproc(void *a)
 	Buf *bp, *dbp;
 	Ether *e = a;
 
+	threadsetname("etherread");
 	while(e->exiting == 0){
 		bp = nbrecvp(e->rc);
 		if(bp == nil){
@@ -1023,6 +1047,7 @@ etherreadproc(void *a)
 					dbp->type = bp->type;
 				}
 				if(nbsendp(e->conns[i]->rc, dbp) == 0){
+					deprint(2, "%s: (in) packet lost\n", argv0);
 					e->nierrs++;
 					freebuf(e, dbp);
 				}
@@ -1126,14 +1151,48 @@ etherinit(Ether *e, int *ei, int *eo)
 	return -1;
 }
 
+static int
+kernelproxy(Ether *e)
+{
+	int ctlfd, n;
+	char eaddr[13];
+
+	ctlfd = open("#l0/ether0/clone", ORDWR);
+	if(ctlfd < 0){
+		deprint(2, "%s: etherusb bind #l0: %r\n", argv0);
+		return -1;
+	}
+	close(e->epin->dfd);
+	close(e->epout->dfd);
+	seprintaddr(eaddr, eaddr+sizeof(eaddr), e->addr);
+	n = fprint(ctlfd, "bind %s #u/usb/ep%d.%d/data #u/usb/ep%d.%d/data %s %d %d",
+		e->name, e->dev->id, e->epin->id, e->dev->id, e->epout->id,
+		eaddr, e->bufsize, e->epout->maxpkt);
+	if(n < 0){
+		deprint(2, "%s: etherusb bind #l0: %r\n", argv0);
+		opendevdata(e->epin, OREAD);
+		opendevdata(e->epout, OWRITE);
+		close(ctlfd);
+		return -1;
+	}
+	close(ctlfd);
+	return 0;
+}
+
 int
 ethermain(Dev *dev, int argc, char **argv)
 {
 	int epin, epout, i, devid;
 	Ether *e;
+	uchar ea[Eaddrlen];
 
 	devid = dev->id;
+	memset(ea, 0, Eaddrlen);
 	ARGBEGIN{
+	case 'a':
+		if(parseaddr(ea, EARGF(usage())) < 0)
+			return usage();
+		break;
 	case 'd':
 		if(etherdebug == 0)
 			fprint(2, "ether debug on\n");
@@ -1151,6 +1210,8 @@ ethermain(Dev *dev, int argc, char **argv)
 	e = dev->aux = emallocz(sizeof(Ether), 1);
 	e->dev = dev;
 	dev->free = etherdevfree;
+	memmove(e->addr, ea, Eaddrlen);
+	e->name = "cdc";
 
 	for(i = 0; i < nelem(ethers); i++)
 		if(ethers[i](e) == 0)
@@ -1165,21 +1226,25 @@ ethermain(Dev *dev, int argc, char **argv)
 		e->bwrite = etherbwrite;
 	if(e->bread == nil)
 		e->bread = etherbread;
+	if(e->bufsize == 0)
+		e->bufsize = Maxpkt;
 
 	if(openeps(e, epin, epout) < 0)
 		return -1;
+	if(kernelproxy(e) == 0)
+		return 0;
 	e->fs = etherfs;
 	snprint(e->fs.name, sizeof(e->fs.name), "etherU%d", devid);
 	e->fs.dev = dev;
 	e->fs.aux = e;
-	e->bc = chancreate(sizeof(Buf*), Nconns);
+	e->bc = chancreate(sizeof(Buf*), Nbufs);
 	e->rc = chancreate(sizeof(Buf*), Nconns/2);
 	e->wc = chancreate(sizeof(Buf*), Nconns*2);
 	incref(e->dev);
 	proccreate(etherwriteproc, e, 16*1024);
 	incref(e->dev);
 	proccreate(etherreadproc, e, 16*1024);
-	deprint(2, "%s: dev ref %d\n", argv0, dev->ref);
+	deprint(2, "%s: dev ref %ld\n", argv0, dev->ref);
 	incref(e->dev);
 	usbfsadd(&e->fs);
 	return 0;

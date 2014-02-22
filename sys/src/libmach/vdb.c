@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <bio.h>
@@ -28,7 +37,12 @@ Machdata mipsmach =
 	mipsexcep,		/* print exception */
 	0,			/* breakpoint fixup */
 	beieeesftos,		/* single precision float printer */
-	beieeedftos,		/* double precisioin float printer */
+	/*
+	 * this works for doubles in memory, but FP register pairs have
+	 * the words in little-endian order, so they will print as
+	 * denormalised doubles.
+	 */
+	beieeedftos,		/* double precision float printer */
 	mipsfoll,		/* following addresses */
 	mipsinst,		/* print instruction */
 	mipsdas,		/* dissembler */
@@ -48,7 +62,7 @@ Machdata mipsmachle =
 	mipsexcep,		/* print exception */
 	0,			/* breakpoint fixup */
 	leieeesftos,		/* single precision float printer */
-	leieeedftos,		/* double precisioin float printer */
+	leieeedftos,		/* double precision float printer */
 	mipsfoll,		/* following addresses */
 	mipsinst,		/* print instruction */
 	mipsdas,		/* dissembler */
@@ -71,7 +85,7 @@ Machdata mipsmach2le =
 	mipsexcep,		/* print exception */
 	0,			/* breakpoint fixup */
 	leieeesftos,		/* single precision float printer */
-	leieeedftos,		/* double precisioin float printer */
+	leieeedftos,		/* double precision float printer */
 	mipsfoll,		/* following addresses */
 	mipsinst,		/* print instruction */
 	mipsdas,		/* dissembler */
@@ -94,7 +108,7 @@ Machdata mipsmach2be =
 	mipsexcep,		/* print exception */
 	0,			/* breakpoint fixup */
 	beieeesftos,		/* single precision float printer */
-	beieeedftos,		/* double precisioin float printer */
+	beieeedftos,		/* double precision float printer */
 	mipsfoll,		/* following addresses */
 	mipsinst,		/* print instruction */
 	mipsdas,		/* dissembler */
@@ -131,7 +145,8 @@ mipsexcep(Map *map, Rgetter rget)
 	long c;
 
 	c = (*rget)(map, "CAUSE");
-	if(c & 0x00002000)	/* INTR3 */
+	/* i don't think this applies to any current machines */
+	if(0 && c & 0x00002000)	/* INTR3 */
 		e = 16;		/* Floating point exception */
 	else
 		e = (c>>2)&0x0F;
@@ -415,7 +430,9 @@ static void
 sll(Opcode *o, Instr *i)
 {
 	if (i->w0 == 0)
-		bprint(i, "NOOP");
+		bprint(i, "NOOP");		/* unofficial nop */
+	else if (i->w0 == 0xc0)			/* 0xc0: SLL $3,R0 */
+		bprint(i, "EHB");
 	else if (i->rd == i->rt)
 		format(o->mnemonic, i, "$%a,R%d");
 	else
@@ -962,8 +979,12 @@ cop0(Instr *i)
 			m = "RFE";
 			break;
 	
-		case 32:
+		case 24:
 			m = "ERET";
+			break;
+
+		case 32:
+			m = "WAIT";
 			break;
 		}
 		if (m) {

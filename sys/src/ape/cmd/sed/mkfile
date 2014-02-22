@@ -1,5 +1,4 @@
-MKSHELL=rc
-APE=$NXM/sys/src/ape
+APE=/sys/src/ape
 <$APE/config
 
 TARG=sed
@@ -9,6 +8,6 @@ OFILES=sed0.$O\
 HFILES=sed.h
 
 BIN=$APEBIN
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 
-CFLAGS=-c $CFLAGS -D_POSIX_SOURCE
+CFLAGS=-c -D_POSIX_SOURCE

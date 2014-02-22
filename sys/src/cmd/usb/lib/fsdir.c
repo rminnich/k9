@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <thread.h>
@@ -54,7 +63,7 @@ usbfsdirdump(void)
 	for(i = 1; i < nfs; i++)
 		if(fs[i] != nil)
 			if(fs[i]->dev != nil)
-				fprint(2, "%s\t%s dev %#p refs %d\n",
+				fprint(2, "%s\t%s dev %#p refs %ld\n",
 					argv0, fs[i]->name, fs[i]->dev, fs[i]->dev->ref);
 			else
 				fprint(2, "%s:\t%s\n", argv0, fs[i]->name);
@@ -95,7 +104,7 @@ usbfsdelnth(int i)
 	if(fs[i] != nil){
 		dprint(2, "%s: fsdel %s", argv0, fs[i]->name);
 		if(fs[i]->dev != nil){
-			dprint(2, " dev %#p ref %d\n",
+			dprint(2, " dev %#p ref %ld\n",
 				fs[i]->dev, fs[i]->dev->ref);
 		}else
 			dprint(2, "no dev\n");

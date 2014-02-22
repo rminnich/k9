@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * snoopy - network sniffer
  */
@@ -149,7 +158,7 @@ main(int argc, char **argv)
 		snprint(buf, Blen, "%s!-1", file);
 		fd = dial(buf, 0, 0, &cfd);
 		if(fd < 0)
-			sysfatal("dialing %s", buf);
+			sysfatal("dialing %s: %r", buf);
 		if(pflag && fprint(cfd, prom, strlen(prom)) < 0)
 			sysfatal("setting %s", prom);
 	} else if((!tiflag) && strstr(file, "ipifc")){

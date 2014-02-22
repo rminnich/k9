@@ -1,7 +1,6 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
-LIB=$NXM/$objtype/lib/libthread.a
+LIB=/$objtype/lib/libthread.a
 
 OFILES=\
 	$objtype.$O\
@@ -32,7 +31,6 @@ OFILES=\
 
 CFILES=\
 	386.c\
-	alpha.c\
 	amd64.c\
 	arm.c\
 	channel.c\
@@ -64,18 +62,18 @@ CFILES=\
 	tprimes.c\
 
 HFILES=\
-	$NXM/sys/include/thread.h\
+	/sys/include/thread.h\
 	threadimpl.h\
 
 UPDATE=mkfile\
-	$NXM/386/lib/libthread.a\
+	/386/lib/libthread.a\
 	$HFILES\
 	$CFILES\
 	$SFILES\
 
-all:V:	$LIB sched.acid$O channel.acid$O
+all:V:	$LIB sched.acid channel.acid
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib
 
 $O.tprimes: tprimes.$O $LIB
 	$LD -o $target $prereq

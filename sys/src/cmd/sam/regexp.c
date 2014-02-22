@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "sam.h"
 
 Rangeset	sel;
@@ -9,7 +18,7 @@ typedef struct Inst Inst;
 
 struct Inst
 {
-	long	type;	/* < 0x1000000 ==> literal, otherwise action */
+	long	type;	/* <= Runemax ==> literal, otherwise action */
 	union {
 		int rsid;
 		int rsubid;
@@ -46,35 +55,38 @@ struct Ilist
 
 #define	NLIST	127
 
-Ilist	*tl, *nl;	/* This list, next list */
+Ilist	*tl, *nl;		/* This list, next list */
 Ilist	list[2][NLIST+1];	/* +1 for trailing null */
 static	Rangeset sempty;
 
 /*
  * Actions and Tokens
  *
- *	0x10000xx are operators, value == precedence
- *	0x20000xx are tokens, i.e. operands for operators
+ *	0x100xx are operators, value == precedence
+ *	0x200xx are tokens, i.e. operands for operators
  */
-#define	OPERATOR	0x1000000	/* Bitmask of all operators */
-#define	START		0x1000000	/* Start, used for marker on stack */
-#define	RBRA		0x1000001	/* Right bracket, ) */
-#define	LBRA		0x1000002	/* Left bracket, ( */
-#define	OR		0x1000003	/* Alternation, | */
-#define	CAT		0x1000004	/* Concatentation, implicit operator */
-#define	STAR		0x1000005	/* Closure, * */
-#define	PLUS		0x1000006	/* a+ == aa* */
-#define	QUEST		0x1000007	/* a? == a|nothing, i.e. 0 or 1 a's */
-#define	ANY		0x2000000	/* Any character but newline, . */
-#define	NOP		0x2000001	/* No operation, internal use only */
-#define	BOL		0x2000002	/* Beginning of line, ^ */
-#define	EOL		0x2000003	/* End of line, $ */
-#define	CCLASS		0x2000004	/* Character class, [] */
-#define	NCCLASS		0x2000005	/* Negated character class, [^] */
-#define	END		0x2000077	/* Terminate: match found */
+enum {
+	OPERATOR = Runemask+1,	/* Bitmask of all operators */
+	START	= OPERATOR,	/* Start, used for marker on stack */
+	RBRA,			/* Right bracket, ) */
+	LBRA,			/* Left bracket, ( */
+	OR,			/* Alternation, | */
+	CAT,			/* Concatentation, implicit operator */
+	STAR,			/* Closure, * */
+	PLUS,			/* a+ == aa* */
+	QUEST,			/* a? == a|nothing, i.e. 0 or 1 a's */
 
-#define	ISATOR		0x1000000
-#define	ISAND		0x2000000
+	ANY	= OPERATOR<<1,	/* Any character but newline, . */
+	NOP,			/* No operation, internal use only */
+	BOL,			/* Beginning of line, ^ */
+	EOL,			/* End of line, $ */
+	CCLASS,			/* Character class, [] */
+	NCCLASS,		/* Negated character class, [^] */
+	END,			/* Terminate: match found */
+
+	ISATOR	= OPERATOR,
+	ISAND	= OPERATOR<<1,
+};
 
 /*
  * Parser Information
@@ -459,7 +471,7 @@ nextrec(void){
 			exprp++;
 			return '\n';
 		}
-		return *exprp++|0x1000000;
+		return *exprp++|(Runemax+1);
 	}
 	return *exprp++;
 }

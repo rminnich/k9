@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=ipconfig\
 
@@ -12,16 +11,16 @@ HFILES=\
 	../dhcp.h\
 	../icmp.h\
 	ipconfig.h\
-	$NXM/sys/include/ip.h\
+	/sys/include/ip.h\
 
-BIN=$NXM/$objtype/bin/ip
+BIN=/$objtype/bin/ip
 
 UPDATE=\
 	mkfile\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 
 safeinstall:V: $O.out
 	if(test -e $BIN/___ipconfig)

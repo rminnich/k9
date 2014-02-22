@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #define	IF	1
 #define	ELSE	2
 #define	CASE	3
@@ -117,7 +126,6 @@ struct op {
 Biobuf *input;
 Biobuf *output;
 int	strict = 0;
-int plan9 = 0;
 int	join	= 0;
 int	opflag = 1;
 int	keyflag = 0;

@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * POSIX standard
  *	test expression
@@ -327,7 +336,7 @@ isint(char *s, int *pans)
 int
 isolder(char *pin, char *f)
 {
-	int r;
+	int r, rel;
 	ulong n, m;
 	char *p = pin;
 	Dir *dir;
@@ -338,6 +347,7 @@ isolder(char *pin, char *f)
 
 	/* parse time */
 	n = 0;
+	rel = 0;
 	while(*p){
 		m = strtoul(p, &p, 0);
 		switch(*p){
@@ -362,13 +372,22 @@ isolder(char *pin, char *f)
 		case 's':
 			n += m;
 			p++;
+			rel = 1;
 			break;
 		default:
 			synbad("bad time syntax, ", pin);
 		}
 	}
-
-	r = dir->mtime + n < time(0);
+	if (!rel)
+		m = n;
+	else{
+		m = time(0);
+		if (n > m)		/* before epoch? */
+			m = 0;
+		else
+			m -= n;
+	}
+	r = dir->mtime < m;
 	free(dir);
 	return r;
 }

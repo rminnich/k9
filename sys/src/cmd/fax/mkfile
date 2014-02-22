@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG =	faxreceive\
 	faxsend\
@@ -20,7 +19,7 @@ SEND=\
 	send.$O\
 	fax2send.$O\
 
-BIN=$NXM/$objtype/bin/aux
+BIN=/$objtype/bin/aux
 
 UPDATE=\
 	mkfile\
@@ -31,15 +30,15 @@ UPDATE=\
 	fax2receive.c\
 	fax2send.c\
 	${TARG:%=%.c}\
-	${TARG:%=$NXM/386/bin/%}\
+	${TARG:%=/386/bin/%}\
 
-<$NXM/sys/src/cmd/mkmany
+</sys/src/cmd/mkmany
 
 $O.faxreceive: $RECEIVE
-	$LD $LDFLAGS -o $target $prereq
+	$LD -o $target $prereq
 
 $O.faxsend: $SEND
-	$LD $LDFLAGS -o $target $prereq
+	$LD -o $target $prereq
 
 install.rc:V:
 	mkdir /sys/lib/fax

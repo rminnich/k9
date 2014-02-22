@@ -1,7 +1,17 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include	<u.h>
 #include	<libc.h>
 #include	<bio.h>
 #include	"../8c/8.out.h"
+#include	"../8l/elf.h"
 
 #ifndef	EXTERN
 #define	EXTERN	extern
@@ -15,6 +25,8 @@
 	{ *cbp++ = c;\
 	if(--cbc <= 0)\
 		cflush(); }
+
+#define	LIBNAMELEN	300
 
 typedef	struct	Adr	Adr;
 typedef	struct	Prog	Prog;
@@ -214,6 +226,7 @@ EXTERN	long	HEADTYPE;
 EXTERN	long	INITDAT;
 EXTERN	long	INITRND;
 EXTERN	long	INITTEXT;
+EXTERN	long	INITTEXTP;
 EXTERN	char*	INITENTRY;		/* entry point */
 EXTERN	Biobuf	bso;
 EXTERN	long	bsssize;
@@ -287,6 +300,7 @@ int	Pconv(Fmt*);
 int	Rconv(Fmt*);
 int	Sconv(Fmt*);
 void	addhist(long, int);
+void	addlibpath(char*);
 Prog*	appendp(Prog*);
 void	asmb(void);
 void	asmdyn(void);
@@ -312,8 +326,10 @@ void	dynreloc(Sym*, ulong, int);
 long	entryvalue(void);
 void	errorexit(void);
 void	export(void);
+int	fileexists(char*);
 int	find1(long, int);
 int	find2(long, int);
+char*	findlib(char*);
 void	follow(void);
 void	gethunk(void);
 void	histtoauto(void);
@@ -326,6 +342,8 @@ void	listinit(void);
 Sym*	lookup(char*, int);
 void	lput(long);
 void	lputl(long);
+void	llput(vlong v);
+void	llputl(vlong v);
 void	main(int, char*[]);
 void	mkfwd(void);
 void*	mysbrk(ulong);
@@ -339,10 +357,12 @@ int	relinv(int);
 long	reuse(Prog*, Sym*);
 long	rnd(long, long);
 void	span(void);
+void	strnput(char*, int);
 void	undef(void);
 void	undefsym(Sym*);
 long	vaddr(Adr*);
-void	wput(ushort);
+void	wput(long);
+void	wputl(long);
 void	xdefine(char*, int, long);
 void	xfol(Prog*);
 int	zaddr(uchar*, Adr*, Sym*[]);

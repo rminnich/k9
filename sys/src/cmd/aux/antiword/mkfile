@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=antiword
 
@@ -17,9 +16,9 @@ OFILES= main_u.$O asc85enc.$O blocklist.$O chartrans.$O datalist.$O depot.$O\
 
 HFILES=antiword.h debug.h draw.h fail.h fontinfo.h version.h wordconst.h wordtypes.h
 
-BIN=$NXM/$objtype/bin/aux
+BIN=/$objtype/bin/aux
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 
 main_u.$O: version.h
 postscript.$O: version.h

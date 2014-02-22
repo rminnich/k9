@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <ip.h>
@@ -41,13 +50,19 @@ errtoolong(RR *rp, Scan *sp, int remain, int need, char *where)
 			rrname(rp->type, ptype, sizeof ptype));
 	p = seprint(p, ep, "%d bytes needed; %d remain", need, remain);
 	if (rp)
-		seprint(p, ep, ": %R", rp);
-	sp->err = sp->errbuf;
-	/* hack to cope with servers that don't set Ftrunc when they should */
-	if (remain < Maxudp && need > Maxudp)
+		p = seprint(p, ep, ": %R", rp);
+	/*
+	 * hack to cope with servers that don't set Ftrunc when they should:
+	 * if the (udp) packet is full-sized, if must be truncated because
+	 * it is incomplete.  otherwise, it's just garbled.
+	 */
+	if (sp->ep - sp->base >= Maxudp) {
 		sp->trunc = 1;
+		seprint(p, ep, " (truncated)");
+	}
 	if (debug && rp)
 		dnslog("malformed rr: %R", rp);
+	sp->err = sp->errbuf;
 	return 0;
 }
 
@@ -328,6 +343,7 @@ static RR*
 convM2RR(Scan *sp, char *what)
 {
 	int type, class, len, left;
+	char *dn;
 	char dname[Domlen+1];
 	uchar *data;
 	RR *rp;
@@ -396,7 +412,12 @@ retry:
 		break;
 	case Tmx:
 		USHORT(rp->pref);
-		rp->host = dnlookup(NAME(dname), Cin, 1);
+		dn = NAME(dname);
+		rp->host = dnlookup(dn, Cin, 1);
+		if(strchr((char *)rp->host, '\n') != nil) {
+			dnslog("newline in mx text for %s", dn);
+			sp->trunc = 1;		/* try again via tcp */
+		}
 		break;
 	case Ta:
 		V4ADDR(rp->ip);
@@ -555,6 +576,8 @@ rrloop(Scan *sp, char *what, int count, int quest)
  *  if there are formatting errors or the like during parsing of the message,
  *  set *codep to the outgoing response code (e.g., Rformat), which will
  *  abort processing and reply immediately with the outgoing response code.
+ *
+ *  ideally would note if len == Maxudp && query was via UDP, for errtoolong.
  */
 char*
 convM2DNS(uchar *buf, int len, DNSmsg *m, int *codep)

@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * usb/ether - usb ethernet adapter.
  * BUG: This should use /dev/etherfile to
@@ -19,7 +28,7 @@ enum
 static void
 usage(void)
 {
-	fprint(2, "usage: %s [-Dd] [-N nb] [-m mnt] [-s srv] [dev...]\n", argv0);
+	fprint(2, "usage: %s [-a addr] [-Dd] [-N nb] [-m mnt] [-s srv] [dev...]\n", argv0);
 	threadexitsall("usage");
 }
 
@@ -61,6 +70,9 @@ threadmain(int argc, char **argv)
 	ae = args+sizeof(args);
 	as = seprint(args, ae, "ether");
 	ARGBEGIN{
+	case 'a':
+		as = seprint(as, ae, " -a %s", EARGF(usage()));
+		break;
 	case 'D':
 		usbfsdebug++;
 		break;

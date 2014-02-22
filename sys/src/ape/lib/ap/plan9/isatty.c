@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "lib.h"
 #include <string.h>
 #include <sys/types.h>
@@ -8,7 +17,6 @@
 int
 _isatty(int fd)
 {
-	int t;
 	char buf[64];
 
 	if(_FD2PATH(fd, buf, sizeof buf) < 0)
@@ -20,7 +28,7 @@ _isatty(int fd)
 
 /* The FD_ISTTY flag is set via _isatty in _fdsetup or open */
 int
-isatty(fd)
+isatty(int fd)
 {
 	if(_fdinfo[fd].flags&FD_ISTTY)
 		return 1;

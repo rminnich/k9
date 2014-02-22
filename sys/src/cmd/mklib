@@ -1,4 +1,3 @@
-MKSHELL=rc
 AFLAGS=
 YFLAGS=-d
 
@@ -16,9 +15,6 @@ $LIB:	$LIBOBJ
 
 %.$O:	%.c
 	$CC $CFLAGS $stem.c
-
-%.$O:	%.g
-	$GC $GFLAGS $stem.g
 
 %.$O:	%.s
 	$AS $AFLAGS $stem.s
@@ -40,11 +36,11 @@ installall:V:
 		mk $stem
 
 nuke:V:
-	rm -f *.[$OS] y.tab.? y.output y.error
+	rm -f *.[$OS] y.tab.? y.output y.error $CLEANFILES
 	rm -f $LIB
 
 clean:V:
-	rm -f *.[$OS] y.tab.? y.output y.error
+	rm -f *.[$OS] y.tab.? y.output y.error $CLEANFILES
 
 update:V:
 	update $UPDATEFLAGS $UPDATE

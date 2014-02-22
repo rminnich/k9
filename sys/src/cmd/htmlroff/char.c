@@ -1,8 +1,13 @@
-#include "a.h"
-
-/*
- * hopeless if runes are not 16 bits
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
  */
+
+#include "a.h"
 
 /*
  * Translate Unicode to HTML by asking tcs(1).
@@ -19,6 +24,12 @@ rune2html(Rune r)
 	
 	if(r == '\n')
 		return L("\n");
+
+	if(((uint)r&~0xFFFF) != 0){
+		/* The cache must grow a lot to handle them */
+		fprint(2, "%s: can't handle rune '%C'\n", argv0, r);
+		return L("?");
+	}
 
 	if(tcscache[r>>8] && tcscache[r>>8][r&0xFF])
 		return tcscache[r>>8][r&0xFF];
@@ -63,7 +74,7 @@ rune2html(Rune r)
 typedef struct Trtab Trtab;
 struct Trtab
 {
-	char t[3];
+	char t[UTFmax];
 	Rune r;
 };
 

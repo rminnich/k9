@@ -1,8 +1,7 @@
-MKSHELL=rc
-APE=$NXM/sys/src/ape
+APE=/sys/src/ape
 <$APE/config
 
-LIB=$NXM/$objtype/lib/ape/libdraw.a
+LIB=/$objtype/lib/ape/libdraw.a
 
 OFILES=\
 	alloc.$O\
@@ -57,23 +56,23 @@ OFILES=\
 	writesubfont.$O\
 
 HFILES=\
-	$NXM/sys/include/ape/draw.h\
-	$NXM/sys/include/ape/event.h\
-	$NXM/sys/include/ape/mouse.h\
-	$NXM/sys/include/ape/keyboard.h\
+	/sys/include/ape/draw.h\
+	/sys/include/ape/event.h\
+	/sys/include/ape/mouse.h\
+	/sys/include/ape/keyboard.h\
 
 UPDATE=\
 	mkfile\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
-	${LIB:$NXM/$objtype/%=/386/%}\
+	${LIB:/$objtype/%=/386/%}\
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib
 
-CFLAGS=-c $CFLAGS -D_POSIX_SOURCE -D_PLAN9_SOURCE -I.
+CFLAGS=$CFLAGS -c $CFLAGS -D_POSIX_SOURCE -D_PLAN9_SOURCE -I.
 
-%.$O: $NXM/sys/src/libdraw/%.c
-	$CC $CFLAGS $NXM/sys/src/libdraw/$stem.c
+%.$O: /sys/src/libdraw/%.c
+	$CC $CFLAGS /sys/src/libdraw/$stem.c
 
 $O.colors: colors.$O
 	$LD -o $target colors.$O

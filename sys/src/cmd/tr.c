@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include 	<u.h>
 #include 	<libc.h>
 
@@ -19,10 +28,6 @@ uchar	f[(Runemax+1)/8];
 uchar	t[(Runemax+1)/8];
 char 	wbuf[4096];
 char	*wptr;
-
-enum {
-	Lastc	= Runemax + 1,
-};
 
 Pcb pfrom, pto;
 
@@ -96,7 +101,7 @@ delete(void)
 			SETBIT(t, c);
 	}
 
-	last = Lastc;
+	last = 0x10000;
 	while (readrune(0, &c) > 0) {
 		if(!BITSET(f, c) && (c != last || !BITSET(t,c))) {
 			last = c;
@@ -136,7 +141,7 @@ complement(void)
 		else p[i] = i;
 	}
 	if (sflag){
-		lastc = Lastc;
+		lastc = 0x10000;
 		while (readrune(0, &from) > 0) {
 			if (from > high)
 				from = to;
@@ -190,7 +195,7 @@ translit(void)
 		SETBIT(t,to);
 	}
 	if (sflag){
-		lastc = Lastc;
+		lastc = 0x10000;
 		while (readrune(0, &from) > 0) {
 			if (from <= high)
 				from = p[from];
@@ -278,7 +283,7 @@ getrune(char *s, Rune *rp)
 		n = 0;
 		if (*s == 'x') {
 			s++;
-			for (i = 0; i < 6; i++) {
+			for (i = 0; i < 4; i++) {
 				save = s;
 				s += chartorune(&r, s);
 				if ('0' <= r && r <= '9')
@@ -293,8 +298,6 @@ getrune(char *s, Rune *rp)
 					else *rp = n;
 					return save;
 				}
-				if(n > Runemax)
-					sysfatal("character > Runemax");
 			}
 		} else {
 			for(i = 0; i < 3; i++) {

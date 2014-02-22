@@ -9,7 +9,7 @@ defn acidinit()			// Called after all the init modules are loaded
 		"./",
 		"/sys/src/libc/port/",
 		"/sys/src/libc/9sys/",
-		"/sys/src/libc/" + objtype + "/"
+		"/sys/src/libc/sparc64/"
 	};
 
 	srcfiles = {};		// list of loaded files
@@ -219,6 +219,4 @@ Ureg(addr) {
 };
 sizeofUreg = 152;
 
-objchar = 'u';
-objtype = "sparc";
 print("/sys/lib/acid/sparc64");

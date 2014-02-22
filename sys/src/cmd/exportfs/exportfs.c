@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * exportfs - Export a plan 9 name space across a network
  */
@@ -254,7 +263,12 @@ main(int argc, char **argv)
 		/* do nothing */
 	}
 	else if(srv) {
-		chdir(srv);
+		if(chdir(srv) < 0) {
+			errstr(ebuf, sizeof ebuf);
+			fprint(0, "chdir(\"%s\"): %s\n", srv, ebuf);
+			DEBUG(DFD, "chdir(\"%s\"): %s\n", srv, ebuf);
+			exits(ebuf);
+		}
 		DEBUG(DFD, "invoked as server for %s", srv);
 		strncpy(buf, srv, sizeof buf);
 	}
@@ -264,15 +278,15 @@ main(int argc, char **argv)
 		n = read(0, buf, sizeof(buf)-1);
 		if(n < 0) {
 			errstr(buf, sizeof buf);
-			fprint(0, "read(0): %s", buf);
-			DEBUG(DFD, "read(0): %s", buf);
+			fprint(0, "read(0): %s\n", buf);
+			DEBUG(DFD, "read(0): %s\n", buf);
 			exits(buf);
 		}
 		buf[n] = 0;
 		if(chdir(buf) < 0) {
 			errstr(ebuf, sizeof ebuf);
-			fprint(0, "chdir(%d:\"%s\"): %s", n, buf, ebuf);
-			DEBUG(DFD, "chdir(%d:\"%s\"): %s", n, buf, ebuf);
+			fprint(0, "chdir(%d:\"%s\"): %s\n", n, buf, ebuf);
+			DEBUG(DFD, "chdir(%d:\"%s\"): %s\n", n, buf, ebuf);
 			exits(ebuf);
 		}
 	}

@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #ifndef PLAN9
 #include	<sys/types.h>
 #include	<stdio.h>
@@ -503,6 +512,10 @@ struct convert convert[] =
 	{ "ebcdic", "EBCDIC", Table, (void *)tabebcdic },	/* 6f is recommended bad map */
 	{ "euc-k", "Korean EUC: ASCII+KS C 5601 1987", From|Func, 0, (Fnptr)uksc_in },
 	{ "euc-k", "Korean EUC: ASCII+KS C 5601 1987", Func, 0, (Fnptr)uksc_out },
+ 	{ "euc-kr", "Korean EUC: ASCII+KS C 5601 1987", From|Func, 0, (Fnptr)uksc_in },
+ 	{ "euc-kr", "Korean EUC: ASCII+KS C 5601 1987", Func, 0, (Fnptr)uksc_out },
+ 	{ "ks_c_5601-1987", "Korean EUC: ASCII+KS C 5601 1987", From|Func, 0, (Fnptr)uksc_in },
+ 	{ "ks_c_5601-1987", "Korean EUC: ASCII+KS C 5601 1987", Func, 0, (Fnptr)uksc_out },
 	{ "gb2312", "GB2312-80 (Chinese)", From|Func, 0, (Fnptr)gb_in },
 	{ "gb2312", "GB2312-80 (Chinese)", Func, 0, (Fnptr)gb_out },
 	{ "gbk", "GBK (Chinese)", From|Func, 0, (Fnptr)gbk_in },

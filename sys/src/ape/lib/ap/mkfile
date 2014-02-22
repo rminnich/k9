@@ -1,5 +1,4 @@
-MKSHELL=rc
-APE=$NXM/sys/src/ape
+APE=/sys/src/ape
 <$APE/config
 
 DIRS=gen math plan9 posix stdio syscall

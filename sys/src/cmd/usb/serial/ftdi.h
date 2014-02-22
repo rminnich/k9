@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 enum {
 	/* used by devices which don't provide their own Vid */
 	FTVid		= 0x0403,
@@ -386,6 +395,10 @@ enum {
 	 */
 	FT4232HDid	= 0x6011,		/* FTDI FT4232H based device */
 
+	/*
+	 * Amontec JTAGkey (http://www.amontec.com/)
+	 */
+	AMONKEYDid	= 0xCFF8,
 };
 
 /* Commands */

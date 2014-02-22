@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=cfs
 COMMONOBJ=\
@@ -27,8 +26,8 @@ UPDATE=mkfile\
 	$HFILES\
 	$CFILES\
 
-BIN=$NXM/$objtype/bin
-<$NXM/sys/src/cmd/mkone
+BIN=/$objtype/bin
+</sys/src/cmd/mkone
 
 cfs.$O:		cformat.h inode.h bcache.h disk.h lru.h file.h
 file.$O:	cformat.h inode.h bcache.h disk.h lru.h file.h

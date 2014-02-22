@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #define	EXTERN
 #include	"l.h"
 #include	<ar.h>
@@ -12,23 +21,23 @@ char	thechar		= '6';
 char	*thestring 	= "amd64";
 char	*paramspace	= "FP";
 
-char**  libdir;
-int     nlibdir = 0;
-static int      maxlibdir = 0;
+char**	libdir;
+int	nlibdir	= 0;
+static	int	maxlibdir = 0;
 
 /*
  *	-H2 -T0x200028 -R0x200000	is plan9 format (was -T4136 -R4096)
- *	-H3 -T4128 -R4096		is plan9 32-bit format
  *	-H5 -T0x80110000 -R4096		is ELF32
+ *	-H6 -T0x2000e8 -R0x200000	is ELF64
  *
- *	options used: 189BLQSWabcjlnpsvz
+ *	options used: 189BLPQSVWabcjlnpsvz
  */
 
 void
 usage(void)
 {
-        diag("usage: 6l [-options] objects");
-        errorexit();
+	diag("usage: %s [-options] objects", argv0);
+	errorexit();
 }
 
 static int
@@ -58,6 +67,7 @@ main(int argc, char *argv[])
 {
 	int i, c;
 	char *a;
+	char name[LIBNAMELEN];
 
 	Binit(&bso, 1, OWRITE);
 	cout = -1;
@@ -65,9 +75,9 @@ main(int argc, char *argv[])
 	memset(debug, 0, sizeof(debug));
 	nerrors = 0;
 	outfile = "6.out";
-	Lflag(".");
 	HEADTYPE = -1;
 	INITTEXT = -1;
+	INITTEXTP = -1;
 	INITDAT = -1;
 	INITRND = -1;
 	INITENTRY = 0;
@@ -90,13 +100,18 @@ main(int argc, char *argv[])
 		if(a)
 			HEADTYPE = atolwhex(a);
 		break;
-        case 'L':
-                Lflag(EARGF(usage()));
-                break;
+	case 'L':
+		addlibpath(EARGF(usage()));
+		break;
 	case 'T':
 		a = ARGF();
 		if(a)
 			INITTEXT = atolwhex(a);
+		break;
+	case 'P':
+		a = ARGF();
+		if(a)
+			INITTEXTP = atolwhex(a);
 		break;
 	case 'D':
 		a = ARGF();
@@ -121,20 +136,26 @@ main(int argc, char *argv[])
 		break;
 	} ARGEND
 	USED(argc);
-	if(*argv == 0) {
+	if(*argv == 0)
 		usage();
-	}
 	if(!debug['9'] && !debug['U'] && !debug['B'])
 		debug[DEFAULT] = 1;
+	a = getenv("ccroot");
+	if(a != nil && *a != '\0') {
+		if(!fileexists(a)) {
+			diag("nonexistent $ccroot: %s", a);
+			errorexit();
+		}
+	}else
+		a = "";
+	snprint(name, sizeof(name), "%s/%s/lib", a, thestring);
+	addlibpath(name);
 	if(HEADTYPE == -1) {
 		if(debug['B'])
 			HEADTYPE = 2;
 		if(debug['9'])
 			HEADTYPE = 2;
 	}
-
-	Lflag(smprint("%s/amd64/lib", (a = getenv("NXM")) == 0 ? "" : a));
-
 	switch(HEADTYPE) {
 	default:
 		diag("unknown -H option");
@@ -148,17 +169,8 @@ main(int argc, char *argv[])
 		if(INITRND == -1)
 			INITRND = 0x200000;
 		break;
-	case 3:	/* plan 9 */
-		HEADR = 32L;
-		if(INITTEXT == -1)
-			INITTEXT = 4096+HEADR;
-		if(INITDAT == -1)
-			INITDAT = 0;
-		if(INITRND == -1)
-			INITRND = 4096;
-		break;
 	case 5:	/* elf32 executable */
-		HEADR = rnd(52L+3*32L, 16);
+		HEADR = rnd(Ehdr32sz+3*Phdr32sz, 16);
 		if(INITTEXT == -1)
 			INITTEXT = 0xf0110000L;
 		if(INITDAT == -1)
@@ -166,7 +178,18 @@ main(int argc, char *argv[])
 		if(INITRND == -1)
 			INITRND = 4096;
 		break;
+	case 6:	/* ELF64 executable */
+		HEADR = rnd(Ehdr64sz+3*Phdr64sz, 16);
+		if(INITTEXT == -1)
+			INITTEXT = 0x200000+HEADR;
+		if(INITDAT == -1)
+			INITDAT = 0;
+		if(INITRND == -1)
+			INITRND = 0x200000;
+		break;
 	}
+	if (INITTEXTP == -1)
+		INITTEXTP = INITTEXT;
 	if(INITDAT != 0 && INITRND != 0)
 		print("warning: -D0x%llux is ignored because of -R0x%lux\n",
 			INITDAT, INITRND);
@@ -300,7 +323,7 @@ main(int argc, char *argv[])
 	dtype = 4;
 	cout = create(outfile, 1, 0775);
 	if(cout < 0) {
-		diag("cannot create %s", outfile);
+		diag("cannot create %s: %r", outfile);
 		errorexit();
 	}
 	version = 0;
@@ -368,27 +391,39 @@ main(int argc, char *argv[])
 }
 
 void
-Lflag(char *arg)
+addlibpath(char *arg)
 {
-        char **p;
-	int oldlen;
+	char **p;
 
-        if(nlibdir >= maxlibdir) {
-		oldlen = maxlibdir;
-                if (maxlibdir == 0)
-                        maxlibdir = 8;
-                else
-                        maxlibdir *= 2;
-		p = malloc(maxlibdir * sizeof(*p));
-		memmove(p, libdir, oldlen);
+	if(nlibdir >= maxlibdir) {
+		if(maxlibdir == 0)
+			maxlibdir = 8;
+		else
+			maxlibdir *= 2;
+		p = malloc(maxlibdir*sizeof(*p));
+		if(p == nil) {
+			diag("out of memory");
+			errorexit();
+		}
+		memmove(p, libdir, nlibdir*sizeof(*p));
 		free(libdir);
-                if (p == nil) {
-                        print("too many -L's: %d\n", nlibdir);
-                        usage();
-                }
-                libdir = p;
-        }
-        libdir[nlibdir++] = strdup(arg);
+		libdir = p;
+	}
+	libdir[nlibdir++] = strdup(arg);
+}
+
+char*
+findlib(char *file)
+{
+	int i;
+	char name[LIBNAMELEN];
+
+	for(i = 0; i < nlibdir; i++) {
+		snprint(name, sizeof(name), "%s/%s", libdir[i], file);
+		if(fileexists(name))
+			return libdir[i];
+	}
+	return nil;
 }
 
 void
@@ -429,42 +464,28 @@ objfile(char *file)
 {
 	long off, esym, cnt, l;
 	int f, work;
-	int i;
 	Sym *s;
 	char magbuf[SARMAG];
-	char libfile[100];
-	char name[100], pname[150];
+	char name[LIBNAMELEN], pname[LIBNAMELEN];
 	struct ar_hdr arhdr;
 	char *e, *start, *stop;
 
-	if(file[0] == '-' && file[1] == 'l') {
-                sprint(libfile, "lib");
-                strcat(libfile, file+2);
-                strcat(libfile, ".a");
-//              if(debug['9'])
-//                      sprint(name, "/%s/lib/lib", thestring);
-//              else
-//                      sprint(name, "/usr/%clib/lib", thechar);
-//              strcat(name, file+2);
-//              strcat(name, ".a");
-//              file = name;
-                for (i = 0; i < nlibdir; i++) {
-                        sprint(name, "%s/", libdir[i]);
-                        strcat(name, libfile);
-                        if (!access(name, AREAD)) {
-                                print("found at %s\n", name);
-                                file = name;
-                                break;
-                        }
-                }
-
-	}
 	if(debug['v'])
 		Bprint(&bso, "%5.2f ldobj: %s\n", cputime(), file);
 	Bflush(&bso);
+	if(file[0] == '-' && file[1] == 'l') {
+		snprint(pname, sizeof(pname), "lib%s.a", file+2);
+		e = findlib(pname);
+		if(e == nil) {
+			diag("cannot find library: %s", file);
+			errorexit();
+		}
+		snprint(name, sizeof(name), "%s/%s", e, pname);
+		file = name;
+	}
 	f = open(file, 0);
 	if(f < 0) {
-		diag("cannot open file: %s", file);
+		diag("cannot open %s: %r", file);
 		errorexit();
 	}
 	l = read(f, magbuf, SARMAG);
@@ -523,7 +544,8 @@ objfile(char *file)
 			l |= (e[3] & 0xff) << 16;
 			l |= (e[4] & 0xff) << 24;
 			seek(f, l, 0);
-			l = read(f, &arhdr, SAR_HDR);
+			/* need readn to read the dumps (at least) */
+			l = readn(f, &arhdr, SAR_HDR);
 			if(l != SAR_HDR)
 				goto bad;
 			if(strncmp(arhdr.fmag, ARFMAG, sizeof(arhdr.fmag)))
@@ -550,7 +572,7 @@ int
 zaddr(uchar *p, Adr *a, Sym *h[])
 {
 	int c, t, i;
-	long l;
+	int l;
 	Sym *s;
 	Auto *u;
 
@@ -635,33 +657,28 @@ zaddr(uchar *p, Adr *a, Sym *h[])
 void
 addlib(char *obj)
 {
-	char name[1024], pname[1024], comp[256], *p;
-	int i;
-	int search = 0;
+	char fn1[LIBNAMELEN], fn2[LIBNAMELEN], comp[LIBNAMELEN], *p, *name;
+	int i, search;
 
 	if(histfrogp <= 0)
 		return;
 
+	name = fn1;
+	search = 0;
 	if(histfrog[0]->name[1] == '/') {
 		sprint(name, "");
 		i = 1;
-	} else
-	if(histfrog[0]->name[1] == '.') {
+	} else if(histfrog[0]->name[1] == '.') {
 		sprint(name, ".");
 		i = 0;
 	} else {
-                sprint(name, "");
-                search = 1;
-                i = 0;
-//		if(debug['9'])
-//			sprint(name, "/%s/lib", thestring);
-//		else
-//			sprint(name, "/usr/%clib", thechar);
-//		i = 0;
+		sprint(name, "");
+		i = 0;
+		search = 1;
 	}
 
 	for(; i<histfrogp; i++) {
-		snprint(comp, sizeof comp, "%s", histfrog[i]->name+1);
+		snprint(comp, sizeof comp, histfrog[i]->name+1);
 		for(;;) {
 			p = strstr(comp, "$O");
 			if(p == 0)
@@ -680,39 +697,35 @@ addlib(char *obj)
 			memmove(p+strlen(thestring), p+2, strlen(p+2)+1);
 			memmove(p, thestring, strlen(thestring));
 		}
-		if(strlen(name) + strlen(comp) + 3 >= sizeof(name)) {
+		if(strlen(fn1) + strlen(comp) + 3 >= sizeof(fn1)) {
 			diag("library component too long");
 			return;
 		}
 		if(i > 0 || !search)
-			strcat(name, "/");
-		strcat(name, comp);
+			strcat(fn1, "/");
+		strcat(fn1, comp);
 	}
-        cleanname(name);
 
-        if (search) {
-                // try dot, then -L "libdir", then $NXM/amd64/lib
-                for (i = 0; i < nlibdir; i++) {
-                        snprint(pname, sizeof pname, "%s/%s", libdir[i], name);
-                        if(debug['v'])
-                                Bprint(&bso, "searching for %s at %s\n", name, pname);
-                        if (access(pname, AEXIST) >= 0)
-                                break;
-                }
-        } else {
-                strcpy(pname, name);
-        }
+	cleanname(name);
+
+	if(search){
+		p = findlib(name);
+		if(p != nil){
+			snprint(fn2, sizeof(fn2), "%s/%s", p, name);
+			name = fn2;
+		}
+	}
 
 	for(i=0; i<libraryp; i++)
-		if(strcmp(pname, library[i]) == 0)
+		if(strcmp(name, library[i]) == 0)
 			return;
 	if(libraryp == nelem(library)){
 		diag("too many autolibs; skipping %s", name);
 		return;
 	}
 
-	p = malloc(strlen(pname) + 1);
-	strcpy(p, pname);
+	p = malloc(strlen(name) + 1);
+	strcpy(p, name);
 	library[libraryp] = p;
 	p = malloc(strlen(obj) + 1);
 	strcpy(p, obj);
@@ -830,7 +843,7 @@ ldobj(int f, long c, char *pn)
 	int v, o, r, skip, mode;
 	Sym *h[NSYM], *s, *di;
 	ulong sig;
-	static int files = 0;
+	static int files;
 	static char **filen;
 	char **nfilen;
 
@@ -1214,8 +1227,7 @@ lookup(char *symb, int v)
 	for(p=symb; c = *p; p++)
 		h = h+h+h + c;
 	l = (p - symb) + 1;
-	if(h < 0)
-		h = ~h;
+	h &= 0xffffff;
 	h %= NHASH;
 	for(s = hash[h]; s != S; s = s->link)
 		if(s->version == v)

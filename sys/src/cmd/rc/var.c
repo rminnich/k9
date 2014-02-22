@@ -1,15 +1,29 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "rc.h"
 #include "exec.h"
 #include "fns.h"
 
-int
-hash(char *s, int n)
+unsigned
+hash(char *as, int n)
 {
-	int h = 0, i = 1;
-	while(*s) h+=*s++*i++;
-	h%=n;
-	return h<0?h+n:h;
+	int i = 1;
+	unsigned h = 0;
+	uchar *s;
+
+	s = (uchar *)as;
+	while (*s)
+		h += *s++ * i++;
+	return h % n;
 }
+
 #define	NKW	30
 struct kw{
 	char *name;

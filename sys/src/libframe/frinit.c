@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <draw.h>
@@ -50,7 +59,7 @@ frinittick(Frame *f)
 	/* background color */
 	draw(f->tick, f->tick->r, f->cols[BACK], nil, ZP);
 	/* vertical line */
-	draw(f->tick, Rect(FRTICKW/2, 0, FRTICKW/2+1, ft->height), f->display->black, nil, ZP);
+	draw(f->tick, Rect(FRTICKW/2, 0, FRTICKW/2+1, ft->height), f->cols[TEXT], nil, ZP);
 	/* box on each end */
 	draw(f->tick, Rect(0, 0, FRTICKW, FRTICKW), f->cols[TEXT], nil, ZP);
 	draw(f->tick, Rect(0, ft->height-FRTICKW, FRTICKW, ft->height), f->cols[TEXT], nil, ZP);

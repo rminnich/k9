@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include	<stdlib.h>
 
 /*
@@ -27,7 +36,7 @@ srand(unsigned int seed)
 	rng_tap = rng_vec;
 	rng_feed = rng_vec+LEN-TAP;
 	seed = seed%M;
-	if(seed < 0)
+	if(0 && seed < 0)			/* seed is unsigned */
 		seed += M;
 	if(seed == 0)
 		seed = 89482311;

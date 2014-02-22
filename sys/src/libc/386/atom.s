@@ -1,4 +1,4 @@
-TEXT ainc(SB), $0	/* int ainc(int *); */
+TEXT ainc(SB), $0	/* long ainc(long *); */
 	MOVL	addr+0(FP), BX
 ainclp:
 	MOVL	(BX), AX
@@ -10,7 +10,7 @@ ainclp:
 	MOVL	CX, AX
 	RET
 
-TEXT adec(SB), $0	/* int adec(int*); */
+TEXT adec(SB), $0	/* long adec(long*); */
 	MOVL	addr+0(FP), BX
 adeclp:
 	MOVL	(BX), AX
@@ -26,7 +26,7 @@ adeclp:
  * int cas32(u32int *p, u32int ov, u32int nv);
  * int cas(uint *p, int ov, int nv);
  * int casp(void **p, void *ov, void *nv);
- * int casul(ulong *p, ulong ov, ulong nv);
+ * int casl(ulong *p, ulong ov, ulong nv);
  */
 
 /*
@@ -39,8 +39,7 @@ adeclp:
 TEXT	cas32+0(SB),0,$0
 TEXT	cas+0(SB),0,$0
 TEXT	casp+0(SB),0,$0
-TEXT	casul+0(SB),0,$0
-TEXT	casl+0(SB),0,$0		/* compatibility with old name */
+TEXT	casl+0(SB),0,$0
 	MOVL	p+0(FP), CX
 	MOVL	ov+4(FP), AX
 	MOVL	nv+8(FP), DX
@@ -74,13 +73,3 @@ TEXT	cas64+0(SB),0,$0
 	JNE	fail
 	MOVL	$1,AX
 	RET
-
-/*
- * void mfence(void);
- */
-TEXT mfence(SB),0,$0
-	BYTE $0x0f
-	BYTE $0xae
-	BYTE $0xf0
-	RET
-

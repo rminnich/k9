@@ -1,6 +1,5 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
-BIN=$NXM/$objtype/bin
+</$objtype/mkfile
+BIN=/$objtype/bin
 
 TARG=webfs
 
@@ -30,7 +29,7 @@ UPDATE=\
 	mkfile\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
-	${TARG:%=$NXM/386/bin/%}\
+	${TARG:%=/386/bin/%}\
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 

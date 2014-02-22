@@ -1,12 +1,17 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <draw.h>
 #include <cursor.h>
 #include <event.h>
-
-enum {
-	Kbdmsgsz	= 1 + 4 /* allow for 32-bit runes */
-};
 
 typedef struct	Slave Slave;
 typedef struct	Ebuf Ebuf;
@@ -203,7 +208,7 @@ static void
 ekeyslave(int fd)
 {
 	Rune r;
-	char t[Kbdmsgsz], k[10];
+	char t[3], k[10];
 	int kr, kn, w;
 
 	if(eforkslave(Ekeyboard) < MAXSLAVE)
@@ -222,9 +227,7 @@ ekeyslave(int fd)
 		memmove(k, &k[w], kn);
 		t[1] = r;
 		t[2] = r>>8;
-		t[3] = r>>16;
-		t[4] = r>>24;
-		if(write(epipe[1], t, sizeof t) != sizeof t)
+		if(write(epipe[1], t, 3) != 3)
 			break;
 	}
 breakout:;
@@ -308,7 +311,7 @@ loop:
 		s->head = (Ebuf *)1;
 		return;
 	}
-	if(i == Skeyboard && n != Kbdmsgsz)
+	if(i == Skeyboard && n != 3)
 		drawerror(display, "events: protocol error: keyboard");
 	if(i == Smouse){
 		if(n < 1+1+2*12)
@@ -423,15 +426,13 @@ emouse(void)
 int
 ekbd(void)
 {
-	uchar *t;
-	int c;
 	Ebuf *eb;
+	int c;
 
 	if(Skeyboard < 0)
 		drawerror(display, "events: keyboard not initialzed");
 	eb = ebread(&eslave[Skeyboard]);
-	t = eb->buf;
-	c = t[0] | t[1]<<8 | t[2]<<16 | t[3]<<24;
+	c = eb->buf[0] + (eb->buf[1]<<8);
 	free(eb);
 	return c;
 }

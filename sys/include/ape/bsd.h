@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #ifndef _BSD_EXTENSION
     This header file is an extension to ANSI/POSIX
 #endif
@@ -5,7 +14,7 @@
 #ifndef __BSD_H_
 #define __BSD_H_
 #pragma src "/sys/src/ape/lib/bsd"
-#pragma lib "ape/libbsd.a"
+#pragma lib "/$M/lib/ape/libbsd.a"
 
 #ifndef __TYPES_H
 #include <sys/types.h>
@@ -34,11 +43,9 @@ extern int	ffs(unsigned int);
 extern void	bhappy(void*);
 extern int	rresvport(int*);
 extern int	rcmd(char**, int, char*, char*, char*, int*);
-extern char*	strdup(char*);
 extern int	strcasecmp(char*, char*);
 extern int 	putenv(char*);
 extern int	strncasecmp(char*, char*,int);
-extern void* memccpy(void*, void*, int, size_t);
 
 extern int	getopt(int, char**, char*);
 extern int	opterr;

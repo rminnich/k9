@@ -1,10 +1,9 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 #	ptyfs\	# for X11, not going to bother
 TARG=\
 	stty\
 	tar\
 
-BIN=$NXM/$objtype/bin/ape
-<$NXM/sys/src/cmd/mkmany
+BIN=/$objtype/bin/ape
+</sys/src/cmd/mkmany

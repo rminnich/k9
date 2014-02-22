@@ -1,42 +1,46 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <bio.h>
 #include "cb.h"
 #include "cbtype.h"
 
+static void
+usage(void)
+{
+	fprint(2, "usage: cb [-sj] [-l width]\n");
+	exits("usage");
+}
+
 void
 main(int argc, char *argv[])
 {
 	Biobuf stdin, stdout;
 
-	while (--argc > 0 && (*++argv)[0] == '-'){
-		switch ((*argv)[1]){
-		case 's':
-			strict = 1;
-			continue;
-		case 'j':
-			join = 1;
-			continue;
-		case 'l':
-			if((*argv)[2] != '\0'){
-				maxleng = atoi( &((*argv)[2]) );
-			}
-			else{
-				maxleng = atoi(*++argv);
-				argc--;
-			}
-			maxtabs = maxleng/TABLENG - 2;
-			maxleng -= (maxleng + 5)/10;
-			continue;
-		case '9':
-			strict = 1;
-			plan9 = 1;
-			continue;
-		default:
-			fprint(2, "cb: illegal option %c\n", (*argv)[1]);
-			exits("boom");
-		}
-	}
+	ARGBEGIN{
+	case 'j':
+		join = 1;
+		break;
+	case 'l':
+		maxleng = atoi(EARGF(usage()));
+		maxtabs = maxleng/TABLENG - 2;
+		maxleng -= (maxleng + 5)/10;
+		break;
+	case 's':
+		strict = 1;
+		break;
+	default:
+		usage();
+	}ARGEND
+
 	Binit(&stdout, 1, OWRITE);
 	output = &stdout;
 	if (argc <= 0){
@@ -46,10 +50,8 @@ main(int argc, char *argv[])
 		Bterm(input);
 	} else {
 		while (argc-- > 0){
-			if ((input = Bopen( *argv, OREAD)) == 0){
-				fprint(2, "cb: cannot open input file %s\n", *argv);
-				exits("boom");
-			}
+			if ((input = Bopen(*argv, OREAD)) == 0)
+				sysfatal("can't open input file %s: %r", *argv);
 			work();
 			Bterm(input);
 			argv++;
@@ -80,7 +82,7 @@ work(void)
 			clev->pdepth = 0;
 			clev->tabs = (clev-1)->tabs;
 			clearif(clev);
-			if(strict && clev->tabs > 0 && !plan9)
+			if(strict && clev->tabs > 0)
 				putspace(' ',NO);
 			putch(c,NO);
 			getnl();
@@ -97,8 +99,7 @@ work(void)
 					if(c == Beof)error("{");
 				putch(c,NO);
 				if(strict){
-					if(!plan9)
-						putch(' ',NO);
+					putch(' ',NO);
 					eatspace();
 				}
 				keyflag = SINIT;
@@ -122,8 +123,7 @@ work(void)
 						if(cc == Beof)error("}");
 					putch(cc,NO);
 					if(strict){
-						if(!plan9)
-							putch(' ',NO);
+						putch(' ',NO);
 						eatspace();
 					}
 					getnext(0);
@@ -135,7 +135,7 @@ work(void)
 				continue;
 			}
 			else if(keyflag == SINIT && *pt == '}'){
-				if(strict && !plan9)
+				if(strict)
 					putspace(' ',NO);
 				putch(c,NO);
 				getnl();
@@ -163,8 +163,7 @@ work(void)
 					OUTK;
 				}
 				else if(strict || (lptr != 0 && lptr->type == ELSE && ct == 0)){
-					if(!plan9)
-						putspace(' ',NO);
+					putspace(' ',NO);
 					eatspace();
 				}
 				else if(lptr != 0 && lptr->type == ELSE){
@@ -209,8 +208,7 @@ work(void)
 			if ((lptr = lookup(lastlook,p)) != 0){
 				if(!(lptr->type == TYPE || lptr->type == STRUCT))keyflag=KEYWORD;
 				if (strict){
-					if(!plan9)
-						putspace(lptr->punc,NO);
+					putspace(lptr->punc,NO);
 					opflag = 1;
 				}
 				putch(c,NO);

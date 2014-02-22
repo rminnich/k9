@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <bio.h>
@@ -102,15 +111,17 @@ syminit(int fd, Fhdr *fp)
 	Bseek(&b, fp->symoff, 0);
 	nsym = 0;
 	size = 0;
+	if((fp->_magic && (fp->magic & HDR_MAGIC)) || mach->szaddr == 8)
+		svalsz = 8;
+	else
+		svalsz = 4;
 	for(p = symbols; size < fp->symsz; p++, nsym++) {
-		if(fp->_magic && (fp->magic & HDR_MAGIC)){
-			svalsz = 8;
+		if(svalsz == 8){
 			if(Bread(&b, &vl, 8) != 8)
 				return symerrmsg(8, "symbol");
 			p->value = beswav(vl);
 		}
 		else{
-			svalsz = 4;
 			if(Bread(&b, &l, 4) != 4)
 				return symerrmsg(4, "symbol");
 			p->value = (u32int)beswal(l);
@@ -685,6 +696,8 @@ srchtext(uvlong addr)
 	top = ntxt;
 	for (mid = (bot+top)/2; mid < top; mid = (bot+top)/2) {
 		sp = txt[mid].sym;
+		if(sp == nil)
+			return -1;
 		if(val < sp->value)
 			top = mid;
 		else if(mid != ntxt-1 && val >= txt[mid+1].sym->value)
@@ -710,6 +723,8 @@ srchdata(uvlong addr)
 	val = addr;
 	for(mid = (bot+top)/2; mid < top; mid = (bot+top)/2) {
 		sp = globals[mid];
+		if(sp == nil)
+			return -1;
 		if(val < sp->value)
 			top = mid;
 		else if(mid < nglob-1 && val >= globals[mid+1]->value)
@@ -1103,11 +1118,15 @@ fileelem(Sym **fp, uchar *cp, char *buf, int n)
 {
 	int i, j;
 	char *c, *bp, *end;
+	Sym *sym;
 
 	bp = buf;
 	end = buf+n-1;
 	for(i = 1; j = (cp[i]<<8)|cp[i+1]; i+=2){
-		c = fp[j]->name;
+		sym = fp[j];
+		if (sym == nil)
+			break;
+		c = sym->name;
 		if(bp != buf && bp[-1] != '/' && bp < end)
 			*bp++ = '/';
 		while(bp < end && *c)

@@ -1,5 +1,4 @@
-MKSHELL=rc
-APE=$NXM/sys/src/ape
+APE=/sys/src/ape
 <$APE/config
 
 TARG=pax
@@ -32,7 +31,7 @@ HFILES=config.h\
 	pax.h\
 
 BIN=$APEBIN
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 
 CFLAGS =-c -D_POSIX_SOURCE -B -DPATH_MAX=1024
 

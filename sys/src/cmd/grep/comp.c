@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include	"grep.h"
 
 /*
@@ -275,7 +284,7 @@ re2class(char *s)
 			x = re2or(x, rclass(ov, p[0]-1));
 			ov = p[1]+1;
 		}
-		x = re2or(x, rclass(ov, 0xffff));
+		x = re2or(x, rclass(ov, Runemask));
 	} else {
 		x = rclass(p[0], p[1]);
 		for(p+=2; *p; p+=2)

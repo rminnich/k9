@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=mapd 
 LIB=libmap/libmap.a$O
@@ -11,10 +10,10 @@ OFILES=map.$O\
 HFILES=map.h\
 	iplot.h\
 
-BIN=$NXM/$objtype/bin/aux
+BIN=/$objtype/bin/aux
 
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 
 $O.out:V:	$OFILES $LIB
 	$LD $LDFLAGS -o $target $prereq

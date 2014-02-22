@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <bio.h>
@@ -61,7 +70,7 @@ range(char *argv[])
 			goto err;
 		i = 0;
 		do{
-			Bprint(&bout, "%.4x %C", min, min);
+			Bprint(&bout, "%.6x %C", min, min);
 			i++;
 			if(min==max || (i&7)==0)
 				Bprint(&bout, "\n");
@@ -79,17 +88,22 @@ nums(char *argv[])
 {
 	char *q;
 	Rune r;
-	int w;
+	int w, rsz;
+	char utferr[UTFmax];
 
+	r = Runeerror;
+	rsz = runetochar(utferr, &r);
 	while(*argv){
 		q = *argv;
 		while(*q){
 			w = chartorune(&r, q);
-			if(r==0x80 && (q[0]&0xFF)!=0x80){
-				fprint(2, "unicode: invalid utf string %s\n", *argv);
-				return "bad utf";
+			if(r==Runeerror){
+				if(strlen(q) != rsz || memcmp(q, utferr, rsz) != 0){
+					fprint(2, "unicode: invalid utf string %s\n", *argv);
+					return "bad utf";
+				}
 			}
-			Bprint(&bout, "%.4x\n", r);
+			Bprint(&bout, "%.6x\n", r);
 			q += w;
 		}
 		argv++;

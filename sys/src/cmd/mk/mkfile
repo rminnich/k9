@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=mk
 OFILES=arc.$O\
@@ -28,12 +27,12 @@ OFILES=arc.$O\
 HFILES=fns.h\
 	mk.h\
 
-BIN=$NXM/$objtype/bin
+BIN=/$objtype/bin
 
 UPDATE=\
 	mkfile\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 

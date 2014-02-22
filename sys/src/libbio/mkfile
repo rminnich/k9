@@ -1,7 +1,6 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
-LIB=$NXM/$objtype/lib/libbio.a
+LIB=/$objtype/lib/libbio.a
 OFILES=\
 	bbuffered.$O\
 	bfildes.$O\
@@ -21,13 +20,13 @@ OFILES=\
 	bwrite.$O\
 	bvprint.$O\
 
-HFILES=$NXM/sys/include/bio.h
+HFILES=/sys/include/bio.h
 
 UPDATE=\
 	mkfile\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
-	${LIB:$NXM/$objtype/%=/386/%}\
+	${LIB:/$objtype/%=/386/%}\
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib
 

@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=\
 	netssh\
@@ -28,7 +27,7 @@ COMMON=\
 
 CFILES=`{echo *.c}
 
-BIN=$NXM/$objtype/bin
+BIN=/$objtype/bin
 
 UPDATE=\
 	mkfile\
@@ -37,7 +36,7 @@ UPDATE=\
 	${CIPHEROFILES:%.$O=%.c}\
 	${TARG:%=%.c}\
 
-<$NXM/sys/src/cmd/mkmany
+</sys/src/cmd/mkmany
 
 ${TARG:%=$O.%}: $COMMON
 

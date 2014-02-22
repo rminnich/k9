@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * Editor
  */
@@ -15,7 +24,7 @@ enum
 	ESIZE	= 256,		/* max size of reg exp */
 	GBSIZE	= 256,		/* max size of global command */
 	MAXSUB	= 9,		/* max number of sub reg exp */
-	ESCFLG	= 0xFFFF,	/* escape Rune - user defined code */
+	ESCFLG	= Runemax,	/* escape Rune - user defined code */
 	EOF	= -1,
 };
 
@@ -735,7 +744,7 @@ gety(void)
 		if(c == 0)
 			continue;
 		*p++ = c;
-		if(p >= &linebuf[LBSIZE-2])
+		if(p >= &linebuf[LBSIZE-sizeof(Rune)])
 			error(Q);
 	}
 }
@@ -992,7 +1001,8 @@ getline(int tl)
 	while(*lp++ = *bp++) {
 		nl -= sizeof(Rune);
 		if(nl == 0) {
-			bp = getblock(tl += BLKSIZE/sizeof(Rune), OREAD);
+			tl += BLKSIZE/sizeof(Rune);
+			bp = getblock(tl, OREAD);
 			nl = nleft;
 		}
 	}
@@ -1047,7 +1057,8 @@ getblock(int atl, int iof)
 	static uchar obuff[BLKSIZE];
 
 	bno = atl / (BLKSIZE/sizeof(Rune));
-	off = (atl*sizeof(Rune)) & (BLKSIZE-1) & ~03;
+	/* &~3 so the ptr is aligned to 4 (?) */
+	off = (atl*sizeof(Rune)) & (BLKSIZE-1) & ~3;
 	if(bno >= NBLK) {
 		lastc = '\n';
 		error(T);
@@ -1160,7 +1171,7 @@ join(void)
 	for(a1=addr1; a1<=addr2; a1++) {
 		lp = getline(*a1);
 		while(*gp = *lp++)
-			if(gp++ >= &genbuf[LBSIZE-2])
+			if(gp++ >= &genbuf[LBSIZE-sizeof(Rune)])
 				error(Q);
 	}
 	lp = linebuf;

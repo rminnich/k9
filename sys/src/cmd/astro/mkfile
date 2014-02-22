@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=astro
 OFILES=\
@@ -36,5 +35,5 @@ OFILES=\
 
 HFILES=astro.h\
 
-BIN=$NXM/$objtype/bin
-<$NXM/sys/src/cmd/mkone
+BIN=/$objtype/bin
+</sys/src/cmd/mkone

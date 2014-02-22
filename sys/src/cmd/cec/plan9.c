@@ -1,3 +1,4 @@
+/* Copyright © Coraid, Inc. 2006.  All rights reserved. */
 #include <u.h>
 #include <libc.h>
 #include "cec.h"
@@ -83,7 +84,6 @@ netsend(void *v, int len)
 		dump(p, len);
 	}
 	if (len < 60)
-		len = 60;
+		len = 60;	/* mintu */
 	return write(fd, p, len);
 }
-

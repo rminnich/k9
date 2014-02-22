@@ -1,25 +1,21 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=`{ls *.[cy] | sed '/\.tab\.c$/d;s/..$//'}
-HFILES=$NXM/$objtype/include/u.h $NXM/sys/include/libc.h $NXM/sys/include/bio.h
-BIN=$NXM/$objtype/bin
+HFILES=/$objtype/include/u.h /sys/include/libc.h /sys/include/bio.h
+BIN=/$objtype/bin
 PROGS=${TARG:%=$O.%}
+LDFLAGS=
 YFLAGS=-d
 
 NOTSYS=sml|dup|.+\..+
-BUGGERED=bitsy|unix|postscript|qi|srvold9p|vnc|linux|linuxemu3
-RUNEBUGGERED=page
-PCCBUGGERED=gs|lp
+BUGGERED=unix|postscript
 OUTOFDATE=old
 
-NOMK=$NOTSYS|$BUGGERED|$RUNEBUGGERED|$PCCBUGGERED|$OUTOFDATE
+NOMK=$NOTSYS|$BUGGERED|$OUTOFDATE
 
-cpuobjtype=`{sed -n 's/^O=//p' $NXM/$cputype/mkfile}
-MKDIRS=`{echo */mkfile | sed 's,/mkfile,,g'}
-
-DIRS=`{ls -ld $MKDIRS | sed '/^d/!d; s/.* //; /^('$NOMK')$/d'}
-APEDIRS=awk bzip2 compress cvs eqn grap links-ape lp pic postscript spin \
+cpuobjtype=`{sed -n 's/^O=//p' /$cputype/mkfile}
+DIRS=`{ls -l | sed '/^d/!d; s/.* //; /^('$NOMK')$/d'}
+APEDIRS=awk bzip2 compress cvs eqn grap gs links-ape lp pic postscript spin \
 	tex troff
 
 none:VQ:
@@ -42,8 +38,6 @@ dirs:V:
 	}
 
 all:V:	$PROGS dirs
-	echo $TARG
-	echo $PROGS
 
 ^([$OS])\.(.*):R:	\2.\1
 	$stem1^l $LDFLAGS -o $target $stem2.$stem1
@@ -120,10 +114,10 @@ installall:V:
 	mv $stem1.tab.c $stem1.c
 
 $BIN/init:	$O.init
-	cp $prereq $NXM/$objtype/init
+	cp $prereq /$objtype/init
 
 $O.cj:	cj.$O
-	$LD $LDFLAGS -o $O.cj cj.$O $NXM/$objtype/lib/libjpg.a
+	$LD $LDFLAGS -o $O.cj cj.$O /$objtype/lib/libjpg.a
 
 %.update:V:
 	update $stem.c /386/bin/$stem

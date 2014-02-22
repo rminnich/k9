@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=na
 HFILES=\
@@ -10,5 +9,5 @@ OFILES=\
 
 YFILES=na.y\
 
-BIN=$NXM/$objtype/bin/aux
-<$NXM/sys/src/cmd/mkone
+BIN=/$objtype/bin/aux
+</sys/src/cmd/mkone

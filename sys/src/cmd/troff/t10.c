@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "tdef.h"
 #include "fns.h"
 #include "ext.h"
@@ -156,11 +165,11 @@ void t_ptout(Tchar i)
 
 int ptout0(Tchar *pi)
 {
-	int j, k, w;
-	int z, dx, dy, dx2, dy2, n;
-	Tchar i;
+	int j, k, w, z, dx, dy, dx2, dy2, n;
 	int outsize;	/* size of object being printed */
+	Tchar i;
 
+	w = 0;
 	outsize = 1;	/* default */
 	i = *pi;
 	k = cbits(i);

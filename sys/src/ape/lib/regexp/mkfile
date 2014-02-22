@@ -1,8 +1,7 @@
-MKSHELL=rc
-APE=$NXM/sys/src/ape
+APE=/sys/src/ape
 <$APE/config
 
-LIB=$NXM/$objtype/lib/ape/libregexp.a
+LIB=/$objtype/lib/ape/libregexp.a
 OFILES=regcomp.$O\
 	regerror.$O\
 	regexec.$O\
@@ -11,6 +10,6 @@ OFILES=regcomp.$O\
 	rregexec.$O\
 	rregsub.$O\
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib
 
-CFLAGS=-c $CFLAGS -DUTF -D_REGEXP_EXTENSION
+CFLAGS=$CFLAGS -c -DUTF -D_REGEXP_EXTENSION

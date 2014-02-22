@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=tcs
 OFILES=tcs.$O\
@@ -17,8 +16,8 @@ OFILES=tcs.$O\
 	big5.$O\
 	tune.$O
 
-BIN=$NXM/$objtype/bin
-<$NXM/sys/src/cmd/mkone
+BIN=/$objtype/bin
+</sys/src/cmd/mkone
 CFLAGS= -DPLAN9 $CFLAGS
 
 tcs.$O utf.$O:		hdr.h

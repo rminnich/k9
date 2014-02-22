@@ -3,18 +3,15 @@ AFLAGS=
 all:V:	$LIB
 
 $LIB:V:	$OFILES			# force archive even when not needed
-	ar rvu $LIB $newprereq
+	ar vu $LIB $newprereq
 
 &:n:	&.$O
-	ar rvu $LIB $stem.$O
+	ar vu $LIB $stem.$O
 
 %.$O:	$HFILES			# don't combine with following %.$O rules
 
 %.$O:	%.c
 	$CC $CFLAGS $stem.c
-
-%.$O:	%.g
-	$GC $GFLAGS $stem.g
 
 %.$O:	%.s
 	$AS $AFLAGS $stem.s
@@ -39,7 +36,7 @@ clean:V:
 nuke:V:
 	rm -f *.[$OS] [$OS].out $CLEANFILES $LIB
 
-%.acid$O: %.$O $HFILES
+%.acid: %.$O $HFILES
 	$CC $CFLAGS -a $stem.c >$target
 
 update:V:

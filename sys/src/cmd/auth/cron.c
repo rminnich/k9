@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <bio.h>
@@ -174,7 +183,7 @@ main(int argc, char *argv[])
 
 	switch(fork()){
 	case -1:
-		fatal("can't fork");
+		fatal("can't fork: %r");
 	case 0:
 		break;
 	default:
@@ -251,7 +260,7 @@ createuser(void)
 	snprint(file, sizeof file, "/cron/%s", user);
 	fd = create(file, OREAD, 0755|DMDIR);
 	if(fd < 0)
-		sysfatal("couldn't create %s: %r", file);
+		fatal("couldn't create %s: %r", file);
 	nulldir(&d);
 	d.gid = user;
 	dirfwstat(fd, &d);
@@ -259,7 +268,7 @@ createuser(void)
 	snprint(file, sizeof file, "/cron/%s/cron", user);
 	fd = create(file, OREAD, 0644);
 	if(fd < 0)
-		sysfatal("couldn't create %s: %r", file);
+		fatal("couldn't create %s: %r", file);
 	nulldir(&d);
 	d.gid = user;
 	dirfwstat(fd, &d);
@@ -276,7 +285,7 @@ readalljobs(void)
 
 	fd = open("/cron", OREAD);
 	if(fd < 0)
-		fatal("can't open /cron\n");
+		fatal("can't open /cron: %r");
 	while((n = dirread(fd, &d)) > 0){
 		for(i = 0; i < n; i++){
 			if(strcmp(d[i].name, "log") == 0 ||

@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <bio.h>
@@ -19,6 +28,8 @@ typedef	struct	Hist	Hist;
 typedef	struct	Term	Term;
 typedef	struct	Init	Init;
 typedef	struct	Bits	Bits;
+
+typedef	Rune	TRune;	/* target system type */
 
 #define	NHUNK		50000L
 #define	BUFSIZ		8192
@@ -51,7 +62,7 @@ struct	Node
 	double	fconst;		/* fp constant */
 	vlong	vconst;		/* non fp const */
 	char*	cstring;	/* character string */
-	Rune*	rstring;	/* rune string */
+	TRune*	rstring;	/* rune string */
 
 	Sym*	sym;
 	Type*	type;
@@ -337,11 +348,8 @@ enum
 	TOLD,
 	NALLTYPES,
 
-	/*
-	 * bootstrapping
-	 */
-//	TRUNE = TUINT,
-	TRUNE = sizeof(Rune)==4? TUINT: TUSHORT,
+	/* adapt size of Rune to target system's size */
+	TRUNE = sizeof(TRune)==4? TUINT: TUSHORT,
 };
 enum
 {
@@ -441,7 +449,7 @@ EXTERN	int	fperror;
 EXTERN	Sym*	hash[NHASH];
 EXTERN	int	hasdoubled;
 EXTERN	char*	hunk;
-EXTERN	char*	include[20];
+EXTERN	char**	include;
 EXTERN	Io*	iofree;
 EXTERN	Io*	ionext;
 EXTERN	Io*	iostack;
@@ -452,6 +460,7 @@ EXTERN	long	lastfield;
 EXTERN	Type*	lasttype;
 EXTERN	long	lineno;
 EXTERN	long	nearln;
+EXTERN	int	maxinclude;
 EXTERN	int	nerrors;
 EXTERN	int	newflag;
 EXTERN	long	nhunk;
@@ -746,8 +755,7 @@ void	gclean(void);
 void	gextern(Sym*, Node*, long, long);
 void	ginit(void);
 long	outstring(char*, long);
-long	outlstring(Rune*, long);
-void	sextern(Sym*, Node*, long, long);
+long	outlstring(TRune*, long);
 void	xcom(Node*);
 long	exreg(Type*);
 long	align(long, Type*, int);

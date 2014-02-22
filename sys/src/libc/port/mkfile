@@ -1,7 +1,6 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
-LIB=$NXM/$objtype/lib/libc.a
+LIB=/$objtype/lib/libc.a
 CFILES=\
 	_assert.c\
 	abs.c\
@@ -18,7 +17,6 @@ CFILES=\
 	cistrstr.c\
 	charstod.c\
 	cleanname.c\
-	confpmc.c\
 	crypt.c\
 	ctype.c\
 	encodefmt.c\
@@ -29,7 +27,6 @@ CFILES=\
 	fmod.c\
 	frand.c\
 	frexp.c\
-	getbe.c\
 	getcallerpc.c\
 	getfields.c\
 	getuser.c\
@@ -39,7 +36,6 @@ CFILES=\
 	lock.c\
 	log.c\
 	lrand.c\
-#	qmalloc.c\
 	malloc.c\
 	memccpy.c\
 	memchr.c\
@@ -62,9 +58,10 @@ CFILES=\
 	qsort.c\
 	quote.c\
 	rand.c\
-	rdpmc.c\
 	readn.c\
 	rune.c\
+	runebase.c\
+	runebsearch.c\
 	runestrcat.c\
 	runestrchr.c\
 	runestrcmp.c\
@@ -121,12 +118,12 @@ ALLOFILES=${CFILES:%.c=%.$O}
 # cull things in the per-machine directories from this list
 OFILES=	`{rc ./reduce $O $objtype $ALLOFILES}
 
-HFILES=$NXM/sys/include/libc.h
+HFILES=/sys/include/libc.h
 
 UPDATE=mkfile\
 	$HFILES\
 	$CFILES\
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib
 
-profile.$O: $NXM/sys/include/tos.h
+profile.$O: /sys/include/tos.h

@@ -1,9 +1,18 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #ifndef __LIMITS
 #define __LIMITS
 /* 8 bit chars (signed), 16 bit shorts, 32 bit ints/longs */
 
 #define CHAR_BIT	8
-#define MB_LEN_MAX	3
+#define MB_LEN_MAX	4
 
 #define UCHAR_MAX	0xff
 #define USHRT_MAX	0xffff
@@ -49,6 +58,7 @@
 #define	_POSIX_TIMER_MAX		32
 #define _POSIX_TZNAME_MAX		3
 
+
 /* pedagogy: those that standard allows omitting are commented out */
 /*#define AIO_LIST_MAX _POSIX_AIO_LIST_MAX */
 /*#define AIO_MAX _POSIX_AIO_MAX */
@@ -65,6 +75,7 @@
 #define NGROUPS_MAX 10
 /*#define OPEN_MAX _POSIX_OPEN_MAX */
 /*#define PAGESIZE 1 */
+#define PASS_MAX	64
 /*#define PATH_MAX _POSIX_PATH_MAX */
 /*#define PIPE_BUF _POSIX_PIPE_BUF */
 /*#define RTSIG_MAX _POSIX_RTSIG_MAX */

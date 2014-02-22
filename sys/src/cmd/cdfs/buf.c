@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * Buffered I/O on block devices.
  * Write buffering ignores offset.
@@ -40,16 +49,16 @@ bread(Buf *b, void *v, long n, vlong off)
 	/* Refill buffer */
 	if(b->off > off || off >= b->off+b->ndata) {
 		noff = off - off % b->bs;
-		if(vflag)
+		if(vflag > 1)
 			fprint(2, "try refill at %lld...", noff);
 		if((m = b->fn(b, b->data, b->nblock, noff/b->bs)) <= 0) {
 			if (vflag)
-				fprint(2, "failed\n");
+				fprint(2, "read failed: %r\n");
 			return m;
 		}
 		b->ndata = b->bs * m;
 		b->off = noff;
-		if(vflag)
+		if(vflag > 1)
 			fprint(2, "got %ld\n", b->ndata);
 	}
 

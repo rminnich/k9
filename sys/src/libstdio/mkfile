@@ -1,7 +1,6 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
-LIB=$NXM/$objtype/lib/libstdio.a
+LIB=/$objtype/lib/libstdio.a
 OFILES=\
 	_IO_getc.$O\
 	_IO_putc.$O\
@@ -53,18 +52,18 @@ OFILES=\
 	vsnprintf.$O\
 	vsprintf.$O\
 
-HFILES=$NXM/sys/include/stdio.h\
+HFILES=/sys/include/stdio.h\
 	iolib.h\
 
 UPDATE=\
 	mkfile\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
-	${LIB:$NXM/$objtype/%=/386/%}\
+	${LIB:/$objtype/%=/386/%}\
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib
 # this code really can't handle any flow-analysis warnings
-# CFLAGS=
+CFLAGS= -FTV
 
 test:V:	$OFILES
 	ar vu libstdio.a $OFILES

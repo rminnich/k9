@@ -1,11 +1,18 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include	<u.h>
 #include	<libc.h>
 #include	<tos.h>
 
-extern	uintptr	_callpc(void**);
-extern	uintptr	_savearg(void);
-extern	uintptr	_saveret(void);
-extern	uintptr	_restorearg(uintptr);
+extern	long	_callpc(void**);
+extern	long	_savearg(void);
 
 static	ulong	khz;
 static	ulong	perr;
@@ -17,27 +24,28 @@ struct	Plink
 	Plink	*old;
 	Plink	*down;
 	Plink	*link;
-	uintptr	pc;
+	long	pc;
 	long	count;
 	vlong time;
 };
 
 #pragma profile off
 
-uintptr
+ulong
 _profin(void)
 {
 	void *dummy;
-	uintptr pc;
+	long pc;
 	Plink *pp, *p;
-	uintptr arg;
+	ulong arg;
 	vlong t;
 
 	arg = _savearg();
 	pc = _callpc(&dummy);
 	pp = _tos->prof.pp;
 	if(pp == 0 || (_tos->prof.pid && _tos->pid != _tos->prof.pid))
-		return _restorearg(arg);
+		return arg;
+
 	for(p=pp->down; p; p=p->link)
 		if(p->pc == pc)
 			goto out;
@@ -45,7 +53,7 @@ _profin(void)
 	if(p >= _tos->prof.last) {
 		_tos->prof.pp = 0;
 		perr++;
-		return _restorearg(arg);
+		return arg;
 	}
 	_tos->prof.next = p;
 	p->link = pp->down;
@@ -76,17 +84,17 @@ out:
 		p->time = p->time - _tos->clock;
 		break;
 	}
-	return _restorearg(arg);
+	return arg;		/* disgusting linkage */
 }
 
-uintptr
+ulong
 _profout(void)
 {
 	Plink *p;
-	uintptr arg;
+	ulong arg;
 	vlong t;
 
-	arg = _saveret();
+	arg = _savearg();
 	p = _tos->prof.pp;
 	if (p == nil || (_tos->prof.pid != 0 && _tos->pid != _tos->prof.pid))
 		return arg;	/* Not our process */
@@ -132,7 +140,7 @@ _profdump(void)
 		snprint(filename, sizeof filename - 1, "prof.out");
 	f = create(filename, 1, 0666);
 	if(f < 0) {
-		fprint(2, "create prof.out: %r");
+		perror("create prof.out");
 		return;
 	}
 	_tos->prof.pid = ~0;	/* make sure data gets dumped once */
@@ -233,7 +241,7 @@ _profmain(void)
 	char ename[50];
 	int n, f;
 
-	n = 10000;
+	n = 2000;
 	if (_tos->cyclefreq != 0LL){
 		khz = _tos->cyclefreq / 1000;	/* Report times in milliseconds */
 		havecycles = 1;
@@ -241,9 +249,9 @@ _profmain(void)
 	f = open("/env/profsize", OREAD);
 	if(f >= 0) {
 		memset(ename, 0, sizeof(ename));
-		if(read(f, ename, sizeof(ename)-1) > 0)
-			n = atol(ename);
+		read(f, ename, sizeof(ename)-1);
 		close(f);
+		n = atol(ename);
 	}
 	_tos->prof.what = Profuser;
 	f = open("/env/proftype", OREAD);

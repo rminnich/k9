@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "cc.h"
 
 typedef struct Com Com;
@@ -67,6 +76,7 @@ tcomo(Node *n, int f)
 	Node *l, *r;
 	Type *t;
 	int o;
+	static TRune zer;
 
 	if(n == Z) {
 		diag(Z, "Z in tcom");
@@ -636,9 +646,7 @@ tcomo(Node *n, int f)
 		if(n->type->link != types[TRUNE]) {
 			o = outstring(0, 0);
 			while(o & 3) {
-				/* outlstring(L"", sizeof(Rune)); */
-				Rune str[1] = {0};
-				outlstring(str, sizeof(Rune));
+				outlstring(&zer, sizeof(TRune));
 				o = outlstring(0, 0);
 			}
 		}

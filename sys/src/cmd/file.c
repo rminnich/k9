@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <bio.h>
@@ -267,64 +276,10 @@ type(char *file, int nlen)
 	close(fd);
 }
 
-/*
- * Unicode 4.0 4-byte runes.
- */
-typedef int Rune1;
-
-enum {
-	UTFmax1 = 4,
-};
-
-int
-fullrune1(char *p, int n)
-{
-	int c;
-
-	if(n >= 1) {
-		c = *(uchar*)p;
-		if(c < 0x80)
-			return 1;
-		if(n >= 2 && c < 0xE0)
-			return 1;
-		if(n >= 3 && c < 0xF0)
-			return 1;
-		if(n >= 4)
-			return 1;
-	}
-	return 0;
-}
-
-int
-chartorune1(Rune1 *rune, char *str)
-{
-	int c, c1, c2, c3, n;
-	Rune r;
-
-	c = *(uchar*)str;
-	if(c < 0xF0){
-		r = 0;
-		n = chartorune(&r, str);
-		*rune = r;
-		return n;
-	}
-	c &= ~0xF0;
-	c1 = *(uchar*)(str+1) & ~0x80;
-	c2 = *(uchar*)(str+2) & ~0x80;
-	c3 = *(uchar*)(str+3) & ~0x80;
-	n = (c<<18) | (c1<<12) | (c2<<6) | c3;
-	if(n < 0x10000 || n > 0x10FFFF){
-		*rune = Runeerror;
-		return 1;
-	}
-	*rune = n;
-	return 4;
-}
-
 void
 filetype(int fd)
 {
-	Rune1 r;
+	Rune r;
 	int i, f, n;
 	char *p, *eob;
 
@@ -363,9 +318,9 @@ filetype(int fd)
 		language[i].count = 0;
 	eob = (char *)buf+nbuf;
 	for(n = 0, p = (char *)buf; p < eob; n++) {
-		if (!fullrune1(p, eob-p) && eob-p < UTFmax1)
+		if (!fullrune(p, eob-p) && eob-p < UTFmax)
 			break;
-		p += chartorune1(&r, p);
+		p += chartorune(&r, p);
 		if (r == 0)
 			f = Cnull;
 		else if (r <= 0x7f) {
@@ -592,6 +547,7 @@ Filemagic long0tab[] = {
 	070707,		0xFFFF,		"cpio archive\n", OCTET,
 	0x2F7,		0xFFFF,		"tex dvi\n", "application/dvi",
 	0xfaff,		0xfeff,		"mp3 audio\n",	"audio/mpeg",
+	0xf0ff,		0xf6ff,		"aac audio\n",	"audio/mpeg",
 	0xfeff0000,	0xffffffff,	"utf-32be\n",	"text/plain charset=utf-32be",
 	0xfffe,		0xffffffff,	"utf-32le\n",	"text/plain charset=utf-32le",
 	0xfeff,		0xffff,		"utf-16be\n",	"text/plain charset=utf-16be",
@@ -607,10 +563,11 @@ Filemagic long0tab[] = {
 	/* 0xcafebabe */
 	0xbebafeca,	0xFFFFFFFF,	"Mach-O universal executable\n", OCTET,
 	/*
-	 * venti & fossil magic numbers are stored big-endian on disk,
+	 * these magic numbers are stored big-endian on disk,
 	 * thus the numbers appear reversed in this table.
 	 */
 	0xad4e5cd1,	0xFFFFFFFF,	"venti arena\n", OCTET,
+	0x2bb19a52,	0xFFFFFFFF,	"paq archive\n", OCTET,
 };
 
 int
@@ -644,7 +601,7 @@ struct Fileoffmag {
  */
 Fileoffmag longofftab[] = {
 	/*
-	 * venti & fossil magic numbers are stored big-endian on disk,
+	 * these magic numbers are stored big-endian on disk,
 	 * thus the numbers appear reversed in this table.
 	 */
 	256*1024, 0xe7a5e4a9, 0xFFFFFFFF, "venti arenas partition\n", OCTET,
@@ -801,6 +758,7 @@ struct	FILE_STRING
 	"\033E\033",	"HP PCL printer data",		3,	OCTET,
 	"\033&",	"HP PCL printer data",		2,	OCTET,
 	"\033%-12345X",	"HPJCL file",		9,	"application/hpjcl",
+	"\033Lua",		"Lua bytecode",		4,	OCTET,
 	"ID3",			"mp3 audio with id3",	3,	"audio/mpeg",
 	"\211PNG",		"PNG image",		4,	"image/png",
 	"P3\n",			"ppm",				3,	"image/ppm",
@@ -1508,7 +1466,7 @@ iself(void)
 
 			if(n>0 && n < nelem(type) && type[n])
 				t = type[n];
-			print("%s ELF %s\n", p, t);
+			print("%s ELF%s %s\n", p, (buf[4] == 2? "64": "32"), t);
 		}
 		else
 			print("application/x-elf-executable");

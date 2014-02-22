@@ -1,8 +1,7 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 HFILES=\
-	$NXM/sys/g/include/httpd.h\
+	/sys/include/httpd.h\
 	httpsrv.h\
 
 TARG=\
@@ -38,14 +37,14 @@ LIBSOFILES=\
 	sendfd.$O\
 	authorize.$O\
 
-BIN=$NXM/$objtype/bin/ip/httpd
+BIN=/$objtype/bin/ip/httpd
 
 UPDATE=\
 	$HFILES\
 	${LIBSOFILES:%.$O=%.c}\
 	${XTARG:%=%.c}\
 
-<$NXM/sys/src/cmd/mkmany
+</sys/src/cmd/mkmany
 
 trial: $O.netlib_history
 	# should first   mount -b /srv/histnetlib /usr/web/historic
@@ -70,11 +69,11 @@ none:VQ:
 	echo usage: mk safeinstall, safeinstallall, cmd.safeinstallall, or cmd.safeinstallall
 
 $O.9down: 9down.$O whois.$O classify.$O $LIB
-	$LD $LDFLAGS -o $target $prereq
+	$LD -o $target $prereq
 
 $O.test9down: 9down4e.$O whois.$O classify.$O $LIB
-	$LD $LDFLAGS -o $target $prereq
+	$LD -o $target $prereq
 
 $O.testclassify: testclassify.$O whois.$O classify.$O $LIB
-	$LD $LDFLAGS -o $target $prereq
+	$LD -o $target $prereq
 

@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=db
 OFILES=\
@@ -19,5 +18,5 @@ OFILES=\
 HFILES=defs.h\
 	fns.h\
 
-BIN=$NXM/$objtype/bin
-<$NXM/sys/src/cmd/mkone
+BIN=/$objtype/bin
+< /sys/src/cmd/mkone

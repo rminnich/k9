@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 HFILES=ssh.h
 
@@ -30,7 +29,7 @@ OFILES=\
 	msg.$O\
 	util.$O\
 
-BIN=$NXM/$objtype/bin
+BIN=/$objtype/bin
 
 UPDATE=\
 	mkfile\
@@ -45,7 +44,7 @@ UPDATE=\
 	${CIPHEROFILES:%.$O=%.c}\
 	${TARG:%=%.c}\
 
-<$NXM/sys/src/cmd/mkmany
+</sys/src/cmd/mkmany
 
 $O.ssh1: \
 	$AUTHOFILES\
@@ -66,6 +65,7 @@ $O.sshnet: \
 	pubkey.$O\
 
 $BIN/sshserve:VQ: $BIN/aux/sshserve
+	;
 
 $BIN/aux/sshserve: $O.sshserve
 	cp $O.sshserve $BIN/aux/sshserve

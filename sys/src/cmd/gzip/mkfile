@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 HFILES=\
 	gzip.h\
@@ -11,6 +10,6 @@ TARG=\
 	zip\
 	unzip\
 
-BIN=$NXM/$objtype/bin
+BIN=/$objtype/bin
 
-<$NXM/sys/src/cmd/mkmany
+</sys/src/cmd/mkmany

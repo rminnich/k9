@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=htmlroff
 
@@ -33,7 +32,7 @@ OFILES=\
 
 HFILES=a.h
 
-BIN=$NXM/$objtype/bin
+BIN=/$objtype/bin
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 

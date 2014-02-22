@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /* cdfs - CD, DVD and BD reader and writer file system */
 #include <u.h>
 #include <libc.h>
@@ -207,8 +216,9 @@ fsremove(Req *r)
 char *
 disctype(Drive *drive)
 {
-	char *type, *rw;
+	char *type, *rw, *laysfx;
 
+	rw = laysfx = "";
 	switch (drive->mmctype) {
 	case Mmccd:
 		type = "cd-";
@@ -219,6 +229,8 @@ disctype(Drive *drive)
 		break;
 	case Mmcbd:
 		type = "bd-";
+		if (drive->laysfx)
+			laysfx = drive->laysfx;
 		break;
 	case Mmcnone:
 		type = "no-disc";
@@ -227,7 +239,6 @@ disctype(Drive *drive)
 		type = "**GOK**";		/* traditional */
 		break;
 	}
-	rw = "";
 	if (drive->mmctype != Mmcnone && drive->dvdtype == nil)
 		if (drive->erasable == Yes)
 			rw = drive->mmctype == Mmcbd? "re": "rw";
@@ -235,7 +246,7 @@ disctype(Drive *drive)
 			rw = "r";
 		else
 			rw = "rom";
-	return smprint("%s%s", type, rw);
+	return smprint("%s%s%s", type, rw, laysfx);
 }
 
 int
@@ -340,6 +351,7 @@ static void
 readctl(Req *r)
 {
 	int i, isaudio;
+	ulong nwa;
 	char *p, *e, *ty;
 	char s[1024];
 	Msf *m;
@@ -375,9 +387,14 @@ readctl(Req *r)
 		ty = disctype(drive);
 		p = seprint(p, e, "%s", ty);
 		free(ty);
-		if (drive->mmctype != Mmcnone)
-			p = seprint(p, e, " next writable sector %lud",
-				getnwa(drive));
+		if (drive->mmctype != Mmcnone) {
+			nwa = getnwa(drive);
+			p = seprint(p, e, " next writable sector ");
+			if (nwa == ~0ul)
+				p = seprint(p, e, "none; disc full");
+			else
+				p = seprint(p, e, "%lud", nwa);
+		}
 		seprint(p, e, "\n");
 	}
 	readstr(r, s);
@@ -709,7 +726,8 @@ main(int argc, char **argv)
 				close(fd);
 			vflag++;
 			scsiverbose = 2; /* verbose but no Readtoc errs */
-		}
+		} else
+			fprint(2, "%s: can't open /tmp/cdfs.log: %r\n", argv0);
 		break;
 	default:
 		usage();

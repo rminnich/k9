@@ -1,17 +1,16 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 # CFLAGS=$CFLAGS -DDEBUG_MAC
 
 TARG=cifs
 HFILES=cifs.h
-BIN=$NXM/$objtype/bin
+BIN=/$objtype/bin
 OFILES= main.$O transnt.$O trans2.$O trans.$O cifs.$O 	\
 	netbios.$O pack.$O info.$O fs.$O sid2name.$O	\
 	misc.$O nterrstr.$O doserrstr.$O raperrstr.$O 	\
 	auth.$O dfs.$O ping.$O
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 
 install:V:
 	# cp $TARG.man /sys/man/4/$TARG

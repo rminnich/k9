@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /* magic to get SUSV2 standard, including pread, pwrite*/
 #define _XOPEN_SOURCE 500
 /* magic to get 64-bit pread/pwrite */
@@ -30,6 +39,7 @@ typedef unsigned long long int  uint64_t;
 #endif
 
 #include <inttypes.h>		/* for int64_t et al. */
+#include <stdlib.h>
 #include <stdarg.h>		/* for va_list, vararg macros */
 #ifndef va_copy
 #ifdef __va_copy
@@ -41,6 +51,7 @@ typedef unsigned long long int  uint64_t;
 #include <sys/types.h>
 #include <string.h>		/* for memmove */
 #include <unistd.h>		/* for write */
+#include <fcntl.h>
 
 #define ulong p9ulong		/* because sys/types.h has some of these sometimes */
 #define ushort p9ushort
@@ -97,8 +108,7 @@ enum
 	UTFmax		= 3,		/* maximum bytes per rune */
 	Runesync	= 0x80,		/* cannot represent part of a UTF sequence (<) */
 	Runeself	= 0x80,		/* rune and UTF sequences are the same (<) */
-	Runeerror	= 0xFFFD,	/* decoding error in UTF */
-	Runemax	= 0xFFFF,	/* 16 bit rune */
+	Runeerror	= 0x80		/* decoding error in UTF */
 };
 
 extern	int	runetochar(char*, Rune*);

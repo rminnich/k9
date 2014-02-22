@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=dump9660 mk9660
 
@@ -32,8 +31,8 @@ UPDATE=\
 	mk9660.rc\
 	${TARG:%=/386/bin/disk/%}\
 
-BIN=$NXM/$objtype/bin/disk
-<$NXM/sys/src/cmd/mkmany
+BIN=/$objtype/bin/disk
+</sys/src/cmd/mkmany
 
 $O.dump9660: $DFILES
 

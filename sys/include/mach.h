@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  *	Architecture-dependent application data
  */
@@ -11,12 +20,11 @@
  *		i386,
  *		amd64,
  *		sparc,
- *		sparc64,
  *		mips2 (R4000)
  *		arm
  *		powerpc,
  *		powerpc64
- *		alpha
+ *		arm64
  */
 enum
 {
@@ -31,11 +39,12 @@ enum
 	M29000,			/* retired */
 	MARM,
 	MPOWER,
-	MALPHA,
+	MALPHA,			/* retired */
 	NMIPS,
-	MSPARC64,
+	MSPARC64,		/* retired */
 	MAMD64,
 	MPOWER64,
+	MARM64,
 				/* types of executables */
 	FNONE = 0,		/* unidentified */
 	FMIPS,			/* v.out */
@@ -57,14 +66,16 @@ enum
 	FPOWER,			/* q.out */
 	FPOWERB,		/* power pc bootable */
 	FMIPS2LE,		/* 0.out */
-	FALPHA,			/* 7.out */
-	FALPHAB,		/* DEC Alpha bootable */
+	FALPHA,			/* retired */
+	FALPHAB,		/* retired DEC Alpha bootable */
 	FMIPSLE,		/* 3k little endian */
-	FSPARC64,		/* u.out */
+	FSPARC64,		/* retired */
 	FAMD64,			/* 6.out */
 	FAMD64B,		/* 6.out bootable */
 	FPOWER64,		/* 9.out */
 	FPOWER64B,		/* 9.out bootable */
+	FARM64,			/* arm64 */
+	FARM64B,		/* arm64 bootable */
 
 	ANONE = 0,		/* dissembler types */
 	AMIPS,
@@ -78,10 +89,11 @@ enum
 	A29000,			/* retired */
 	AARM,
 	APOWER,
-	AALPHA,
-	ASPARC64,
+	AALPHA,			/* retired */
+	ASPARC64,		/* retired */
 	AAMD64,
 	APOWER64,
+	AARM64,
 				/* object file types */
 	Obj68020 = 0,		/* .2 */
 	ObjSparc,		/* .k */
@@ -94,11 +106,12 @@ enum
 	ObjArm,			/* .5 */
 	ObjPower,		/* .q */
 	ObjMips2le,		/* .0 */
-	ObjAlpha,		/* .7 */
-	ObjSparc64,		/* .u */
+	ObjAlpha,		/* retired */
+	ObjSparc64,		/* retired */
 	ObjAmd64,		/* .6 */
 	ObjSpim,		/* .0 */
 	ObjPower64,		/* .9 */
+	ObjArm64,		/* .4? */
 	Maxobjtype,
 
 	CNONE  = 0,		/* symbol table classes */

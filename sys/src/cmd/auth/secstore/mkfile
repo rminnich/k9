@@ -1,6 +1,5 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
-BIN=$NXM/$objtype/bin/auth
+</$objtype/mkfile
+BIN=/$objtype/bin/auth
 HFILES =\
 	SConn.h\
 	secstore.h\
@@ -22,24 +21,23 @@ UPDATE=\
 	${TARG:%=%.c}\
 	${DEBUG:%=%.c}\
 	mkfile\
-	$NXM/sys/g/man/1/secstore\
-	$NXM/sys/man/1/secstore\
+	/sys/man/1/secstore\
 
 default:V: all
 
 $O.aescbc: aescbc.$O util.$O
-	$LD $LDFLAGS -o $target $prereq
+	$LD -o $target $prereq
 $O.descbc: descbc.$O util.$O
-	$LD $LDFLAGS -o $target $prereq
+	$LD -o $target $prereq
 
 $O.secstore: secstore.$O  $OFILES
-	$LD $LDFLAGS -o $target $prereq
+	$LD -o $target $prereq
 
 $O.secstored: secstored.$O dirls.$O secureidcheck.$O $OFILES
-	$LD $LDFLAGS -o $target $prereq
+	$LD -o $target $prereq
 
 $O.secuser: secuser.$O $OFILES
-	$LD $LDFLAGS -o $target $prereq
+	$LD -o $target $prereq
 
 secstore.$O secstored.$O $OFILES: $HFILES
 
@@ -48,6 +46,6 @@ secureidcheck.$O: ../secureidcheck.c
 
 # debugging
 $O.secchk: secchk.$O secureidcheck.$O
-	$LD $LDFLAGS -o $target $prereq
+	$LD -o $target $prereq
 
-<$NXM/sys/src/cmd/mkmany
+</sys/src/cmd/mkmany

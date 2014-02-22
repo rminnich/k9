@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * lock - keep a lock alive while a command runs
  */
@@ -44,6 +53,18 @@ openlock(char *lock)
 	int lckfd;
 	Dir *dir;
 
+	/* first ensure that the lock file has the lock bit set */
+	dir = dirstat(lock);
+	if (dir == nil)
+		sysfatal("can't stat %s: %r", lock);
+	if (!(dir->mode & DMEXCL)) {
+		dir->mode |= DMEXCL;
+		dir->qid.type |= QTEXCL;
+		if (dirwstat(lock, dir) < 0)
+			sysfatal("can't make %s exclusive access: %r", lock);
+	}
+	free(dir);
+
 	if (lockwait)
 		while ((lckfd = open(lock, ORDWR)) < 0)
 			sleep(1000);
@@ -51,16 +72,6 @@ openlock(char *lock)
 		lckfd = open(lock, ORDWR);
 	if (lckfd < 0)
 		sysfatal("can't open %s read/write: %r", lock);
-	dir = dirfstat(lckfd);
-	if (dir == nil)
-		sysfatal("can't fstat %s: %r", lock);
-	if (!(dir->mode & DMEXCL)) {
-		dir->mode |= DMEXCL;
-		dir->qid.type |= QTEXCL;
-		if (dirfwstat(lckfd, dir) < 0)
-			sysfatal("can't make %s exclusive access: %r", lock);
-	}
-	free(dir);
 	return lckfd;
 }
 

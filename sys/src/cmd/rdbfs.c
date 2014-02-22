@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * Remote debugging file system
  */
@@ -137,12 +146,13 @@ Biobuf	rfb;
 char*	portname = "/dev/eia0";
 char*	textfile = "/386/9pc";
 char*	procname = "1";
+char*	srvname;
 Channel* rchan;
 
 void
 usage(void)
 {
-	fprint(2, "usage: rdbfs [-p procnum] [-t textfile] [serialport]\n");
+	fprint(2, "usage: rdbfs [-p procnum] [-s srvname] [-t textfile] [serialport]\n");
 	exits("usage");
 }
 
@@ -397,6 +407,9 @@ threadmain(int argc, char **argv)
 	case 'p':
 		procname = EARGF(usage());
 		break;
+	case 's':
+		srvname = EARGF(usage());
+		break;
 	case 't':
 		textfile = EARGF(usage());
 		break;
@@ -427,7 +440,7 @@ threadmain(int argc, char **argv)
 	for(i=0; i<nelem(tab); i++)
 		closefile(createfile(dir, tab[i].s, "rdbfs", tab[i].mode, (void*)tab[i].id));
 	closefile(dir);
-	threadpostmountsrv(&fs, nil, "/proc", MBEFORE);
+	threadpostmountsrv(&fs, srvname, "/proc", MBEFORE);
 	exits(0);
 }
 

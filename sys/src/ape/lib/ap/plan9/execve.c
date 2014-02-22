@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "lib.h"
 #include <unistd.h>
 #include <errno.h>
@@ -60,7 +69,7 @@ execve(const char *name, const char *argv[], const char *envp[])
 	f = _CREATE("#e/_sighdlr", OWRITE, 0666);
 	if(f >= 0){
 		ss = buf;
-		for(i = 0, n=0; i <=MAXSIG && ss < &buf[sizeof(buf)]-5; i++) {
+		for(i = 0; i <=MAXSIG && ss < &buf[sizeof(buf)]-5; i++) {
 			if(_sighdlr[i] == SIG_IGN) {
 				ss = _ultoa(ss, i);
 				*ss++ = ' ';
@@ -71,7 +80,7 @@ execve(const char *name, const char *argv[], const char *envp[])
 	}
 	if(envp){
 		strcpy(nam, "#e/");
-		for(e = envp; (ss = *e); e++) {
+		for(e = (char **)envp; (ss = *e); e++) {
 			se = strchr(ss, '=');
 			if(!se || ss==se)
 				continue;	/* what is name? value? */

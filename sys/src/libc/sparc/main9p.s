@@ -36,12 +36,6 @@ loop:
 TEXT	_savearg(SB), 1, $0
 	RETURN
 
-TEXT	_saveret(SB), 1, $0
-	RETURN
-
-TEXT	_restorearg(SB), 1, $0
-	RETURN
-
 TEXT	_callpc(SB), 1, $0
 	MOVW	argp-4(FP), R7
 	RETURN

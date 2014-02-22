@@ -1,24 +1,24 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
-TARG=lpdsend \
-	lpsend \
+TARG=\
 	LOCK \
-	lpdaemon
+	lpdaemon \
+	lpdsend \
+	lpsend \
+	tonet \
 
 OFILES=
-
 HFILES=
 
-BIN=$NXM/$objtype/bin/aux
-<$NXM/sys/src/cmd/mkmany
-CFLAGS=-Dplan9
+BIN=/$objtype/bin/aux
+</sys/src/cmd/mkmany
+CFLAGS=$CFLAGS -Dplan9
 
 installall:V:	/sys/lib/lp/bin/lpsend.rc
 
 /sys/lib/lp/bin/lpsend.rc:	lpsend.rc
-	cp $target $prereq
-	
+	cp $prereq $target
+
 $O.lpdsend:	lpdsend.$O
 	pcc -o $target lpdsend.$O
 

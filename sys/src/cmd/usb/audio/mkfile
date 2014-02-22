@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=audio
 OFILES=\
@@ -17,12 +16,12 @@ UPDATE=\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
 	mkfile\
-	$NXM/sys/g/man/3/usb\
+	/sys/man/3/usb\
 
 LIB=../lib/usb.a$O
 
-BIN=$NXM/$objtype/bin/usb
-<$NXM/sys/src/cmd/mkone
+BIN=/$objtype/bin/usb
+</sys/src/cmd/mkone
 
 CFLAGS=-I../lib $CFLAGS
 

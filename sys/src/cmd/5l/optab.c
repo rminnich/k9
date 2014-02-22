@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include	"l.h"
 
 Optab	optab[] =
@@ -210,6 +219,14 @@ Optab	optab[] =
 
 	{ ACASE,	C_REG,	C_NONE,	C_NONE,		62, 4, 0 },
 	{ ABCASE,	C_NONE, C_NONE, C_SBRA,		63, 4, 0 },
+
+	{ AADDF,	C_FREG,	C_NONE,	C_FREG,		74, 4, 0, VFP },
+	{ AADDF,	C_FREG,	C_REG,	C_FREG,		74, 4, 0, VFP },
+	{ AMOVF,	C_FREG, C_NONE, C_FREG,		74, 4, 0, VFP },
+	{ ACMPF,	C_FREG,	C_REG,	C_NONE,		75, 8, 0, VFP },
+	{ ACMPF,	C_FCON,	C_REG,	C_NONE,		75, 8, 0, VFP },
+	{ AMOVFW,	C_FREG,	C_NONE,	C_REG,		76, 8, 0, VFP },
+	{ AMOVFW,	C_REG,	C_NONE,	C_FREG,		76, 8, 0, VFP },
 
 	{ AMOVH,	C_REG,	C_NONE,	C_HEXT,		70, 4, REGSB,	V4 },
 	{ AMOVH,	C_REG,	C_NONE, C_HAUTO,	70, 4, REGSP,	V4 },

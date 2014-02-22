@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /* t6.c: compute tab stops */
 # define tx(a) (a>0 && a<128)
 # include "t.h"
@@ -192,7 +201,12 @@ maktab(void)			/* define the tab stops of the table */
 	if (boxflg || allflg || dboxflg)
 		Bprint(&tabout, ".nr TW +((%d*\\n(%d)/2)\n", tsep, TMP);
 	Bprint(&tabout,
-	    ".if t .if (\\n(TW+\\n(.o)>7.65i .tm Table at line %d file %s is too wide - \\n(TW units\n", iline - 1, ifile);
+	    ".if t .if (\\n(TW>\\n(.l .tm Table at line %d file %s is too wide - \\n(TW units\n", iline - 1, ifile);
+/*
+ * Used to be:
+ 	    ".if t .if (\\n(TW+\\n(.o)>7.65i .tm Table at line %d file %s is too wide - \\n(TW units\n", iline - 1, ifile);
+ * but that gives warnings where none are necessary (or desired) [sape]
+ */
 }
 
 

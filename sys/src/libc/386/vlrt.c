@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 typedef	unsigned long	ulong;
 typedef	unsigned int	uint;
 typedef	unsigned short	ushort;
@@ -114,7 +123,7 @@ _v2f(Vlong x)
 }
 
 ulong	_div64by32(Vlong, ulong, ulong*);
-void	_mul64by32(Vlong*, Vlong, ulong);
+int	_mul64by32(Vlong*, Vlong, ulong);
 
 static void
 slowdodiv(Vlong num, Vlong den, Vlong *q, Vlong *r)
@@ -199,8 +208,8 @@ dodiv(Vlong num, Vlong den, Vlong *qp, Vlong *rp)
 	if(den.hi != 0){
 		q.hi = 0;
 		n = num.hi/den.hi;
-		_mul64by32(&x, den, n);
-		if(x.hi > num.hi || (x.hi == num.hi && x.lo > num.lo))
+		if(_mul64by32(&x, den, n) || x.hi > num.hi ||
+		    (x.hi == num.hi && x.lo > num.lo))
 			slowdodiv(num, den, &q, &r);
 		else {
 			q.lo = n;

@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <thread.h>
@@ -7,6 +16,7 @@
 #include "ucons.h"
 #include "prolific.h"
 #include "ftdi.h"
+#include "silabs.h"
 
 enum {
 	Arglen = 80,
@@ -26,7 +36,7 @@ static int
 matchserial(char *info, void*)
 {
 	if(uconsmatch(info) == 0 || plmatch(info) == 0 ||
-	    ftmatch(nil, info) == 0)
+	    ftmatch(nil, info) == 0 || slmatch(info) == 0)
 		return 0;
 	return -1;
 }

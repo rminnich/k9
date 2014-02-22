@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * troff5.c
  * 
@@ -83,6 +92,7 @@ chget(int c)
 {
 	Tchar i;
 
+	i = 0;
 	if (skip() || ismot(i = getch()) || cbits(i) == ' ' || cbits(i) == '\n') {
 		ch = i;
 		return(c);
@@ -431,7 +441,7 @@ void casetm1(int ab, FILE *out)
 		else {
 			extern int error;
 			int savtrac = trace;
-			i = trace = 0;
+			trace = 0;
 			noscale++;
 			i = inumb(&trace);
 			noscale--;
@@ -472,7 +482,7 @@ void casetm1(int ab, FILE *out)
 				sprintf(&tmbuf[i], "\\N'%s'", p+1);
 				break;
 			case Troffchar:
-				if ((j = strlen(p+1)) == 2)
+				if (strlen(p+1) == 2)
 					sprintf(&tmbuf[i], "\\(%s", p+1);
 				else
 					sprintf(&tmbuf[i], "\\C'%s'", p+1);

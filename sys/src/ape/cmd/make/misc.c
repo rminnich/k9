@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "defs.h"
 
 static int	hasslash(char *);
@@ -195,7 +204,7 @@ return 0;
 
 /* copy string a into b, substituting for arguments */
 char *
-subst(char *a, char *b)
+subst(char *a, char *b, char *e)
 {
 static depth	= 0;
 char *s;
@@ -226,10 +235,12 @@ if(a)  while(*a)
 		*s = '\0';
 		if( (vbp = varptr(vname)) ->varval != 0)
 			{
-			b = subst(vbp->varval, b);
+			b = subst(vbp->varval, b, e);
 			vbp->used = YES;
 			}
 		}
+		if(b >= e)
+			fatal("macro expanded too far");
 	}
 
 *b = '\0';

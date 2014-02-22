@@ -1,10 +1,11 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=\
 	8prefix\
 	9pcon\
+	accupoint\
 	acidleak\
+	apm\
 	astarld\
 	cddb\
 	clog\
@@ -17,6 +18,7 @@ TARG=\
 	listen\
 	listen1\
 	mklatinkbd\
+	ms2\
 	msexceltables\
 	mswordstrings\
 	mouse\
@@ -32,10 +34,11 @@ TARG=\
 	timesync\
 	trampoline\
 	usage\
+	watchdog\
 	write\
 	zerotrunc\
 
-BIN=$NXM/$objtype/bin/aux
+BIN=/$objtype/bin/aux
 
 UPDATE=\
 	mkfile\
@@ -43,14 +46,10 @@ UPDATE=\
 	${OFILES:%.$O=%.c}\
 	${TARG:%=%.c}\
 
-<$NXM/sys/src/cmd/mkmany
+</sys/src/cmd/mkmany
 
-DIRS=\
-	realemu\
+DIRS=mnihongo\
 	flashfs\
-
-UNUSEDDIRS=\
-	mnihongo\
 	gps\
 	na\
 	vga

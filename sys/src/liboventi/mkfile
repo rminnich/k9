@@ -1,7 +1,6 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
-LIB=$NXM/$objtype/lib/liboventi.a
+LIB=/$objtype/lib/liboventi.a
 
 SYS=plan9
 
@@ -31,17 +30,17 @@ UPDATE=\
 	mkfile\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
-	${LIB:$NXM/$objtype/%=/386/%}\
+	${LIB:/$objtype/%=/386/%}\
 
 CFLAGS=$CFLAGS
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib
 
 $O.vttest: vttest.$O $OFILES
 	$LD $LDFLAGS -o $target $prereq
 
-acid.$O:	$HFILES packet.c
-	$CC $INC -a packet.c > acid$O || rm acid$O
+acid:	$HFILES packet.c
+	$CC $INC -a packet.c > acid || rm acid
 
 test: $O.vttest
 	$O.vttest

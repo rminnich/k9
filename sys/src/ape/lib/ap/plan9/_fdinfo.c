@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #define  _BSDTIME_EXTENSION
 #include "lib.h"
 #include <sys/stat.h>
@@ -107,11 +116,9 @@ readprocfdinit(void)
 static void
 sfdinit(int usedproc, char *s, char *se)
 {
-	int i;
 	Fdinfo *fi;
 	unsigned long fd, fl, ofl;
 	char *e;
-	struct stat sbuf;
 
 	while(s < se){
 		fd = strtoul(s, &e, 10);

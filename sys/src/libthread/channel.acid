@@ -31,26 +31,27 @@ FPdbleword(addr) {
 	print("}\n");
 };
 
-UTFmax = 3;
+UTFmax = 4;
 Runesync = 128;
 Runeself = 128;
 Runeerror = 65533;
-Runemax = 65535;
-sizeofFmt = 80;
+Runemax = 1114111;
+Runemask = 2097151;
+sizeofFmt = 48;
 aggr Fmt
 {
 	'b' 0 runes;
-	'Y' 8 start;
-	'Y' 16 to;
-	'Y' 24 stop;
-	'Y' 32 flush;
-	'Y' 40 farg;
-	'D' 48 nfmt;
-	'Y' 56 args;
-	'D' 64 r;
-	'D' 68 width;
-	'D' 72 prec;
-	'U' 76 flags;
+	'X' 4 start;
+	'X' 8 to;
+	'X' 12 stop;
+	'X' 16 flush;
+	'X' 20 farg;
+	'D' 24 nfmt;
+	'X' 28 args;
+	'D' 32 r;
+	'D' 36 width;
+	'D' 40 prec;
+	'U' 44 flags;
 };
 
 defn
@@ -124,21 +125,23 @@ Profsample = 4;
 sizeofLock = 8;
 aggr Lock
 {
-	'D' 0 val;
+	'D' 0 key;
+	'D' 4 sem;
 };
 
 defn
 Lock(addr) {
 	complex Lock addr;
-	print("	val	", addr.val, "\n");
+	print("	key	", addr.key, "\n");
+	print("	sem	", addr.sem, "\n");
 };
 
-sizeofQLp = 24;
+sizeofQLp = 12;
 aggr QLp
 {
 	'D' 0 inuse;
-	'A' QLp 8 next;
-	'C' 16 state;
+	'A' QLp 4 next;
+	'C' 8 state;
 };
 
 defn
@@ -149,13 +152,13 @@ QLp(addr) {
 	print("	state	", addr.state, "\n");
 };
 
-sizeofQLock = 32;
+sizeofQLock = 20;
 aggr QLock
 {
 	Lock 0 lock;
 	'D' 8 locked;
-	'A' QLp 16 $head;
-	'A' QLp 24 $tail;
+	'A' QLp 12 $head;
+	'A' QLp 16 $tail;
 };
 
 defn
@@ -169,14 +172,14 @@ QLock(addr) {
 	print("	$tail	", addr.$tail\X, "\n");
 };
 
-sizeofRWLock = 32;
+sizeofRWLock = 24;
 aggr RWLock
 {
 	Lock 0 lock;
 	'D' 8 readers;
 	'D' 12 writer;
 	'A' QLp 16 $head;
-	'A' QLp 24 $tail;
+	'A' QLp 20 $tail;
 };
 
 defn
@@ -191,12 +194,12 @@ RWLock(addr) {
 	print("	$tail	", addr.$tail\X, "\n");
 };
 
-sizeofRendez = 24;
+sizeofRendez = 12;
 aggr Rendez
 {
 	'A' QLock 0 l;
-	'A' QLp 8 $head;
-	'A' QLp 16 $tail;
+	'A' QLp 4 $head;
+	'A' QLp 8 $tail;
 };
 
 defn
@@ -207,18 +210,18 @@ Rendez(addr) {
 	print("	$tail	", addr.$tail\X, "\n");
 };
 
-sizeofNetConnInfo = 72;
+sizeofNetConnInfo = 36;
 aggr NetConnInfo
 {
-	'Y' 0 dir;
-	'Y' 8 root;
-	'Y' 16 spec;
-	'Y' 24 lsys;
-	'Y' 32 lserv;
-	'Y' 40 rsys;
-	'Y' 48 rserv;
-	'Y' 56 laddr;
-	'Y' 64 raddr;
+	'X' 0 dir;
+	'X' 4 root;
+	'X' 8 spec;
+	'X' 12 lsys;
+	'X' 16 lserv;
+	'X' 20 rsys;
+	'X' 24 rserv;
+	'X' 28 laddr;
+	'X' 32 raddr;
 };
 
 defn
@@ -247,10 +250,6 @@ RFCENVG = 2048;
 RFCFDG = 4096;
 RFREND = 8192;
 RFNOMNT = 16384;
-RFPREPAGE = 32768;
-RFCPREPAGE = 65536;
-RFCORE = 131072;
-RFCCORE = 262144;
 sizeofQid = 16;
 aggr Qid
 {
@@ -267,7 +266,7 @@ Qid(addr) {
 	print("	type	", addr.type, "\n");
 };
 
-sizeofDir = 80;
+sizeofDir = 60;
 aggr Dir
 {
 	'u' 0 type;
@@ -276,11 +275,11 @@ aggr Dir
 	'U' 24 mode;
 	'U' 28 atime;
 	'U' 32 mtime;
-	'V' 40 length;
-	'Y' 48 name;
-	'Y' 56 uid;
-	'Y' 64 gid;
-	'Y' 72 muid;
+	'V' 36 length;
+	'X' 44 name;
+	'X' 48 uid;
+	'X' 52 gid;
+	'X' 56 muid;
 };
 
 defn
@@ -301,12 +300,12 @@ Dir(addr) {
 	print("	muid	", addr.muid\X, "\n");
 };
 
-sizeofWaitmsg = 24;
+sizeofWaitmsg = 20;
 aggr Waitmsg
 {
 	'D' 0 pid;
 	'a' 4 time;
-	'Y' 16 msg;
+	'X' 16 msg;
 };
 
 defn
@@ -317,11 +316,11 @@ Waitmsg(addr) {
 	print("	msg	", addr.msg\X, "\n");
 };
 
-sizeofIOchunk = 16;
+sizeofIOchunk = 8;
 aggr IOchunk
 {
-	'Y' 0 addr;
-	'U' 8 len;
+	'X' 0 addr;
+	'U' 4 len;
 };
 
 defn
@@ -331,31 +330,11 @@ IOchunk(addr) {
 	print("	len	", addr.len, "\n");
 };
 
-sizeofZio = 16;
-aggr Zio
-{
-	'Y' 0 data;
-	'U' 8 size;
-};
-
-defn
-Zio(addr) {
-	complex Zio addr;
-	print("	data	", addr.data\X, "\n");
-	print("	size	", addr.size, "\n");
-};
-
-NIXTC = 0;
-NIXKC = 1;
-NIXAC = 2;
-PmcOs = 1;
-PmcUser = 2;
-PmcEnable = 4;
 Nqwds = 2;
 Nqshift = 5;
 Nqmask = -1;
 Nqbits = 64;
-sizeofChannel = 48;
+sizeofChannel = 36;
 aggr Channel
 {
 	'D' 0 s;
@@ -363,10 +342,10 @@ aggr Channel
 	'U' 8 n;
 	'D' 12 e;
 	'D' 16 freed;
-	'Y' 24 qentry;
-	'D' 32 nentry;
-	'D' 36 closed;
-	'a' 40 v;
+	'X' 20 qentry;
+	'D' 24 nentry;
+	'D' 28 closed;
+	'a' 32 v;
 };
 
 defn
@@ -388,15 +367,15 @@ CHANSND = 1;
 CHANRCV = 2;
 CHANNOP = 3;
 CHANNOBLK = 4;
-sizeofAlt = 48;
+sizeofAlt = 24;
 aggr Alt
 {
 	'A' Channel 0 c;
-	'Y' 8 v;
-	'D' 16 op;
-	'Y' 24 err;
-	'A' Channel 32 tag;
-	'D' 40 entryno;
+	'X' 4 v;
+	'D' 8 op;
+	'X' 12 err;
+	'A' Channel 16 tag;
+	'D' 20 entryno;
 };
 
 defn
@@ -410,7 +389,7 @@ Alt(addr) {
 	print("	entryno	", addr.entryno, "\n");
 };
 
-sizeofRef = 8;
+sizeofRef = 4;
 aggr Ref
 {
 	'D' 0 ref;
@@ -433,7 +412,7 @@ Chanrecv = 3;
 RENDHASH = 13;
 Printsize = 2048;
 NPRIV = 8;
-sizeofRgrp = 112;
+sizeofRgrp = 60;
 aggr Rgrp
 {
 	Lock 0 lock;
@@ -449,12 +428,12 @@ Rgrp(addr) {
 	print("	hash	", addr.hash, "\n");
 };
 
-sizeofTqueue = 24;
+sizeofTqueue = 12;
 aggr Tqueue
 {
 	'D' 0 asleep;
-	'Y' 8 $head;
-	'Y' 16 $tail;
+	'X' 4 $head;
+	'X' 8 $tail;
 };
 
 defn
@@ -465,31 +444,31 @@ Tqueue(addr) {
 	print("	$tail	", addr.$tail\X, "\n");
 };
 
-sizeofThread = 216;
+sizeofThread = 124;
 aggr Thread
 {
 	Lock 0 lock;
 	'a' 8 sched;
-	'D' 24 id;
-	'D' 28 grp;
-	'D' 32 moribund;
-	'D' 36 state;
-	'D' 40 nextstate;
-	'Y' 48 stk;
-	'U' 56 stksize;
-	'A' Thread 64 next;
-	'Y' 72 proc;
-	'A' Thread 80 nextt;
-	'D' 88 ret;
-	'Y' 96 cmdname;
-	'D' 104 inrendez;
-	'A' Thread 112 rendhash;
-	'Y' 120 rendtag;
-	'Y' 128 rendval;
-	'D' 136 rendbreak;
-	'D' 140 chan;
-	'A' Alt 144 alt;
-	'a' 152 udata;
+	'D' 16 id;
+	'D' 20 grp;
+	'D' 24 moribund;
+	'D' 28 state;
+	'D' 32 nextstate;
+	'X' 36 stk;
+	'U' 40 stksize;
+	'A' Thread 44 next;
+	'X' 48 proc;
+	'A' Thread 52 nextt;
+	'D' 56 ret;
+	'X' 60 cmdname;
+	'D' 64 inrendez;
+	'A' Thread 68 rendhash;
+	'X' 72 rendtag;
+	'X' 76 rendval;
+	'D' 80 rendbreak;
+	'D' 84 chan;
+	'A' Alt 88 alt;
+	'a' 92 udata;
 };
 
 defn
@@ -521,12 +500,12 @@ Thread(addr) {
 	print("	udata	", addr.udata, "\n");
 };
 
-sizeofExecargs = 24;
+sizeofExecargs = 16;
 aggr Execargs
 {
-	'Y' 0 prog;
-	'Y' 8 args;
-	'a' 16 fd;
+	'X' 0 prog;
+	'X' 4 args;
+	'a' 8 fd;
 };
 
 defn
@@ -537,34 +516,34 @@ Execargs(addr) {
 	print("	fd	", addr.fd, "\n");
 };
 
-sizeofProc = 2504;
+sizeofProc = 2432;
 aggr Proc
 {
 	Lock 0 lock;
 	'a' 8 sched;
-	'D' 24 pid;
-	'D' 28 splhi;
-	'A' Thread 32 thread;
-	'D' 40 needexec;
-	Execargs 48 exec;
-	'A' Proc 72 newproc;
-	'a' 80 exitstr;
-	'D' 208 rforkflag;
-	'D' 212 nthreads;
-	Tqueue 216 threads;
-	Tqueue 240 ready;
-	Lock 264 readylock;
-	'a' 272 printbuf;
-	'D' 2320 blocked;
-	'D' 2324 pending;
-	'D' 2328 nonotes;
-	'U' 2332 nextID;
-	'A' Proc 2336 next;
-	'Y' 2344 arg;
-	'a' 2352 str;
-	'Y' 2480 wdata;
-	'Y' 2488 udata;
-	'C' 2496 threadint;
+	'D' 16 pid;
+	'D' 20 splhi;
+	'A' Thread 24 thread;
+	'D' 28 needexec;
+	Execargs 32 exec;
+	'A' Proc 48 newproc;
+	'a' 52 exitstr;
+	'D' 180 rforkflag;
+	'D' 184 nthreads;
+	Tqueue 188 threads;
+	Tqueue 200 ready;
+	Lock 212 readylock;
+	'a' 220 printbuf;
+	'D' 2268 blocked;
+	'D' 2272 pending;
+	'D' 2276 nonotes;
+	'U' 2280 nextID;
+	'A' Proc 2284 next;
+	'X' 2288 arg;
+	'a' 2292 str;
+	'X' 2420 wdata;
+	'X' 2424 udata;
+	'C' 2428 threadint;
 };
 
 defn
@@ -607,12 +586,12 @@ Proc(addr) {
 	print("	threadint	", addr.threadint, "\n");
 };
 
-sizeofPqueue = 24;
+sizeofPqueue = 16;
 aggr Pqueue
 {
 	Lock 0 lock;
 	'A' Proc 8 $head;
-	'A' Proc 16 $tail;
+	'A' Proc 12 $tail;
 };
 
 defn
@@ -625,18 +604,18 @@ Pqueue(addr) {
 	print("	$tail	", addr.$tail\X, "\n");
 };
 
-sizeofIoproc = 192;
+sizeofIoproc = 160;
 aggr Ioproc
 {
 	'D' 0 tid;
-	'A' Channel 8 c;
-	'A' Channel 16 creply;
-	'D' 24 inuse;
-	'Y' 32 op;
-	'Y' 40 arg;
-	'D' 48 ret;
-	'a' 52 err;
-	'A' Ioproc 184 next;
+	'A' Channel 4 c;
+	'A' Channel 8 creply;
+	'D' 12 inuse;
+	'X' 16 op;
+	'X' 20 arg;
+	'D' 24 ret;
+	'a' 28 err;
+	'A' Ioproc 156 next;
 };
 
 defn

@@ -1,4 +1,20 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include	"l.h"
+
+/* can't include a.out.h due to name clashes, but these are taken from it */
+#define	_MAGIC(f, b)	((f)|((((4*(b))+0)*(b))+7))
+#define	V_MAGIC		_MAGIC(0, 16)		/* mips 3000 BE */
+#define	M_MAGIC		_MAGIC(0, 18)		/* mips 4000 BE */
+#define	N_MAGIC		_MAGIC(0, 22)		/* mips 4000 LE */
+#define	P_MAGIC		_MAGIC(0, 24)		/* mips 3000 LE */
 
 long	OFFSET;
 /*
@@ -84,6 +100,12 @@ long	BADOFFSET	=	-1;
 	}
 
 void
+cput(long l)
+{
+	CPUT(l);
+}
+
+void
 objput(long l)	/* emit long in byte order appropriate to object machine */
 {
 	LPUT(l);
@@ -96,9 +118,53 @@ objhput(short s)
 }
 
 void
+wput(long l)
+{
+
+	cbp[0] = l>>8;
+	cbp[1] = l;
+	cbp += 2;
+	cbc -= 2;
+	if(cbc <= 0)
+		cflush();
+}
+
+void
+wputl(long l)
+{
+
+	cbp[0] = l;
+	cbp[1] = l>>8;
+	cbp += 2;
+	cbc -= 2;
+	if(cbc <= 0)
+		cflush();
+}
+
+void
 lput(long l)		/* emit long in big-endian byte order */
 {
 	LBEPUT(l);
+}
+
+void
+lputl(long l)		/* emit long in big-endian byte order */
+{
+	LLEPUT(l);
+}
+
+void
+llput(vlong v)
+{
+	lput(v>>32);
+	lput(v);
+}
+
+void
+llputl(vlong v)
+{
+	lputl(v);
+	lputl(v>>32);
 }
 
 long
@@ -118,11 +184,75 @@ entryvalue(void)
 	return s->value;
 }
 
+static void
+plan9bootimage(ulong sects, ulong submagicvers, ulong tm,
+	ulong hdrtxtsz, ulong textsz, ulong textva, ulong lcsize)
+{
+	lput(0x160L<<16|sects);		/* magic and sections */
+	lput(tm);			/* time and date */
+	lput(hdrtxtsz+datsize);		/* offset to symbol table */
+	lput(symsize);			/* size of symbol table */
+	lput((0x38L<<16)|7L);		/* size of optional hdr and flags */
+	lput(submagicvers);		/* magic and version */
+
+	lput(textsz);			/* segment sizes */
+	lput(datsize);
+	lput(bsssize);
+
+	lput(entryvalue());		/* va of entry */
+	lput(textva);			/* va of base of text */
+	lput(INITDAT);			/* va of base of data */
+	lput(INITDAT+datsize);		/* va of base of bss */
+
+	lput(~0);			/* gp reg mask */
+	lput(lcsize);			/* pcsize / cprmask[0] */
+	lput(0);			/* coproc reg masks[1⋯3] */
+	lput(0);
+	lput(0);
+	lput(~0);			/* gp value ?? */
+}
+
+static void
+symhdrs(ulong hdrtxtsz)
+{
+	strnput(".text", 8);		/* text segment */
+	lput(INITTEXT);			/* address */
+	lput(INITTEXT);
+	lput(textsize);
+	lput(HEADR);
+	lput(0);
+	lput(HEADR+textsize+datsize+symsize);
+	lput(lcsize);			/* line number size */
+	lput(0x20);			/* flags */
+
+	strnput(".data", 8);		/* data segment */
+	lput(INITDAT);			/* address */
+	lput(INITDAT);
+	lput(datsize);
+	lput(hdrtxtsz);
+	lput(0);
+	lput(0);
+	lput(0);
+	lput(0x40);			/* flags */
+
+	strnput(".bss", 8);		/* bss segment */
+	lput(INITDAT+datsize);		/* address */
+	lput(INITDAT+datsize);
+	lput(bsssize);
+	lput(0);
+	lput(0);
+	lput(0);
+	lput(0);
+	lput(0x80);			/* flags */
+}
+
 void
 asmb(void)
 {
 	Prog *p;
-	long t, etext;
+	long tm;
+	ulong rndtxtsz;
+	vlong t, etext;
 	Optab *o;
 
 	if(debug['v'])
@@ -137,8 +267,7 @@ asmb(void)
 			autosize = p->to.offset + 4;
 		}
 		if(p->pc != pc) {
-			diag("phase error %lux sb %lux",
-				p->pc, pc);
+			diag("phase error %llux sb %llux", p->pc, pc);
 			if(!debug['a'])
 				prasm(curp);
 			pc = p->pc;
@@ -179,6 +308,7 @@ asmb(void)
 	case 3:
 	case 5:
 	case 6:
+	case 7:
 		OFFSET = HEADR+textsize;
 		seek(cout, OFFSET, 0);
 		break;
@@ -207,6 +337,7 @@ asmb(void)
 		case 1:
 		case 5:
 		case 6:
+		case 7:
 			OFFSET = HEADR+textsize+datsize;
 			seek(cout, OFFSET, 0);
 			break;
@@ -226,57 +357,26 @@ asmb(void)
 	Bflush(&bso);
 	OFFSET = 0;
 	seek(cout, OFFSET, 0);
+
+	rndtxtsz = rnd(HEADR+textsize, (INITRND > 0? INITRND: 4096));
+	tm = time(0);
 	switch(HEADTYPE) {
 	case 0:
-		lput(0x160L<<16);		/* magic and sections */
-		lput(0L);			/* time and date */
-		lput(rnd(HEADR+textsize, 4096)+datsize);
-		lput(symsize);			/* nsyms */
-		lput((0x38L<<16)|7L);		/* size of optional hdr and flags */
-		lput((0413<<16)|0437L);		/* magic and version */
-		lput(rnd(HEADR+textsize, 4096));	/* sizes */
-		lput(datsize);
-		lput(bsssize);
-		lput(entryvalue());		/* va of entry */
-		lput(INITTEXT-HEADR);		/* va of base of text */
-		lput(INITDAT);			/* va of base of data */
-		lput(INITDAT+datsize);		/* va of base of bss */
-		lput(~0L);			/* gp reg mask */
-		lput(0L);
-		lput(0L);
-		lput(0L);
-		lput(0L);
-		lput(~0L);			/* gp value ?? */
+		/* 0413: plan 9 boot image, text segment rounded (to 4KB) */
+		plan9bootimage(0, 0413<<16|0437, 0, rndtxtsz, rndtxtsz,
+			INITTEXT-HEADR, 0);
 		break;
 	case 1:
-		lput(0x160L<<16);		/* magic and sections */
-		lput(0L);			/* time and date */
-		lput(HEADR+textsize+datsize);
-		lput(symsize);			/* nsyms */
-		lput((0x38L<<16)|7L);		/* size of optional hdr and flags */
-
-		lput((0407<<16)|0437L);		/* magic and version */
-		lput(textsize);			/* sizes */
-		lput(datsize);
-		lput(bsssize);
-		lput(entryvalue());		/* va of entry */
-		lput(INITTEXT);			/* va of base of text */
-		lput(INITDAT);			/* va of base of data */
-		lput(INITDAT+datsize);		/* va of base of bss */
-		lput(~0L);			/* gp reg mask */
-		lput(lcsize);
-		lput(0L);
-		lput(0L);
-		lput(0L);
-		lput(~0L);			/* gp value ?? */
-		lput(0L);			/* complete mystery */
+		/* 0407: plan 9 boot image, extra word */
+		plan9bootimage(0, 0407<<16|0437, 0, HEADR+textsize, textsize,
+			INITTEXT, lcsize);
+		lput(0);			/* extra; complete mystery */
 		break;
-	case 2:
+	case 2:					/* plan 9 format */
 		if (little)
-			t = 24;
+			lput(P_MAGIC);		/* mips 3000 LE */
 		else
-			t = 16;
-		lput(((((4*t)+0)*t)+7));	/* magic */
+			lput(V_MAGIC);		/* mips 3000 BE */
 		lput(textsize);			/* sizes */
 		lput(datsize);
 		lput(bsssize);
@@ -286,171 +386,24 @@ asmb(void)
 		lput(lcsize);
 		break;
 	case 3:
-		lput((0x160L<<16)|3L);		/* magic and sections */
-		lput(time(0));			/* time and date */
-		lput(HEADR+textsize+datsize);
-		lput(symsize);			/* nsyms */
-		lput((0x38L<<16)|7L);		/* size of optional hdr and flags */
-
-		lput((0407<<16)|0437L);		/* magic and version */
-		lput(textsize);			/* sizes */
-		lput(datsize);
-		lput(bsssize);
-		lput(entryvalue());		/* va of entry */
-		lput(INITTEXT);			/* va of base of text */
-		lput(INITDAT);			/* va of base of data */
-		lput(INITDAT+datsize);		/* va of base of bss */
-		lput(~0L);			/* gp reg mask */
-		lput(lcsize);
-		lput(0L);
-		lput(0L);
-		lput(0L);
-		lput(~0L);			/* gp value ?? */
-
-		strnput(".text", 8);		/* text segment */
-		lput(INITTEXT);			/* address */
-		lput(INITTEXT);
-		lput(textsize);
-		lput(HEADR);
-		lput(0L);
-		lput(HEADR+textsize+datsize+symsize);
-		lput(lcsize);			/* line number size */
-		lput(0x20L);			/* flags */
-
-		strnput(".data", 8);		/* data segment */
-		lput(INITDAT);			/* address */
-		lput(INITDAT);
-		lput(datsize);
-		lput(HEADR+textsize);
-		lput(0L);
-		lput(0L);
-		lput(0L);
-		lput(0x40L);			/* flags */
-
-		strnput(".bss", 8);		/* bss segment */
-		lput(INITDAT+datsize);		/* address */
-		lput(INITDAT+datsize);
-		lput(bsssize);
-		lput(0L);
-		lput(0L);
-		lput(0L);
-		lput(0L);
-		lput(0x80L);			/* flags */
+		/* 0407: plan 9 mips 4k boot image with symbols */
+		plan9bootimage(3, 0407<<16|0437, tm, HEADR+textsize, textsize,
+			INITTEXT, lcsize);
+		symhdrs(HEADR+textsize);
 		break;
 	case 4:
-
-		lput((0x160L<<16)|3L);		/* magic and sections */
-		lput(time(0));			/* time and date */
-		lput(rnd(HEADR+textsize, 4096)+datsize);
-		lput(symsize);			/* nsyms */
-		lput((0x38L<<16)|7L);		/* size of optional hdr and flags */
-
-		lput((0413<<16)|01012L);	/* magic and version */
-		lput(textsize);			/* sizes */
-		lput(datsize);
-		lput(bsssize);
-		lput(entryvalue());		/* va of entry */
-		lput(INITTEXT);			/* va of base of text */
-		lput(INITDAT);			/* va of base of data */
-		lput(INITDAT+datsize);		/* va of base of bss */
-		lput(~0L);			/* gp reg mask */
-		lput(lcsize);
-		lput(0L);
-		lput(0L);
-		lput(0L);
-		lput(~0L);			/* gp value ?? */
-
-		strnput(".text", 8);		/* text segment */
-		lput(INITTEXT);			/* address */
-		lput(INITTEXT);
-		lput(textsize);
-		lput(HEADR);
-		lput(0L);
-		lput(HEADR+textsize+datsize+symsize);
-		lput(lcsize);			/* line number size */
-		lput(0x20L);			/* flags */
-
-		strnput(".data", 8);		/* data segment */
-		lput(INITDAT);			/* address */
-		lput(INITDAT);
-		lput(datsize);
-		lput(rnd(HEADR+textsize, 4096));	/* sizes */
-		lput(0L);
-		lput(0L);
-		lput(0L);
-		lput(0x40L);			/* flags */
-
-		strnput(".bss", 8);		/* bss segment */
-		lput(INITDAT+datsize);		/* address */
-		lput(INITDAT+datsize);
-		lput(bsssize);
-		lput(0L);
-		lput(0L);
-		lput(0L);
-		lput(0L);
-		lput(0x80L);			/* flags */
+		/* 0413: plan 9 mips 4k boot image with symbols */
+		plan9bootimage(3, 0413<<16|01012, tm, rndtxtsz, textsize,
+			INITTEXT, lcsize);
+		symhdrs(rndtxtsz);
 		break;
 	case 5:
-		/* first part of ELF is byte-wide parts, thus no byte-order issues */
-		strnput("\177ELF", 4);		/* e_ident */
-		CPUT(1);			/* class = 32 bit */
-		CPUT(little? 1: 2);		/* data: 1 = LSB, 2 = MSB */
-		CPUT(1);			/* version = 1 */
-		strnput("", 9);			/* reserved for expansion */
-		/* entire remainder of ELF file is in target byte order */
-
-		/* file header part of ELF header */
-		objhput(2);			/* type = EXEC */
-		objhput(8);			/* machine = MIPS */
-		objput(1L);			/* version = CURRENT */
-		objput(entryvalue());		/* entry vaddr */
-		objput(52L);			/* offset to first phdr */
-		objput(0L);			/* offset to first shdr */
-		objput(0L);			/* flags (no MIPS flags defined) */
-		objhput(52);			/* Ehdr size */
-		objhput(32);			/* Phdr size */
-		objhput(3);			/* # of Phdrs */
-		objhput(0);			/* Shdr size */
-		objhput(0);			/* # of Shdrs */
-		objhput(0);			/* Shdr string size */
-
-		/* "Program headers" - one per chunk of file to load */
-
-		/*
-		 * include ELF headers in text -- 8l doesn't,
-		 * but in theory it aids demand loading.
-		 */
-		objput(1L);			/* text: type = PT_LOAD */
-		objput(0L);			/* file offset */
-		objput(INITTEXT-HEADR);		/* vaddr */
-		objput(INITTEXT-HEADR);		/* paddr */
-		objput(HEADR+textsize);		/* file size */
-		objput(HEADR+textsize);		/* memory size */
-		objput(0x05L);			/* protections = RX */
-		objput(0x1000L);		/* page-align text off's & vaddrs */
-
-		objput(1L);			/* data: type = PT_LOAD */
-		objput(HEADR+textsize);		/* file offset */
-		objput(INITDAT);		/* vaddr */
-		objput(INITDAT);		/* paddr */
-		objput(datsize);		/* file size */
-		objput(datsize+bsssize);	/* memory size */
-		objput(0x06L);			/* protections = RW */
-		if(INITDAT % 4096 == 0 && (HEADR + textsize) % 4096 == 0)
-			objput(0x1000L);	/* page-align data off's & vaddrs */
-		else
-			objput(0L);		/* do not claim alignment */
-
-		objput(0L);			/* P9 symbols: type = PT_NULL */
-		objput(HEADR+textsize+datsize);	/* file offset */
-		objput(0L);
-		objput(0L);
-		objput(symsize);		/* symbol table size */
-		objput(lcsize);			/* line number size */
-		objput(0x04L);			/* protections = R */
-		objput(0L);			/* do not claim alignment */
+		elf32(MIPS, little? ELFDATA2LSB: ELFDATA2MSB, 0, nil);
 		break;
 	case 6:
+		break;
+	case 7:
+		elf64(MIPSR4K, little? ELFDATA2LSB: ELFDATA2MSB, 0, nil);
 		break;
 	}
 	cflush();
@@ -606,9 +559,9 @@ putsymb(char *s, int t, long v, int ver)
 void
 asmlc(void)
 {
-	long oldpc, oldlc;
+	long oldlc, v, s;
+	vlong oldpc;
 	Prog *p;
-	long v, s;
 
 	oldpc = INITTEXT;
 	oldlc = 0;
@@ -616,12 +569,11 @@ asmlc(void)
 		if(p->line == oldlc || p->as == ATEXT || p->as == ANOP) {
 			if(p->as == ATEXT)
 				curtext = p;
-			if(debug['L'])
-				Bprint(&bso, "%6lux %P\n",
-					p->pc, p);
+			if(debug['V'])
+				Bprint(&bso, "%6llux %P\n", p->pc, p);
 			continue;
 		}
-		if(debug['L'])
+		if(debug['V'])
 			Bprint(&bso, "\t\t%6ld", lcsize);
 		v = (p->pc - oldpc) / MINLC;
 		while(v) {
@@ -629,7 +581,7 @@ asmlc(void)
 			if(v < 127)
 				s = v;
 			CPUT(s+128);	/* 129-255 +pc */
-			if(debug['L'])
+			if(debug['V'])
 				Bprint(&bso, " pc+%ld*%d(%ld)", s, MINLC, s+128);
 			v -= s;
 			lcsize++;
@@ -643,32 +595,29 @@ asmlc(void)
 			CPUT(s>>16);
 			CPUT(s>>8);
 			CPUT(s);
-			if(debug['L']) {
+			if(debug['V']) {
 				if(s > 0)
 					Bprint(&bso, " lc+%ld(%d,%ld)\n",
 						s, 0, s);
 				else
 					Bprint(&bso, " lc%ld(%d,%ld)\n",
 						s, 0, s);
-				Bprint(&bso, "%6lux %P\n",
-					p->pc, p);
+				Bprint(&bso, "%6llux %P\n", p->pc, p);
 			}
 			lcsize += 5;
 			continue;
 		}
 		if(s > 0) {
 			CPUT(0+s);	/* 1-64 +lc */
-			if(debug['L']) {
+			if(debug['V']) {
 				Bprint(&bso, " lc+%ld(%ld)\n", s, 0+s);
-				Bprint(&bso, "%6lux %P\n",
-					p->pc, p);
+				Bprint(&bso, "%6llux %P\n", p->pc, p);
 			}
 		} else {
 			CPUT(64-s);	/* 65-128 -lc */
-			if(debug['L']) {
+			if(debug['V']) {
 				Bprint(&bso, " lc%ld(%ld)\n", s, 64-s);
-				Bprint(&bso, "%6lux %P\n",
-					p->pc, p);
+				Bprint(&bso, "%6llux %P\n", p->pc, p);
 			}
 		}
 		lcsize++;
@@ -678,7 +627,7 @@ asmlc(void)
 		CPUT(s);
 		lcsize++;
 	}
-	if(debug['v'] || debug['L'])
+	if(debug['v'] || debug['V'])
 		Bprint(&bso, "lcsize = %ld\n", lcsize);
 	Bflush(&bso);
 }
@@ -961,7 +910,7 @@ asmout(Prog *p, Optab *o, int aflag)
 			if(o2) {
 				o1 += 1;
 				if(debug['a'])
-					Bprint(&bso, " %.8lux: %.8lux %.8lux%P\n",
+					Bprint(&bso, " %.8llux: %.8lux %.8lux%P\n",
 						p->pc, o1, o2, p);
 				LPUT(o1);
 				LPUT(o2);

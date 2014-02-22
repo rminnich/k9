@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <bio.h>
@@ -1851,36 +1860,6 @@ bootsecdump32(int fd, Xfs *xf, Dosboot32 *b32)
 		fprint(2, "bad fat info sector: %d reserved %d\n", bsec, res);
 }
 
-static char*
-sanitize(char *s, char *e, Dosdir *d)
-{
-	char c, *p, buf[8+3+2];
-	int i, j;
-
-	j = 0;
-	p = (char*)d->name;
-	for(i = 0; i < 8; i++){
-		c = p[i];
-		if(c == 0)
-			break;
-		if(c & 0x80 || c < ' ')
-			c = '-';
-		buf[j++] = c;
-	}
-	buf[j++] = '.';
-	p = (char*)d->ext;
-	for(i = 0; i < 3; i++){
-		c = p[i];
-		if(c == 0)
-			break;
-		if(c & 0x80 || c < ' ')
-			c = '-';
-		buf[j++] = c;
-	}
-	buf[j] = 0;
-	return seprint(s, e, "\"%s\" ", buf);
-}
-
 void
 dirdump(void *vdbuf)
 {
@@ -1904,8 +1883,7 @@ dirdump(void *vdbuf)
 		name = getnamerunes(name, dbuf, 1);
 		seprint(buf, ebuf, "\"%s\" %2.2x %2.2ux %2.2ux %d", name, dbuf[0], dbuf[12], dbuf[13], GSHORT(d->start));
 	}else{
-//		s = seprint(buf, ebuf, "\"%.8s.%.3s\" ", (char*)d->name, (char*)d->ext);
-		s = sanitize(buf, ebuf, d);
+		s = seprint(buf, ebuf, "\"%.8s.%.3s\" ", (char*)d->name, (char*)d->ext);
 		for(i=7; i>=0; i--)
 			*s++ = d->attr&(1<<i) ? attrchar[i] : '-';
 	

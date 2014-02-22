@@ -1,7 +1,6 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
-LIB=$NXM/$objtype/lib/libauth.a
+LIB=/$objtype/lib/libauth.a
 OFILES=\
 	amount.$O\
 	amount_getkey.$O\
@@ -21,13 +20,13 @@ OFILES=\
 	noworld.$O\
 
 HFILES=\
-	$NXM/sys/include/auth.h\
+	/sys/include/auth.h\
 	authlocal.h\
 
 UPDATE=\
 	mkfile\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
-	${LIB:$NXM/$objtype/%=/386/%}\
+	${LIB:/$objtype/%=/386/%}\
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib

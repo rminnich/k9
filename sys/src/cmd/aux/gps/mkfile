@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=\
 	gpsfs\
@@ -8,7 +7,7 @@ TARG=\
 OFILES=\
 	util.$O
 
-BIN=$NXM/$objtype/bin/aux
+BIN=/$objtype/bin/aux
 
 UPDATE=\
 	mkfile\
@@ -16,7 +15,7 @@ UPDATE=\
 	${OFILES:%.$O=%.c}\
 	${TARG:%=%.c}\
 
-<$NXM/sys/src/cmd/mkmany
+</sys/src/cmd/mkmany
 
 update:V:
 	update $UPDATEFLAGS $UPDATE

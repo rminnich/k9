@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <auth.h>
@@ -13,7 +22,7 @@ increqref(void *v)
 	r = v;
 	if(r){
 if(chatty9p > 1)
-	fprint(2, "increfreq %p %d\n", r, r->ref.ref);
+	fprint(2, "increfreq %p %ld\n", r, r->ref.ref);
 		incref(&r->ref);
 	}
 }
@@ -73,7 +82,7 @@ closereq(Req *r)
 		return;
 
 if(chatty9p > 1)
-	fprint(2, "closereq %p %d\n", r, r->ref.ref);
+	fprint(2, "closereq %p %ld\n", r, r->ref.ref);
 
 	if(decref(&r->ref) == 0){
 		if(r->fid)

@@ -1,11 +1,18 @@
-typedef struct Plink Plink;
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 typedef struct Tos Tos;
+typedef struct Plink Plink;
 
 #pragma incomplete Plink
 
-
-struct Tos
-{
+struct Tos {
 	struct			/* Per process profiling */
 	{
 		Plink	*pp;	/* known to be 0(ptr) */
@@ -14,22 +21,14 @@ struct Tos
 		Plink	*first;
 		ulong	pid;
 		ulong	what;
-	}	prof;
+	} prof;
 	uvlong	cyclefreq;	/* cycle clock frequency if there is one, 0 otherwise */
 	vlong	kcycles;	/* cycles spent in kernel */
 	vlong	pcycles;	/* cycles spent in process (kernel + user) */
+	ulong	pid;		/* might as well put the pid here */
 	ulong	clock;
-
-	/*
-	 * Fields below are not available on Plan 9 kernels.
-	 */
-	int	nixtype;		/* role of the core we are running at */
-	int	core;		/* core we are running at */
-
-	/* Used as TLS data in Go.*/
-	void *Go_g;	/* goroutines */
-	void *Go_m;	/* go threads */
-	uvlong pid;
+	/* scratch space for kernel use (e.g., mips fp delay-slot execution) */
+	ulong	kscr[4];
 	/* top of stack is here */
 };
 

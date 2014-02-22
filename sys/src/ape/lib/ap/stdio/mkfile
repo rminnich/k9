@@ -1,7 +1,6 @@
-MKSHELL=rc
-APE=$NXM/sys/src/ape
+APE=/sys/src/ape
 <$APE/config
-LIB=$NXM/$objtype/lib/ape/libap.a
+LIB=/$objtype/lib/ape/libap.a
 OFILES=\
 	_IO_getc.$O\
 	_IO_putc.$O\
@@ -64,6 +63,7 @@ OFILES=\
 	vsprintf.$O\
 	vsnprintf.$O\
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib
 
-CFLAGS=-c $CFLAGS -D_POSIX_SOURCE
+# -w draws lots of "result of operation not used" warnings
+CFLAGS=-c -D_POSIX_SOURCE -FTV

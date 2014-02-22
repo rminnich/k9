@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include	"mk.h"
 
 typedef struct Event
@@ -272,17 +281,17 @@ killchildren(char *msg)
 	Exit();
 }
 
-static long tslot[1000];
-static long tick;
+static ulong tslot[1000];
+static ulong tick;
 
 void
 usage(void)
 {
-	long t;
+	ulong t;
 
-	time(&t);
+	t = time(0);
 	if(tick)
-		tslot[nrunning] += (t-tick);
+		tslot[nrunning] += t - tick;
 	tick = t;
 }
 
@@ -293,5 +302,5 @@ prusage(void)
 
 	usage();
 	for(i = 0; i <= nevents; i++)
-		fprint(1, "%d: %ld\n", i, tslot[i]);
+		fprint(1, "%d: %lud\n", i, tslot[i]);
 }

@@ -1,13 +1,21 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include "cec.h"
 
 typedef struct {
 	char	type;
+	char	pad[3];
 	Pkt	p;
 } Muxmsg;
-
-#define	Muxo	(offsetof(Muxmsg, p))
 
 typedef struct {
 	int	fd;
@@ -20,11 +28,6 @@ struct Mux {
 	Muxproc	p[2];
 	int	pfd[2];
 	int	inuse;
-	int	to;
-	int	retries;
-	int	step;
-	vlong	t0;
-	vlong	t1;
 };
 
 static Mux smux = {
@@ -39,7 +42,7 @@ muxcec(int, int cfd)
 
 	m.type = Fcec;
 	while((l = netget(&m.p, sizeof m.p)) > 0)
-		if(write(cfd, &m, l+Muxo) != l+Muxo)
+		if(write(cfd, &m, l+4) != l+4)
 			break;
 	exits("");
 }
@@ -48,12 +51,10 @@ void
 muxkbd(int kfd, int cfd)
 {
 	Muxmsg m;
-	int o;
 
 	m.type = Fkbd;
-	o = offsetof(Muxmsg, p.data[0]);
 	while((m.p.len = read(kfd, m.p.data, sizeof m.p.data)) > 0)
-		if(write(cfd, &m, o+m.p.len) != o+m.p.len)
+		if(write(cfd, &m, m.p.len+22) != m.p.len+22)
 			break;
 	m.type = Ffatal;
 	write(cfd, &m, 4);
@@ -108,63 +109,11 @@ mux(int fd[2])
 	return m;
 }
 
-#define MSEC()	(nsec()/1000000)
-
-static void
-timestamp(Mux *m)
-{
-	m->t0 = MSEC();
-}
-
-int
-timeout(Mux *m)
-{
-	vlong t;
-
-	if(m->to == 0)
-		return -1;
-	t = m->t0 + m->step;
-	if(t > m->t1)
-		t = m->t1;
-	t -= MSEC();
-	if(t < 5)
-		t = 0;
-	return t;
-}
-
 int
 muxread(Mux *m, Pkt *p)
 {
-	int r, t;
-
-	t = timeout(m);
-	r = -1;
-	if(t != 0){
-		if(t > 0)
-			alarm(t);
-		r = read(m->pfd[0], &m->m, sizeof m->m);
-		if(t > 0)
-			alarm(0);
-	}
-	if(r == -1){
-		timestamp(m);
-		if(m->t0 + 5 >= m->t1)
-			return Ftimedout;
-		m->retries++;
-		if(m->step < 1000)
-			m->step <<= 1;
-		return Ftimeout;
-	}
-	memcpy(p, &m->m.p, r-Muxo);
+	if(read(m->pfd[0], &m->m, sizeof m->m) == -1)
+		return -1;
+	memcpy(p, &m->m.p, sizeof *p);
 	return m->m.type;
-}
-
-void
-muxtimeout(Mux *m, int to)
-{
-	m->retries = 0;
-	timestamp(m);
-	m->step = 75;
-	m->to = to;
-	m->t1 = m->t0 + to;
 }

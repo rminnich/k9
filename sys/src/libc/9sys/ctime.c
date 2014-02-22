@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * This routine converts time as follows.
  * The epoch is 0000 Jan 1 1970 GMT.
@@ -106,8 +115,8 @@ gmtime(long tim)
 	/*
 	 * break initial number into days
 	 */
-	hms = tim % 86400L;
-	day = tim / 86400L;
+	hms = (ulong)tim % 86400L;
+	day = (ulong)tim / 86400L;
 	if(hms < 0) {
 		hms += 86400L;
 		day -= 1;

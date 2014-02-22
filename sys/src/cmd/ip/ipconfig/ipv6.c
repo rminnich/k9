@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * ipconfig for IPv6
  *	RS means Router Solicitation
@@ -648,8 +657,9 @@ recvrahost(uchar buf[], int pktlen)
 			}
 			break;
 		default:
-			ralog("ignoring optype %d in Routeradv from %I",
-				optype, ra->src);
+			if (debug)
+				ralog("ignoring optype %d in Routeradv from %I",
+					optype, ra->src);
 			/* fall through */
 		case V6nd_srcaddrs:
 			/* netsbd sends this, so quietly ignore it for now */

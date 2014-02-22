@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include	<u.h>
 #include	<libc.h>
 #include	<bio.h>
@@ -6,6 +15,8 @@
 #ifndef	EXTERN
 #define	EXTERN	extern
 #endif
+
+#define	LIBNAMELEN	300
 
 typedef	struct	Adr	Adr;
 typedef	struct	Sym	Sym;
@@ -266,6 +277,7 @@ int	Sconv(Fmt*);
 int	aclass(Adr*);
 void	addhist(long, int);
 void	histtoauto(void);
+void	addlibpath(char*);
 void	addnop(Prog*);
 void	append(Prog*, Prog*);
 void	asmb(void);
@@ -287,7 +299,9 @@ void	doprof2(void);
 long	entryvalue(void);
 void	errorexit(void);
 void	exchange(Prog*);
+int	fileexists(char*);
 int	find1(long, int);
+char*	findlib(char*);
 void	follow(void);
 void	gethunk(void);
 double	ieeedtod(Ieee*);

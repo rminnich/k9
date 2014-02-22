@@ -1,6 +1,5 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
-BIN=$NXM/$objtype/bin/fossil
+</$objtype/mkfile
+BIN=/$objtype/bin/fossil
 
 TARG=fossil flchk flfmt conf last
 
@@ -38,7 +37,7 @@ LIBOFILES=${LIBFILES:%=%.$O}
 LIB=libfs.a$O
 
 HFILES=\
-	$NXM/sys/include/oventi.h\
+	/sys/include/oventi.h\
 	stdinc.h\
 	vac.h\
 	dat.h\
@@ -99,7 +98,7 @@ test:V: all
 #	unmount /n/fossil
 #	rm /srv/fossil
 
-<$NXM/sys/src/cmd/mkmany
+</sys/src/cmd/mkmany
 
 $LIB(%.$O):N: %.$O
 $LIB:	${LIBOFILES:%=$LIB(%)}

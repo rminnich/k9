@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <draw.h>
@@ -67,7 +76,7 @@ xfidallocthread(void*)
 				threadcreate(xfidctl, x, 16384);
 			}
 			if(x->ref != 0){
-				fprint(2, "%p incref %d\n", x, x->ref);
+				fprint(2, "%p incref %ld\n", x, x->ref);
 				error("incref");
 			}
 			if(x->flushtag != -1)
@@ -77,7 +86,7 @@ xfidallocthread(void*)
 			break;
 		case Free:
 			if(x->ref != 0){
-				fprint(2, "%p decref %d\n", x, x->ref);
+				fprint(2, "%p decref %ld\n", x, x->ref);
 				error("decref");
 			}
 			if(x->flushtag != -1)

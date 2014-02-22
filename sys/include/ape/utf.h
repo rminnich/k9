@@ -1,21 +1,30 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #ifndef _UTF_H_
 #define _UTF_H_ 1
-#pragma lib "ape/libutf.a"
+#pragma lib "/$M/lib/ape/libutf.a"
 #pragma src "/sys/src/ape/lib/utf"
 
 #if defined(__cplusplus)
 extern "C" { 
 #endif
 
-typedef unsigned short Rune;	/* 32 bits */
+typedef unsigned int Rune;	/* 32 bits */
 
 enum
 {
 	UTFmax		= 4,		/* maximum bytes per rune */
 	Runesync	= 0x80,		/* cannot represent part of a UTF sequence (<) */
 	Runeself	= 0x80,		/* rune and UTF sequences are the same (<) */
-	Runeerror	= 0xFFFD,		/* decoding error in UTF */
-	Runemax	= 0x10FFFF,	/* maximum rune value */
+	Runeerror	= 0xFFFD,	/* decoding error in UTF */
+	Runemax		= 0x10FFFF,	/* 21-bit rune */
 };
 
 /*

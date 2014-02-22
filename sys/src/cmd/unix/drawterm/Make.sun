@@ -10,7 +10,7 @@ O=o
 OS=posix
 GUI=x11
 LDADD=-L$(X11)/lib -lX11 -lrt -lpthread -lsocket -lnsl
-LDFLAGS=-L $NXM/$objtype/lib
+LDFLAGS=
 TARG=drawterm
 AUDIO=none
 

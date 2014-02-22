@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=kfs
 
@@ -31,13 +30,13 @@ HFILES=\
 	portfns.h\
 	portdat.h\
 
-BIN=$NXM/$objtype/bin/disk
+BIN=/$objtype/bin/disk
 
 UPDATE=mkfile\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 
 $O.out:	devwren.$O
 

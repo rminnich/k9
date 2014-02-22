@@ -1,6 +1,18 @@
-#include <stdio.h>
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
+#pragma	lib	"libc.a"
+#pragma	src	"/sys/src/libc"
 
 #define	nelem(x)	(sizeof(x)/sizeof((x)[0]))
+#define	offsetof(s, m)	(ulong)(&(((s*)0)->m))
+#define	assert(x)	if(x){}else _assert("x")
 
 /*
  * mem routines
@@ -42,7 +54,8 @@ enum
 	Runesync	= 0x80,		/* cannot represent part of a UTF sequence (<) */
 	Runeself	= 0x80,		/* rune and UTF sequences are the same (<) */
 	Runeerror	= 0xFFFD,	/* decoding error in UTF */
-	Runemax	= 0x10FFFF,	/* maximum rune value */
+	Runemax		= 0x10FFFF,	/* 21-bit rune */
+	Runemask	= 0x1FFFFF,	/* bits used by runes (see grep) */
 };
 
 /*
@@ -76,12 +89,14 @@ extern	Rune*	runestrstr(Rune*, Rune*);
 extern	Rune	tolowerrune(Rune);
 extern	Rune	totitlerune(Rune);
 extern	Rune	toupperrune(Rune);
+extern	Rune	tobaserune(Rune);
 extern	int	isalpharune(Rune);
+extern	int	isbaserune(Rune);
+extern	int	isdigitrune(Rune);
 extern	int	islowerrune(Rune);
 extern	int	isspacerune(Rune);
 extern	int	istitlerune(Rune);
 extern	int	isupperrune(Rune);
-extern	int	isdigitrune(Rune);
 
 /*
  * malloc
@@ -98,7 +113,6 @@ extern	void	setrealloctag(void*, ulong);
 extern	ulong	getmalloctag(void*);
 extern	ulong	getrealloctag(void*);
 extern	void*	malloctopoolblock(void*);
-extern	void	outofmemoryexits(int);
 
 /*
  * print routines
@@ -331,14 +345,6 @@ extern	vlong	nsec(void);
 extern	void	cycles(uvlong*);	/* 64-bit value of the cycle counter if there is one, 0 if there isn't */
 
 /*
- * endian conversion
- */
-extern	uvlong	getbe(uchar*, int);
-extern	void	putbe(uchar*, uvlong, int);
-extern	uvlong	getle(uchar*, int);
-extern	void	putle(uchar*, uvlong, int);
-
-/*
  * one-of-a-kind
  */
 enum
@@ -367,10 +373,9 @@ extern	int	enc32(char*, int, uchar*, int);
 extern	int	dec16(uchar*, int, char*, int);
 extern	int	enc16(char*, int, uchar*, int);
 extern	int	encodefmt(Fmt*);
-//extern	void	exits(char*);
+extern	void	exits(char*);
 extern	double	frexp(double, int*);
 extern	uintptr	getcallerpc(void*);
-extern	int	getcoreno(int*);
 extern	char*	getenv(char*);
 extern	int	getfields(char*, char**, int, int, char*);
 extern	int	gettokens(char *, char **, int, char *);
@@ -386,6 +391,7 @@ extern	int	netcrypt(void*, void*);
 extern	void	notejmp(void*, jmp_buf, int);
 extern	void	perror(char*);
 extern	int	postnote(int, int, char *);
+extern	double	pow10(int);
 extern	int	putenv(char*, char*);
 extern	void	qsort(void*, long, long, int (*)(void*, void*));
 extern	int	setjmp(jmp_buf);
@@ -415,11 +421,21 @@ enum {
 extern	void	prof(void (*fn)(void*), void *arg, int entries, int what);
 
 /*
+ * atomic
+ */
+long	ainc(long*);
+long	adec(long*);
+int	cas32(u32int*, u32int, u32int);
+int	casp(void**, void*, void*);
+int	casl(ulong*, ulong, ulong);
+
+/*
  *  synchronization
  */
 typedef
 struct Lock {
-	int	val;
+	long	key;
+	long	sem;
 } Lock;
 
 extern int	_tas(int*);
@@ -543,6 +559,7 @@ extern	void		freenetconninfo(NetConnInfo*);
 #define	OCEXEC	32	/* or'ed in, close on exec */
 #define	ORCLOSE	64	/* or'ed in, remove on close */
 #define	OEXCL	0x1000	/* or'ed in, exclusive use (create only) */
+// #define	OBEHIND	0x2000	/* use write behind for writes [for 9n] */
 
 #define	AEXIST	0	/* accessible: exists */
 #define	AEXEC	1	/* execute access */
@@ -560,7 +577,7 @@ extern	void		freenetconninfo(NetConnInfo*);
 
 /* bits in Qid.type */
 #define QTDIR		0x80		/* type bit for directories */
-#define QTAPPEND		0x40		/* type bit for append only files */
+#define QTAPPEND	0x40		/* type bit for append only files */
 #define QTEXCL		0x20		/* type bit for exclusive use files */
 #define QTMOUNT		0x10		/* type bit for mounted channel */
 #define QTAUTH		0x08		/* type bit for authentication file */
@@ -569,7 +586,7 @@ extern	void		freenetconninfo(NetConnInfo*);
 
 /* bits in Dir.mode */
 #define DMDIR		0x80000000	/* mode bit for directories */
-#define DMAPPEND		0x40000000	/* mode bit for append only files */
+#define DMAPPEND	0x40000000	/* mode bit for append only files */
 #define DMEXCL		0x20000000	/* mode bit for exclusive use files */
 #define DMMOUNT		0x10000000	/* mode bit for mounted channel */
 #define DMAUTH		0x08000000	/* mode bit for authentication file */
@@ -592,20 +609,7 @@ enum
 	RFCENVG		= (1<<11),
 	RFCFDG		= (1<<12),
 	RFREND		= (1<<13),
-	RFNOMNT		= (1<<14),
-	RFPREPAGE	= (1<<15),
-	RFCPREPAGE	= (1<<16),
-	RFCORE		= (1<<17),
-	RFCCORE		= (1<<18),
-	RFSTACK		= (1<<19),
-};
-
-/* execac */
-enum
-{
-	EXTC = 0,	/* exec on time-sharing */
-	EXAC,		/* want an AC for the exec'd image */
-	EXXC,		/* want an XC for the exec'd image */
+	RFNOMNT		= (1<<14)
 };
 
 typedef
@@ -663,6 +667,7 @@ extern	int	create(char*, int, ulong);
 extern	int	dup(int, int);
 extern	int	errstr(char*, uint);
 extern	int	exec(char*, char*[]);
+extern	int	execl(char*, ...);
 extern	int	fork(void);
 extern	int	rfork(int);
 extern	int	fauth(int, char*);
@@ -671,11 +676,11 @@ extern	int	fwstat(int, uchar*, int);
 extern	int	fversion(int, int, char*, int);
 extern	int	mount(int, int, char*, int, char*);
 extern	int	unmount(char*, char*);
-extern	vlong	nanotime(void);
 extern	int	noted(int);
 extern	int	notify(void(*)(void*, char*));
 extern	int	open(char*, int);
 extern	int	fd2path(int, char*, int);
+// extern	int	fdflush(int);
 extern	int	pipe(int*);
 extern	long	pread(int, void*, long, vlong);
 extern	long	preadv(int, IOchunk*, int, vlong);
@@ -695,7 +700,6 @@ extern	int	segflush(void*, ulong);
 extern	int	segfree(void*, ulong);
 extern	int	semacquire(long*, int);
 extern	long	semrelease(long*, long);
-extern	int	settls(ulong *);
 extern	int	sleep(long);
 extern	int	stat(char*, uchar*, int);
 extern	int	tsemacquire(long*, ulong);
@@ -720,88 +724,6 @@ extern	char*	sysname(void);
 extern	void	werrstr(char*, ...);
 #pragma	varargck	argpos	werrstr	1
 
-extern	int	ziop(int*);
-
-/*
- * Atomics
- * (casul was known before as casl; we don't suppy a prototype
- * so we could see the warnings and update the source; the function
- * is still in libc).
- */
-extern int	ainc(int *); 
-extern int	adec(int *); 
-extern int	cas(uint *p, int ov, int nv);
-extern int	casul(ulong *p, ulong ov, ulong nv);
-extern int	casp(void **p, void *ov, void *nv);
-extern int	cas32(u32int *p, u32int ov, u32int nv);
-extern int	cas64(u64int *p, u64int ov, u64int nv);
-extern void	mfence(void);
-
-/*
- * Zero-copy I/O
- */
-
-typedef struct Zio Zio;
-struct Zio
-{
-	void*	data;
-	ulong	size;
-};
-
-/* kernel interface */
-extern	void	ziofree(Zio io[], int nio);
-extern	int	ziopread(int fd, Zio io[], int nio, usize count, vlong offset);
-extern	int	ziowrite(int fd, Zio io[], int nio);
-extern	int	zioread(int fd, Zio io[], int nio, usize count);
-extern	int	ziopwrite(int fd, Zio io[], int nio, vlong offset);
-
-
-/*
- * NIX core types
- */
-enum
-{
-	NIXTC = 0,
-	NIXKC,
-	NIXAC,
-};
-
-
-/*
- * NIX system calls and library functions.
- */
-extern	int	execac(int, char*, char*[]);
-
-extern int	altsems(int *ss[], int n);
-extern int	downsem(int *s, int dontblock);
-extern void	semstats(void);
-extern void	upsem(int *s);
-extern int	semtrytimes;
-
-/*
- * Internal NIX system calls, used by library functions.
- */
-extern	void	semsleep(int*, int);
-extern	void	semwakeup(int*);
-extern	int	semalt(int*[], int);
-extern	void	semstats(void);
-extern	int	semdebug;
-
-
-/*
- * Performance counters
- */
-enum
-{
-	PmcOs = 1,
-	PmcUser = 2,
-	PmcEnable = 4,
-};
-
-extern int confpmc(int, int, int, char *);
-extern uvlong rdpmc(int);
-
-
 extern char *argv0;
 #define	ARGBEGIN	for((argv0||(argv0=*argv)),argv++,argc--;\
 			    argv[0] && argv[0][0]=='-' && argv[0][1];\
@@ -825,13 +747,3 @@ extern char *argv0;
 
 /* this is used by sbrk and brk,  it's a really bad idea to redefine it */
 extern	char	end[];
-
-/* I'm not ready to add exits() to akaros yet. But maybe we should. */
-static inline void exits(char *mesg)
-{
-	void exit(int status);
-	printf("Exits: %s\n", mesg);
-	exit(1);
-}
-
-#define sysfatal(fmt...)do {printf(fmt); exit(1);} while(0)

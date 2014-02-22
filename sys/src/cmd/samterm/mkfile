@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=samterm
 OFILES=main.$O\
@@ -14,19 +13,19 @@ OFILES=main.$O\
 
 HFILES=samterm.h\
 	flayer.h\
-	$NXM/sys/include/frame.h\
+	/sys/include/frame.h\
 
-LIB= $NXM/$objtype/lib/libdraw.a\
- $NXM/$objtype/lib/libframe.a\
+LIB=	/$objtype/lib/libdraw.a\
+	/$objtype/lib/libframe.a\
 
-BIN=$NXM/$objtype/bin/aux
+BIN=/$objtype/bin/aux
 
 UPDATE=\
 	mkfile\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 
 CFLAGS=-I../sam $CFLAGS
 

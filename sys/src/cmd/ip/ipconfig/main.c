@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * ipconfig - configure parameters of an ip stack
  */
@@ -1156,6 +1165,10 @@ dhcprecv(void)
 			DEBUG("dhcprecv: read timed out");
 		return;
 	}
+	if(n == 0){
+		warning("dhcprecv: zero-length packet read");
+		return;
+	}
 
 	bp = parsebootp(buf, n);
 	if(bp == 0) {
@@ -1608,7 +1621,8 @@ parsebootp(uchar *p, int n)
 
 	bp = (Bootp*)p;
 	if(n < bp->optmagic - p) {
-		warning("parsebootp: short bootp packet");
+		warning("parsebootp: short bootp packet; with options, "
+			"need %d bytes, got %d", bp->optmagic - p, n);
 		return nil;
 	}
 

@@ -1,9 +1,8 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=serial
 OFILES=main.$O
-LIBDOFILES=ftdi.$O serial.$O prolific.$O ucons.$O
+LIBDOFILES=ftdi.$O serial.$O prolific.$O ucons.$O silabs.$O
 HFILES=\
 	../lib/usb.h\
 	ftdi.h\
@@ -17,14 +16,14 @@ LIB=\
 	$LIBD\
 	$LIBU\
 
-BIN=$NXM/$objtype/bin/usb
+BIN=/$objtype/bin/usb
 
 UPDATE=\
 	mkfile\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 
 CFLAGS=-I../lib $CFLAGS
 

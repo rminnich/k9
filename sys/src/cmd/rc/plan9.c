@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * Plan 9 versions of system-specific functions
  *	By convention, exported routines herein have names beginning with an
@@ -29,12 +38,14 @@ char *syssigname[] = {
 	"term",
 	0
 };
-char Rcmain[]="/rc/lib/rcmain";
-char Fdprefix[]="/fd/";
+char *Rcmain = "/rc/lib/rcmain";
+char *Fdprefix = "/fd/";
+
 void execfinit(void);
 void execbind(void);
 void execmount(void);
 void execnewpgrp(void);
+
 builtin Builtin[] = {
 	"cd",		execcd,
 	"whatis",	execwhatis,
@@ -619,7 +630,7 @@ Memcpy(void *a, void *b, long n)
 void*
 Malloc(ulong n)
 {
-	return malloc(n);
+	return mallocz(n, 1);
 }
 
 int *waitpids;

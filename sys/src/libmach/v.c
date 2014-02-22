@@ -1,9 +1,19 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * mips definition
  */
 #include <u.h>
+#include <libc.h>
 #include <bio.h>
-#include "../../../mips/include/ureg.h"
+#include "/mips/include/ureg.h"
 #include <mach.h>
 
 #define	REGOFF(x)	(ulong)(&((struct Ureg *) 0)->x)
@@ -105,9 +115,9 @@ Mach mmips =
 	"R31",		/* name of link register */
 	"setR30",	/* static base register name */
 	0,		/* value */
-	0x1000,		/* page size */
-	0xC0000000ULL,	/* kernel base */
-	0x40000000ULL,	/* kernel text mask */
+	16*1024,	/* page size */
+	0x80000000ULL,	/* kernel base */
+	0x80000000ULL,	/* kernel text mask */
 	0x7FFFFFFFULL,	/* user stack top */
 	4,		/* quantization of pc */
 	4,		/* szaddr */

@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <bio.h>
@@ -40,8 +49,8 @@ void	interpret(Node*, Node*);
 void	include(Node*, Node*);
 void	regexp(Node*, Node*);
 void	dosysr1(Node*, Node*);
-void	fmtof(Node*, Node*);
-void	dofmtsize(Node*, Node*);
+void	fmtof(Node*, Node*) ;
+void	dofmtsize(Node*, Node*) ;
 
 typedef struct Btab Btab;
 struct Btab
@@ -861,7 +870,7 @@ map(Node *r, Node *args)
 	}
 }
 
-void
+void 
 flatten(Node **av, Node *n)
 {
 	if(n == 0)
@@ -969,6 +978,7 @@ fmt(Node *r, Node *args)
 void
 patom(char type, Store *res)
 {
+	int i;
 	char buf[512];
 	extern char *typenames[];
 
@@ -983,13 +993,20 @@ patom(char type, Store *res)
 			Bprint(bout, "%3c", (int)res->ival);
 		break;
 	case 'r':
-		Bprint(bout, "%C", (uint)res->ival);
+		Bprint(bout, "%C", (int)res->ival);
 		break;
 	case 'B':
-		Bprint(bout, "%#.32llub", res->ival);
+		memset(buf, '0', 34);
+		buf[1] = 'b';
+		for(i = 0; i < 32; i++) {
+			if(res->ival & (1<<i))
+				buf[33-i] = '1';
+		}
+		buf[35] = '\0';
+		Bprint(bout, "%s", buf);
 		break;
 	case 'b':
-		Bprint(bout, "%.2x", (uint)res->ival&0xff);
+		Bprint(bout, "%.2x", (int)res->ival&0xff);
 		break;
 	case 'X':
 		Bprint(bout, "%.8lux", (ulong)res->ival);
@@ -1001,10 +1018,10 @@ patom(char type, Store *res)
 		Bprint(bout, "%d", (int)res->ival);
 		break;
 	case 'd':
-		Bprint(bout, "%hd", (short)res->ival);
+		Bprint(bout, "%d", (ushort)res->ival);
 		break;
 	case 'u':
-		Bprint(bout, "%hud", (uint)res->ival&0xffff);
+		Bprint(bout, "%d", (int)res->ival&0xffff);
 		break;
 	case 'U':
 		Bprint(bout, "%lud", (ulong)res->ival);
@@ -1022,13 +1039,13 @@ patom(char type, Store *res)
 		Bprint(bout, "%.16llux", res->ival);
 		break;
 	case 'o':
-		Bprint(bout, "0%.11uo", (uint)res->ival&0xffff);
+		Bprint(bout, "0%.11uo", (int)res->ival&0xffff);
 		break;
 	case 'O':
 		Bprint(bout, "0%.6uo", (int)res->ival);
 		break;
 	case 'q':
-		Bprint(bout, "0%.11ho", (short)(res->ival&0xffff));
+		Bprint(bout, "0%.11o", (short)(res->ival&0xffff));
 		break;
 	case 'Q':
 		Bprint(bout, "0%.6o", (int)res->ival);
@@ -1262,8 +1279,7 @@ pcline(Node *r, Node *args)
 	r->ival = strtol(p+1, 0, 0);	
 }
 
-void
-fmtof(Node *r, Node *args)
+void fmtof(Node *r, Node *args)
 {
 	Node *av[Maxarg];
 	Node res;
@@ -1273,36 +1289,36 @@ fmtof(Node *r, Node *args)
 	if(na < 1)
 		error("fmtof(obj): no argument");
 	if(na > 1)
-		error("fmtof(obj): too many arguments");
+		error("fmtof(obj): too many arguments") ;
 	expr(av[0], &res);
 
 	r->op = OCONST;
-	r->type = TINT;
-	r->ival = res.fmt;
+	r->type = TINT ;
+	r->ival = res.fmt ;
 	r->fmt = 'c';
 }
 
-void
-dofmtsize(Node *r, Node *args)
+void dofmtsize(Node *r, Node *args)
 {
-	Node *av[Maxarg], res;
-	Store *s;
-	Value v;
+	Node *av[Maxarg];
+	Node res;
+	Store * s ;
+	Value v ;
 
 	na = 0;
 	flatten(av, args);
 	if(na < 1)
 		error("fmtsize(obj): no argument");
 	if(na > 1)
-		error("fmtsize(obj): too many arguments");
+		error("fmtsize(obj): too many arguments") ;
 	expr(av[0], &res);
 
-	v.type = res.type;
-	s = &v.Store;
-	*s = res;
+	v.type = res.type ;
+	s = &v.Store ;
+	*s = res ;
 
 	r->op = OCONST;
-	r->type = TINT;
-	r->ival = fmtsize(&v);
+	r->type = TINT ;
+	r->ival = fmtsize(&v) ;
 	r->fmt = 'D';
 }

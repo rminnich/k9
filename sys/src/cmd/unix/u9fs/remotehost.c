@@ -1,9 +1,17 @@
-#include <sys/types.h>
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
+#include <plan9.h>
 #include <sys/socket.h>	/* various networking crud */
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <netdb.h>
-#include <plan9.h>
 
 void
 getremotehostname(char *name, int nname)
@@ -26,7 +34,8 @@ getremotehostname(char *name, int nname)
 	strecpy(name, name+nname, hp->h_name);
 	on = 1;
 	setsockopt(0, SOL_SOCKET, SO_KEEPALIVE, (char*)&on, sizeof(on));
-
+#ifdef TCP_NODELAY
 	on = 1;
 	setsockopt(0, IPPROTO_TCP, TCP_NODELAY, (char*)&on, sizeof(on));
+#endif
 }

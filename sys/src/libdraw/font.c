@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <draw.h>
@@ -7,7 +16,6 @@ static int	freeup(Font*);
 
 #define	PJW	0	/* use NUL==pjw for invisible characters */
 
-static Rune empty[] = { 0 };
 int
 cachechars(Font *f, char **ss, Rune **rr, ushort *cp, int max, int *wp, char **subfontname)
 {
@@ -19,7 +27,7 @@ cachechars(Font *f, char **ss, Rune **rr, ushort *cp, int max, int *wp, char **s
 
 	if(ss){
 		sp = *ss;
-		rp = empty;
+		rp = L"";
 	}else{
 		sp = "";
 		rp = *rr;
@@ -130,7 +138,8 @@ agefont(Font *f)
 			if(s->age){
 				if(s->age<SUBFAGE && s->cf->name != nil){
 					/* clean up */
-					if(s->f != display->defaultsubfont)
+					if(display &&
+					    s->f != display->defaultsubfont)
 						freesubfont(s->f);
 					s->cf = nil;
 					s->f = nil;

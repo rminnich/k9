@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "stdinc.h"
 #include <fcall.h>
 #include "vac.h"
@@ -200,12 +209,6 @@ threadmain(int argc, char *argv[])
 		mfd[0] = p[0];
 		mfd[1] = p[0];
 		srvfd = p[1];
-	}
-
-	procrfork(srv, 0, Stacksize, RFFDG|RFNAMEG|RFNOTEG);
-
-	if(!stdio){
-		close(p[0]);
 		if(defsrv){
 			srvname = smprint("/srv/%s", defsrv);
 			fd = create(srvname, OWRITE|ORCLOSE, 0666);
@@ -215,6 +218,12 @@ threadmain(int argc, char *argv[])
 				sysfatal("write %s: %r", srvname);
 			free(srvname);
 		}
+	}
+
+	procrfork(srv, 0, Stacksize, RFFDG|RFNAMEG|RFNOTEG);
+
+	if(!stdio){
+		close(p[0]);
 		if(defmnt){
 			if(mount(srvfd, -1, defmnt, MREPL|MCREATE, "") < 0)
 				sysfatal("mount %s: %r", defmnt);

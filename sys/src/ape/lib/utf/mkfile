@@ -1,8 +1,7 @@
-MKSHELL=rc
-APE=$NXM/sys/src/ape
+APE=/sys/src/ape
 <$APE/config
 
-LIB=$NXM/$objtype/lib/ape/libutf.a
+LIB=/$objtype/lib/ape/libutf.a
 
 OFILES=\
 	rune.$O\
@@ -27,12 +26,12 @@ OFILES=\
 	utfutf.$O\
 
 HFILES=\
-	$NXM/sys/include/ape/utf.h\
+	/sys/include/ape/utf.h\
 
 UPDATE=\
 	mkfile\
 	${OFILES:%.$O=%.c}\
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib
 
-CFLAGS=-c $CFLAGS -D_POSIX_SOURCE -D_PLAN9_SOURCE -D_BSD_EXTENSION
+CFLAGS=$CFLAGS -c -D_POSIX_SOURCE -D_PLAN9_SOURCE -D_BSD_EXTENSION

@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=kb
 OFILES=main.$O
@@ -16,7 +15,7 @@ LIB=\
 	$LIBD\
 	$LIBU\
 
-BIN=$NXM/$objtype/bin/usb
+BIN=/$objtype/bin/usb
 
 
 UPDATE=\
@@ -24,7 +23,7 @@ UPDATE=\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 CFLAGS=-I../lib $CFLAGS
 
 $LIBU:

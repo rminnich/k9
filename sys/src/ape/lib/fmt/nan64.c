@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * 64-bit IEEE not-a-number routines.
  * This is big/little-endian portable assuming that 
@@ -7,22 +16,12 @@
 
 #include "nan.h"
 
-#ifdef __APPLE__
-#define _NEEDLL
-#endif
-
 typedef unsigned long long uvlong;
 typedef unsigned long ulong;
 
-#ifdef _NEEDLL
 static uvlong uvnan    = 0x7FF0000000000001LL;
 static uvlong uvinf    = 0x7FF0000000000000LL;
 static uvlong uvneginf = 0xFFF0000000000000LL;
-#else
-static uvlong uvnan    = 0x7FF0000000000001;
-static uvlong uvinf    = 0x7FF0000000000000;
-static uvlong uvneginf = 0xFFF0000000000000;
-#endif
 
 double
 __NaN(void)

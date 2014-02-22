@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "gc.h"
 
 static	char	resvreg[nelem(reg)];
@@ -721,8 +730,13 @@ gmove(Node *f, Node *t)
 			regfree(&nod1);
 			p1 = p;
 			regalloc(&nod, t, Z);
-			gins(AMOVF, nodfconst(2147483648.), &nod);
-			gins(AADDF, &nod, t);
+			if(tt == TFLOAT) {
+				gins(AMOVF, nodfconst(2147483648.), &nod);
+				gins(AADDF, &nod, t);
+			} else {
+				gins(AMOVD, nodfconst(2147483648.), &nod);
+				gins(AADDD, &nod, t);
+			}
 			regfree(&nod);
 			patch(p1, pc);
 			return;
@@ -924,12 +938,14 @@ gins(int a, Node *f, Node *t)
 void
 gopcode(int o, Node *f1, Node *f2, Node *t)
 {
-	int a, et;
+	int a, et, true;
 	Adr ta;
 
 	et = TLONG;
 	if(f1 != Z && f1->type != T)
 		et = f1->type->etype;
+	true = o & BTRUE;
+	o &= ~BTRUE;
 	a = AGOK;
 	switch(o) {
 	case OAS:
@@ -1056,7 +1072,8 @@ gopcode(int o, Node *f1, Node *f2, Node *t)
 		nextpc();
 		p->as = a;
 		naddr(f1, &p->from);
-		if(a == ACMP && f1->op == OCONST && p->from.offset < 0) {
+		if(a == ACMP && f1->op == OCONST && p->from.offset < 0 &&
+		    p->from.offset != 0x80000000) {
 			p->as = ACMN;
 			p->from.offset = -p->from.offset;
 		}
@@ -1070,15 +1087,24 @@ gopcode(int o, Node *f1, Node *f2, Node *t)
 			break;
 		case OLT:
 			a = ABLT;
+			/* ensure NaN comparison is always false */
+			if(typefd[et] && !true)
+				a = ABMI;
 			break;
 		case OLE:
 			a = ABLE;
+			if(typefd[et] && !true)
+				a = ABLS;
 			break;
 		case OGE:
 			a = ABGE;
+			if(typefd[et] && true)
+				a = ABPL;
 			break;
 		case OGT:
 			a = ABGT;
+			if(typefd[et] && true)
+				a = ABHI;
 			break;
 		case OLO:
 			a = ABLO;

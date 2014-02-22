@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <oventi.h>
@@ -25,6 +34,7 @@ struct VtLock {
 	int readers;		/* number writering read lock */
 	Thread *qfirst;
 	Thread *qlast;
+	uintptr	pc;
 };
 
 struct VtRendez {
@@ -170,7 +180,7 @@ vtLockAlloc(void)
 }
 
 /*
- * RSC: I think the test is backward.  Let's see who uses it. 
+ * RSC: I think the test is backward.  Let's see who uses it.
  *
 void
 vtLockInit(VtLock **p)
@@ -238,6 +248,7 @@ vtLock(VtLock *p)
 	Thread *t;
 
 	lock(&p->lk);
+	p->pc = getcallerpc(&p);
 	t = *vtRock;
 	if(p->writer == nil && p->readers == 0) {
 		p->writer = t;
@@ -316,7 +327,7 @@ vtUnlock(VtLock *p)
 	 * venti currently has code that assumes lock can be passed between threads :-)
  	 * assert(p->writer == *vtRock);
 	 */
- 	assert(p->writer != nil);   
+ 	assert(p->writer != nil);
 	assert(p->readers == 0);
 	t = p->qfirst;
 	if(t == nil) {
@@ -328,6 +339,7 @@ vtUnlock(VtLock *p)
 		p->qfirst = t->next;
 		p->writer = t;
 		unlock(&p->lk);
+
 		threadWakeup(t);
 		return;
 	}
@@ -337,6 +349,7 @@ vtUnlock(VtLock *p)
 		tt = t;
 		t = t->next;
 		p->readers++;
+
 		threadWakeup(tt);
 	}
 	p->qfirst = t;
@@ -357,7 +370,7 @@ vtRUnlock(VtLock *p)
 		return;
 	}
 	assert(t->state == QueuingW);
-	
+
 	p->qfirst = t->next;
 	p->writer = t;
 	unlock(&p->lk);
@@ -421,7 +434,7 @@ vtWakeup(VtRendez *q)
 	 * put on front so guys that have been waiting will not get starved
 	 */
 	p = q->lk;
-	lock(&p->lk);	
+	lock(&p->lk);
 	/*
 	 * venti currently has code that assumes lock can be passed between threads :-)
  	 * assert(p->writer == *vtRock);
@@ -447,7 +460,7 @@ int
 vtWakeupAll(VtRendez *q)
 {
 	int i;
-	
+
 	for(i=0; vtWakeup(q); i++)
 		;
 	return i;

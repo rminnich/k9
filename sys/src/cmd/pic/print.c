@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <stdio.h>
 #include <math.h>
 #include "pic.h"
@@ -51,11 +60,11 @@ void print(void)
 				move(x0, y0);
 				fillstart(p->o_fillval);
 			}
-			if (p->o_type == BLOCK)
+			if (p->o_type == BLOCK){
 				;	/* nothing at all */
-			else if (invis && !fill)
+			}else if (invis && !fill){
 				;	/* nothing at all */
-			else if (p->o_attr & (DOTBIT|DASHBIT))
+			}else if (p->o_attr & (DOTBIT|DASHBIT))
 				dotbox(x0, y0, x1, y1, p->o_attr, p->o_ddval);
 			else
 				box(x0, y0, x1, y1);

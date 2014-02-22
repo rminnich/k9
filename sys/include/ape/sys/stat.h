@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #ifndef __STAT_H
 #define __STAT_H
 
@@ -5,7 +14,7 @@
 #include <sys/types.h>
 #endif
 
-#pragma lib "ape/libap.a"
+#pragma lib "/$M/lib/ape/libap.a"
 
 /*
  * stat structure, used by stat(2) and fstat(2)
@@ -71,7 +80,7 @@ extern int fstat(int, struct stat *);
 extern int chmod(const char *, mode_t);
 
 #ifdef _BSD_EXTENSION
-#pragma lib "ape/libbsd.a"
+#pragma lib "/$M/lib/ape/libbsd.a"
 extern int	lstat(char *, struct stat *);
 extern int	symlink(char *, char *);
 extern int	readlink(char *, char*, int);

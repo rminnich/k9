@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * ecp - copy a file fast (in big blocks), cope with errors, optionally verify.
  *
@@ -168,6 +177,47 @@ rewind(File *fp)
 	repos(fp, 0);
 }
 
+static char magic[] = "\235any old ☺ rubbish\173";
+static char uniq[sizeof magic + 2*sizeof(ulong)];
+
+static char *
+putbe(char *p, ulong ul)
+{
+	*p++ = ul>>24;
+	*p++ = ul>>16;
+	*p++ = ul>>8;
+	*p++ = ul;
+	return p;
+}
+
+/*
+ * generate magic + unique string, add to start & end of buff.
+ * return tail pointer.
+ */
+static char *
+addmagic(char *buff, int bytes)
+{
+	char *p, *tail;
+	static ulong seq;
+
+	strcpy(uniq, magic);
+	p = putbe(uniq + sizeof magic - 1, time(0));
+	putbe(p, ++seq);
+
+	memcpy(buff, uniq, sizeof uniq);
+	tail = buff + bytes - sizeof uniq;
+	memcpy(tail, uniq, sizeof uniq);
+	return tail;
+}
+
+/* verify magic + unique strings in buff */
+static int
+ismagicok(char *buff, char *tail)
+{
+	return  memcmp(buff, uniq, sizeof uniq) == 0 ||
+		memcmp(tail, uniq, sizeof uniq) == 0;
+}
+
 /*
  * transfer (many) sectors.  reblock input as needed.
  * returns Enone if no failures, others on failure with errstr set.
@@ -176,6 +226,7 @@ static int
 bio(File *fp, Rdwrfn *rdwr, char *buff, Daddr stsect, int sects, int mustseek)
 {
 	int xfered;
+	char *tail;
 	ulong toread, bytes = sects * sectsz;
 	static int reblocked = 0;
 
@@ -188,12 +239,21 @@ bio(File *fp, Rdwrfn *rdwr, char *buff, Daddr stsect, int sects, int mustseek)
 	if ((long)blocksize != blocksize || (long)bytes != bytes)
 		sysfatal("i/o count too big: %lud", bytes);
 
+	SET(tail);
+	if (rdwr == read)
+		tail = addmagic(buff, bytes);
 	werrstr("");
 	xfered = (*rdwr)(fp->fd, buff, bytes);
-	if (xfered == bytes)
+	if (xfered == bytes) {
+		/* don't trust the hardware; it may lie */
+		if (rdwr == read && ismagicok(buff, tail))
+			fprint(2, "%s: `good' read didn't change buffer\n",
+				argv0);
 		return Enone;			/* did as we asked */
+	}
 	if (xfered < 0)
 		return Eio;			/* out-and-out i/o error */
+
 	/*
 	 * Kernel transferred less than asked.  Shouldn't happen;
 	 * probably indicates disk driver error or trying to
@@ -201,6 +261,7 @@ bio(File *fp, Rdwrfn *rdwr, char *buff, Daddr stsect, int sects, int mustseek)
 	 * I/O error that reads zeros past the point of error,
 	 * unless reblocking input and this is a read.
 	 */
+
 	if (rdwr == write)
 		return Eio;
 	if (!reblock) {

@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 
@@ -13,15 +22,15 @@ struct {
 	int	ok;
 } tab[] =
 {
-	{ "ok",			1 },
-	{ "connect",		1 },
-	{ "no carrier",		0 },
-	{ "no dialtone",	0 },
-	{ "error",		0 },
-	{ "busy",		0 },
-	{ "no answer",		0 },
-	{ "delayed",		0 },
-	{ "blacklisted",	0 },
+	{ "ok\n",		1 },
+	{ "connect\n",		1 },
+	{ "no carrier\n",	0 },
+	{ "no dialtone\n",	0 },
+	{ "error\n",		0 },
+	{ "busy\n",		0 },
+	{ "no answer\n",	0 },
+	{ "delayed\n",		0 },
+	{ "blacklisted\n",	0 },
 };
 
 int
@@ -98,7 +107,7 @@ docmd(char *cmd, int timeout, int quiet, int consfd)
 		if(!quiet)
 			writewithoutcr(consfd, buf, i);
 		for(i = 0; i < nelem(tab); i++)
-			if(cistrstr(buf, tab[i].resp)){
+			if(cistrcmp(buf, tab[i].resp) == 0){
 				if(tab[i].ok)
 					goto out;
 				else

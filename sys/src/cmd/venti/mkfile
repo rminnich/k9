@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=\
 	copy\
@@ -9,9 +8,9 @@ TARG=\
 	write\
 
 
-BIN=$NXM/$objtype/bin/venti
+BIN=/$objtype/bin/venti
 
-<$NXM/sys/src/cmd/mkmany
+</sys/src/cmd/mkmany
 
 CFLAGS=$CFLAGS -I.
 

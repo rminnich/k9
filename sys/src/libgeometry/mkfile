@@ -1,7 +1,6 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
-LIB=$NXM/$objtype/lib/libgeometry.a
+LIB=/$objtype/lib/libgeometry.a
 OFILES=\
 	arith3.$O\
 	matrix.$O\
@@ -10,15 +9,15 @@ OFILES=\
 	transform.$O\
 	tstack.$O\
 
-HFILES=$NXM/sys/include/geometry.h
+HFILES=/sys/include/geometry.h
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib
 
 UPDATE=\
 	mkfile\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
-	${LIB:$NXM/$objtype/%=/386/%}\
+	${LIB:/$objtype/%=/386/%}\
 
 listing:V:
 	pr mkfile $HFILES $CFILES|lp -du

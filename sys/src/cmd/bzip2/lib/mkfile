@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 OFILES=\
 	blocksort.$O\
@@ -27,9 +26,9 @@ HFILES=\
 	plan9.h\
 
 LIB=libbzip2.a$O
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib
 
-CFLAGS=$CFLAGS -FV -p -DPLAN9
+CFLAGS=-FV -p -DPLAN9
 
 clean:V:
 	rm -f *.[$OS] [$OS].out libbzip2.a[$OS]

@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=iostats
 OFILES=iostats.$O\
@@ -7,6 +6,6 @@ OFILES=iostats.$O\
 
 HFILES=statfs.h\
 
-BIN=$NXM/$objtype/bin
-<$NXM/sys/src/cmd/mkone
+BIN=/$objtype/bin
+</sys/src/cmd/mkone
 

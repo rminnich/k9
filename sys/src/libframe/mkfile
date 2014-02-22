@@ -1,7 +1,6 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
-LIB=$NXM/$objtype/lib/libframe.a
+LIB=/$objtype/lib/libframe.a
 OFILES=\
 	frbox.$O\
 	frdraw.$O\
@@ -17,6 +16,6 @@ UPDATE=\
 	mkfile\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
-	${LIB:$NXM/$objtype/%=/386/%}\
+	${LIB:/$objtype/%=/386/%}\
 
-< $NXM/sys/src/cmd/mksyslib
+< /sys/src/cmd/mksyslib

@@ -1,15 +1,14 @@
-MKSHELL=rc
 objtype=power
-<$NXM/power/mkfile
+</power/mkfile
 
-LIB=$NXM/$objtype/lib/libmp.a
+LIB=/$objtype/lib/libmp.a
 SFILES=\
 	mpvecadd.s\
 	mpvecsub.s\
 	mpvecdigmuladd.s\
 	mpvecdigmulsub.s\
 
-HFILES=$NXM/$objtype/include/u.h $NXM/sys/include/mp.h ../port/dat.h
+HFILES=/$objtype/include/u.h /sys/include/mp.h ../port/dat.h
 
 OFILES=${SFILES:%.s=%.$O}
 
@@ -17,4 +16,4 @@ UPDATE=mkfile\
 	$HFILES\
 	$SFILES\
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib

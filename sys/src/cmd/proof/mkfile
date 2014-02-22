@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=proof
 OFILES=main.$O\
@@ -9,8 +8,8 @@ OFILES=main.$O\
 
 HFILES=proof.h
 
-BIN=$NXM/$objtype/bin
-<$NXM/sys/src/cmd/mkone
+BIN=/$objtype/bin
+</sys/src/cmd/mkone
 
 $O.pout: $OFILES
-	$LD $LDFLAGS -o $O.pout -p $OFILES
+	$LD -o $O.pout -p $OFILES

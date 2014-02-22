@@ -1,17 +1,16 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
-LIB=$NXM/$objtype/lib/libbin.a
+LIB=/$objtype/lib/libbin.a
 OFILES=\
 	bin.$O\
 
 HFILES=\
-	$NXM/sys/include/bin.h\
+	/sys/include/bin.h\
 
 UPDATE=\
 	mkfile\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
-	${LIB:$NXM/$objtype/%=/386/%}\
+	${LIB:/$objtype/%=/386/%}\
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib

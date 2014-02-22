@@ -1,6 +1,6 @@
-MKSHELL=rc
 PROGS=${TARG:%=$O.%}
 MANFILES=${TARG:%=%.man}
+LDFLAGS=
 YFLAGS=-d
 
 none:VQ:
@@ -16,9 +16,6 @@ $O.%:	%.$O $OFILES $LIB
 %.$O:	%.c
 	$CC $CFLAGS $stem.c
 
-%.$O:	%.g
-	$GC $GFLAGS $stem.g
-
 %.$O:	%.s
 	$AS $AFLAGS $stem.s
 
@@ -31,7 +28,6 @@ lex.yy.c:	$LFILES
 %.install:V:	$BIN/%
 
 $BIN/%:	$O.%
-	mkdir -p $BIN
 	cp $O.$stem $BIN/$stem
 
 %.installall:V:

@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 typedef struct Ether Ether;
 typedef struct Etherops Etherops;
 typedef struct Conn Conn;
@@ -13,6 +22,7 @@ enum
 	A88178,
 	A88179,
 	A88772,
+	S95xx,		/* SMSC */
 
 	Eaddrlen = 6,
 	Epktlen = 1514,
@@ -20,7 +30,7 @@ enum
 
 	Maxpkt	= 2000,	/* no jumbo packets here */
 	Nconns	= 8,	/* max number of connections */
-	Nbufs	= 8,	/* max number of buffers */
+	Nbufs	= 32,	/* max number of buffers */
 	Scether = 6,	/* ethernet cdc subclass */
 	Fnheader = 0,	/* Functions */
 	Fnunion = 6,
@@ -57,6 +67,8 @@ struct Etherops
 	int	(*multicast)(Ether*, uchar*, int);
 	char*	(*seprintstats)(char*, char*, Ether*);
 	void	(*free)(Ether*);
+	int	bufsize;
+	char	*name;
 	void*	aux;
 };
 
@@ -110,6 +122,7 @@ struct Etherpkt
 
 int	ethermain(Dev *dev, int argc, char **argv);
 int	asixreset(Ether*);
+int smscreset(Ether*);
 int	cdcreset(Ether*);
 int	parseaddr(uchar *m, char *s);
 void	dumpframe(char *tag, void *p, int n);

@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "gc.h"
 
 void
@@ -127,6 +136,7 @@ static void
 zapreg(Node *n)
 {
 	if(n->reg != D_NONE) {
+		//prtree(n, "zapreg");
 		regfree(n);
 		n->reg = D_NONE;
 	}
@@ -2224,6 +2234,7 @@ twoop:
 			t = nn;
 		else
 			t = regpair(Z, n);
+		//print("dr=%d ", dr); prtree(t, "t");
 		c = Z;
 		d = Z;
 		if(!nodreg(&nod1, t->left, D_AX)) {
@@ -2240,10 +2251,12 @@ twoop:
 			}else if(reg[D_DX] == 0)
 				fatal(Z, "vlong mul DX botch");
 		}
+		//prtree(t, "t1"); print("reg/ax = %d reg/dx = %d\n", reg[D_AX], reg[D_DX]);
 		if(m)
 			sugen(l, t, 8);
 		else
 			loadpair(l, t);
+		//prtree(t, "t2"); print("reg/ax = %d reg/dx = %d\n", reg[D_AX], reg[D_DX]);
 		if(t->left->reg != D_AX) {
 			c = &nod3;
 			regsalloc(c, t->left);
@@ -2251,11 +2264,16 @@ twoop:
 			gmove(t->left, &nod1);
 			zapreg(t->left);
 		}
+		//print("reg/ax = %d reg/dx = %d\n", reg[D_AX], reg[D_DX]);
 		if(t->right->reg != D_DX) {
 			d = &nod4;
 			regsalloc(d, t->right);
 			gmove(&nod2, d);
-			gmove(t->right, &nod2);
+			if(t->right->reg == D_AX && c != nil){
+				/* need previous value of AX in DX */
+				gmove(c, &nod2);
+			}else
+				gmove(t->right, &nod2);
 			zapreg(t->right);
 		}
 		if(c != Z || d != Z) {
@@ -2265,6 +2283,8 @@ twoop:
 		}
 		else
 			s = t;
+		reg[D_AX]++;	/* don't allow biggen to allocate AX or DX (smashed by MUL) as temp */
+		reg[D_DX]++;
 		if(r->op == OCONST) {
 			if(hi64v(r) == 0)
 				biggen(s, r, Z, 0, mulc32, nil);
@@ -2274,6 +2294,8 @@ twoop:
 		else
 			biggen(s, r, Z, 0, mull, nil);
 		instpair(t, Z);
+		reg[D_AX]--;
+		reg[D_DX]--;
 		if(c != Z) {
 			gmove(&nod1, t->left);
 			gmove(&nod3, &nod1);
@@ -2282,12 +2304,14 @@ twoop:
 			gmove(&nod2, t->right);
 			gmove(&nod4, &nod2);
 		}
+
 		if(r->op == OREGPAIR)
 			freepair(r);
 		if(!m)
 			storepair(t, l, 0);
 		if(l == &nod5)
 			regfree(l);
+
 		if(!dr) {
 			if(nn != Z)
 				storepair(t, nn, 1);

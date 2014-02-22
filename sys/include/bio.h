@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #pragma	src	"/sys/src/libbio"
 #pragma	lib	"libbio.a"
 
@@ -7,7 +16,7 @@ typedef	struct	Biobufhdr	Biobufhdr;
 enum
 {
 	Bsize		= 8*1024,
-	Bungetsize	= 4,		/* space for ungetc */
+	Bungetsize	= UTFmax+1,		/* space for ungetc */
 	Bmagic		= 0x314159,
 	Beof		= -1,
 	Bbad		= -2,

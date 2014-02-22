@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 DIRS=`{ls -l | sed '/^d/!d; s/.* //; /\./d'}
 

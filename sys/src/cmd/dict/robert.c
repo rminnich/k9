@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <bio.h>
@@ -59,7 +68,7 @@ static Rune intab[256] = {
 };
 
 static Rune suptab[] = {
-	['0'] L'⁰',	['1'] L'¹',	['2'] L'²',	['3'] L'³',
+	['0'] L'⁰',	['1'] L'ⁱ',	['2'] L'⁲',	['3'] L'⁳',
 	['4'] L'⁴',	['5'] L'⁵',	['6'] L'⁶',	['7'] L'⁷',
 	['8'] L'⁸',	['9'] L'⁹',	['+'] L'⁺',	['-'] L'⁻',
 	['='] L'⁼',	['('] L'⁽',	[')'] L'⁾',	['a'] L'ª',
@@ -106,8 +115,6 @@ robertindexentry(Entry e, int cmd)
 	if(db == 0)
 		db = Bouvrir(dfile);
 	def.start = malloc(dl+1);
-	if(def.start == nil)
-		sysfatal("malloc: %r");
 	def.end = def.start + dl;
 	def.doff = da;
 	Bseek(db, da, 0);
@@ -120,8 +127,6 @@ robertindexentry(Entry e, int cmd)
 			eb = Bouvrir(efile);
 		etym.start = malloc(el+1);
 		etym.end = etym.start + el;
-		if(etym.start == nil)
-			sysfatal("malloc: %r");
 		etym.doff = ea;
 		Bseek(eb, ea, 0);
 		Bread(eb, etym.start, el);

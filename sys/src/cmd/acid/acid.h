@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /* acid.h */
 enum
 {
@@ -5,8 +14,8 @@ enum
 	Strsize		= 4096,
 	Hashsize	= 128,
 	Maxarg		= 512,
-	Maxproc		= 400,
-	NFD		= Maxproc+20,
+	NFD		= 100,
+	Maxproc		= 50,
 	Maxval		= 10,
 	Mempergc	= 1024*1024,
 };
@@ -243,10 +252,6 @@ void	windir(Map*, Node*, Node*, Node*);
 void	yyerror(char*, ...);
 int	yylex(void);
 int	yyparse(void);
-
-#pragma	varargck	argpos	error		1
-#pragma	varargck	argpos	fatal		1
-#pragma	varargck	argpos	yyerror		1
 
 enum
 {

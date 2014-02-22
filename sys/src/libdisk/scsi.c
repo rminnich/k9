@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * Now thread-safe.
  *
@@ -18,6 +27,7 @@ enum {
 	Testrdy		= 0x00,
 	Reqsense	= 0x03,
 	Write10		= 0x2a,
+	Writever10	= 0x2e,
 	Readtoc		= 0x43,
 
 	/* sense[2] (key) sense codes */
@@ -273,7 +283,8 @@ scsi(Scsi *s, uchar *cmd, int ccount, void *v, int dcount, int io)
 			/* read toc and media changed */
 			s->nchange++;
 			s->changetime = time(0);
-		} else if(cmd[0] == Write10 && key == Sensenotrdy &&
+		} else if((cmd[0] == Write10 || cmd[0] == Writever10) &&
+		    key == Sensenotrdy &&
 		    code == Lunnotrdy && sense[13] == 0x08) {
 			/* long write in progress, per mmc-6 */
 			tries = 0;

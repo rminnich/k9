@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <bio.h>
@@ -22,7 +31,7 @@ ndbopen(char *file)
 	Ndbs s;
 	Ndbtuple *t, *nt;
 
-	if(file == 0)
+	if(file == nil && (file = getenv("NDBFILE")) == nil)
 		file = deffile;
 	db = doopen(file);
 	if(db == 0)
@@ -90,13 +99,12 @@ ndbreopen(Ndb *db)
 	Dir *d;
 
 	/* forget what we know about the open files */
-	if(db->isopen){
+	if(db->mtime){
 		_ndbcacheflush(db);
 		hffree(db);
 		close(Bfildes(&db->b));
 		Bterm(&db->b);
 		db->mtime = 0;
-		db->isopen = 0;
 	}
 
 	/* try the open again */
@@ -112,7 +120,6 @@ ndbreopen(Ndb *db)
 	db->qid = d->qid;
 	db->mtime = d->mtime;
 	db->length = d->length;
-	db->isopen = 1;
 	Binits(&db->b, fd, OREAD, db->buf, sizeof(db->buf));
 	free(d);
 	return 0;

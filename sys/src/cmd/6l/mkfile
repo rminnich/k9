@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=6l
 OFILES=\
@@ -11,22 +10,26 @@ OFILES=\
 	list.$O\
 	enam.$O\
 	compat.$O\
+	elf.$O\
 
 HFILES=\
 	l.h\
 	../6c/6.out.h\
+	../8l/elf.h\
 
-BIN=$NXM/$objtype/bin
+BIN=/$objtype/bin
+CFLAGS=$CFLAGS -. -I.
 CFILES=${OFILES:%.$O=%.c}
 CFILES=${CFILES:enam.c=../6c/enam.c}
 UPDATE=\
 	mkfile\
 	$HFILES\
 	$CFILES\
-	${TARG:%=$NXM/386/bin/%}\
+	${TARG:%=/386/bin/%}\
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 
 enam.$O:	../6c/enam.c
 	$CC $CFLAGS ../6c/enam.c
-
+elf.$O:	../8l/elf.c
+	$CC $CFLAGS ../8l/elf.c

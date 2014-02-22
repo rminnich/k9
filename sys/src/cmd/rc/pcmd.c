@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "rc.h"
 #include "io.h"
 #include "fns.h"
@@ -21,8 +30,9 @@ pcmd(io *f, tree *t)
 {
 	if(t==0)
 		return;
+	assert(f != nil);
 	switch(t->type){
-	default:	pfmt(f, "bad %d %p %p %p", t->type, c0, c1, c2);
+	default:	pfmt(f, "bad cmd %d %p %p %p", t->type, c0, c1, c2);
 	break;
 	case '$':	pfmt(f, "$%t", c0);
 	break;

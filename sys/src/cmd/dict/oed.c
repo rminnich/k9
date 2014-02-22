@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <bio.h>
@@ -204,7 +213,6 @@ static Assoc auxtab[] = {
 
 static Assoc spectab[] = {
 	{"3on4",	L'¾'},
-	{"3on8", L'⅜'},
 	{"Aacu",	L'Á'},
 	{"Aang",	L'Å'},
 	{"Abarab",	L'Ā'},
@@ -238,7 +246,7 @@ static Assoc spectab[] = {
 	{"Lambda",	L'Λ'},
 	{"Lbar",	L'Ł'},
 	{"Mu",		L'Μ'},
-	{"Naira",	L'₦'},
+	{"Naira",	L'N'},		/* should have bar through */
 	{"Nplus",	L'N'},		/* should have plus above */
 	{"Ntilde",	L'Ñ'},
 	{"Nu",		L'Ν'},
@@ -743,7 +751,7 @@ static Assoc spectab[] = {
 	{"ssTau",	L'Τ'},
 	{"star",	L'*'},
 	{"stlig",	MLST},
-	{"sup2",	L'²'},
+	{"sup2",	L'⁲'},
 	{"supgt",	L'˃'},
 	{"suplt",	L'˂'},
 	{"sur",		L'ʳ'},
@@ -808,6 +816,7 @@ static Assoc spectab[] = {
    equivalents in Unicode, so aren't in the above table.
 	22n		2^(2^n) Cf Fermat
 	2on4		2/4
+	3on8		3/8
 	Bantuo		Bantu O. Cf Otshi-herero
 	Car		C with circular arrow on top
 	albrtime 	cut-time: C with vertical line
@@ -974,7 +983,7 @@ static Rune suptab[128] = {
 	NONE,	NONE,	NONE,	NONE,	NONE,	NONE,	NONE,	NONE,
 /*20*/	L' ',	L'!',	L'"',	L'#',	L'$',	L'%',	SPCS,	L'\'',
 	L'⁽',	L'⁾',	L'*',	L'⁺',	L',',	L'⁻',	L'.',	L'/',
-/*30*/  L'⁰',	L'¹',	L'²',	L'³',	L'⁴',	L'⁵',	L'⁶',	L'⁷',
+/*30*/  L'⁰',	L'ⁱ',	L'⁲',	L'⁳',	L'⁴',	L'⁵',	L'⁶',	L'⁷',
 	L'⁸',	L'⁹',	L':',	L';',	TAGS,	L'⁼',	TAGE,	L'?',
 /*40*/  L'@',	L'A',	L'B',	L'C',	L'D',	L'E',	L'F',	L'G',
 	L'H',	L'I',	L'J',	L'K',	L'L',	L'M',	L'N',	L'O',

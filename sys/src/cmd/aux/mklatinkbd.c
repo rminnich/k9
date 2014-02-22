@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * Parse /lib/keyboard to create latin1.h table for kernel.
  * mklatinkbd -r prints an array of integers rather than a Rune string literal.
@@ -30,7 +39,7 @@ char *head = ""
 typedef struct Trie	Trie;
 struct Trie {
 	int n; /* of characters r */
-	char seq[MAXLD+1+1];
+	char seq[MAXLD+1];
 	Rune r[256];
 	Trie *link[256];
 };

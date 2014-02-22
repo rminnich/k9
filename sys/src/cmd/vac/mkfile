@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 LIBFILES=\
 	error\
@@ -10,7 +9,7 @@ LIBFILES=\
 LIB=${LIBFILES:%=%.$O}
 
 HFILES=\
-	$NXM/sys/include/venti.h\
+	/sys/include/venti.h\
 	stdinc.h\
 	error.h\
 	vac.h\
@@ -18,7 +17,7 @@ HFILES=\
 	fns.h\
 
 TARG=vac unvac vacfs
-BIN=$NXM/$objtype/bin
+BIN=/$objtype/bin
 
 CFILES=${TARG:%=%.c} ${LIBFILES:%=%.c}
 
@@ -26,8 +25,8 @@ UPDATE=\
 	mkfile\
 	$CFILES\
 	$HFILES\
-	${TARG:%=$NXM/386/bin/%}
+	${TARG:%=/386/bin/%}
 
 default:V: all
 
-<$NXM/sys/src/cmd/mkmany
+</sys/src/cmd/mkmany

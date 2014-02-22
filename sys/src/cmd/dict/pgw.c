@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /* thanks to Caerwyn Jones <caerwyn@comcast.net> for this module */
 #include <u.h>
 #include <libc.h>
@@ -599,7 +608,7 @@ static Assoc spectab[] = {
 	{"ssTau",	L'Τ'},
 	{"star",	L'*'},
 	{"stlig",	MLST},
-	{"sup2",	L'²'},
+	{"sup2",	L'⁲'},
 	{"supgt",	L'˃'},
 	{"suplt",	L'˂'},
 	{"sur",		L'ʳ'},
@@ -831,7 +840,7 @@ static Rune suptab[128] = {
 	NONE,	NONE,	NONE,	NONE,	NONE,	NONE,	NONE,	NONE,
 /*20*/	L' ',	L'!',	L'"',	L'#',	L'$',	L'%',	SPCS,	L'\'',
 	L'⁽',	L'⁾',	L'*',	L'⁺',	L',',	L'⁻',	L'.',	L'/',
-/*30*/  L'⁰',	L'¹',	L'²',	L'³',	L'⁴',	L'⁵',	L'⁶',	L'⁷',
+/*30*/  L'⁰',	L'ⁱ',	L'⁲',	L'⁳',	L'⁴',	L'⁵',	L'⁶',	L'⁷',
 	L'⁸',	L'⁹',	L':',	L';',	TAGS,	L'⁼',	TAGE,	L'?',
 /*40*/  L'@',	L'A',	L'B',	L'C',	L'D',	L'E',	L'F',	L'G',
 	L'H',	L'I',	L'J',	L'K',	L'L',	L'M',	L'N',	L'O',

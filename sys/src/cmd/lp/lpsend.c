@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #ifdef plan9
 
 #include <u.h>
@@ -138,8 +147,7 @@ char jobbuf[RDSIZE];
 int
 pass(int inpfd, int outfd, int bsize)
 {
-	int bcnt = 0;
-	int rv = 0;
+	int rv, bcnt;
 
 	for(bcnt=bsize; bcnt > 0; bcnt -= rv) {
 		alarm(WRNETIMEOUT);	/* to break hanging */
@@ -217,7 +225,7 @@ recvACK(int netfd)
 		if (*jobbuf == '\0')
 			error(1, "read failed\n");
 		else
-			error(1, "received <0x%x> instead\n", *jobbuf);
+			error(1, "received <%#x> instead\n", (uchar)*jobbuf);
 		rv = 0;
 	} else rv = 1;
 	alarm(0);
@@ -227,7 +235,6 @@ recvACK(int netfd)
 void
 main(int argc, char *argv[])
 {
-	char *devdir;
 	int i, rv, netfd, bsize, datafd;
 #ifndef plan9
 	void (*oldhandler)();

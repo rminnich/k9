@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=ratfs
 OFILES=main.$O\
@@ -9,5 +8,5 @@ OFILES=main.$O\
 
 HFILES=ratfs.h\
 
-BIN=$NXM/$objtype/bin/upas
-<$NXM/sys/src/cmd/mkone
+BIN=/$objtype/bin/upas
+</sys/src/cmd/mkone

@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "cc.h"
 
 static char *kwd[] =
@@ -7,7 +16,7 @@ static char *kwd[] =
 	"$local", "$loop", "$return", "$tail", "$then",
 	"$union", "$whatis", "$while",
 };
-static char picklestr[] = "\tbp = pickle(bp, ep, un, ";
+static char picklestr[] = "\tpickle(s, un, ";
 
 static char*
 pmap(char *s)
@@ -153,10 +162,10 @@ picklemember(Type *t, long off)
 		if(s1 == S)
 			break;
 		if(s == S) {
-			Bprint(&outbuf, "\tbp = pickle_%s(bp, ep, un, (%s*)((char*)addr+%ld+_i*%ld));\n",
+			Bprint(&outbuf, "\tpickle_%s(s, un, (%s*)((char*)addr+%ld+_i*%ld));\n",
 				pmap(s1->name), pmap(s1->name), t->offset+off, t->width);
 		} else {
-			Bprint(&outbuf, "\tbp = pickle_%s(bp, ep, un, &addr->%s);\n",
+			Bprint(&outbuf, "\tpickle_%s(s, un, &addr->%s);\n",
 				pmap(s1->name), pmap(s->name));
 		}
 		break;
@@ -195,10 +204,10 @@ pickletype(Type *t)
 			goto asmstr;
 		an = pmap(s->name);
 
-		Bprint(&outbuf, "uchar*\npickle_%s(uchar *bp, uchar *ep, int un, %s *addr)\n{\n\tint _i = 0;\n\n\tUSED(_i);\n", an, an);
+		Bprint(&outbuf, "void\npickle_%s(void *s, int un, %s *addr)\n{\n\tint _i = 0;\n\n\tUSED(_i);\n", an, an);
 		for(l = t->link; l != T; l = l->down)
 			picklemember(l, 0);
-		Bprint(&outbuf, "\treturn bp;\n}\n\n");
+		Bprint(&outbuf, "}\n\n");
 		break;
 	asmstr:
 		if(s == S)

@@ -9,7 +9,7 @@ defn acidinit()			// Called after all the init modules are loaded
 		"./",
 		"/sys/src/libc/port/",
 		"/sys/src/libc/9sys/",
-		"/sys/src/libc/" + objtype + "/"
+		"/sys/src/libc/arm/"
 	};
 
 	srcfiles = {};			// list of loaded files
@@ -114,6 +114,4 @@ Ureg(addr) {
 	print("	pc	", addr.pc, "\n");
 };
 
-objchar = '5';
-objtype = "arm";
 print("/sys/lib/acid/arm");

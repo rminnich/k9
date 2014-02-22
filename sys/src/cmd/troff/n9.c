@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "tdef.h"
 #include "ext.h"
 #include "fns.h"
@@ -331,20 +340,18 @@ void casefc(void)
 
 Tchar setfield(int x)
 {
-	Tchar ii, jj, *fp;
-	int i, j;
-	int length, ws, npad, temp, type;
+	Tchar rchar, ii, jj, *fp;
 	Tchar **pp, *padptr[NPP];
 	Tchar fbuf[FBUFSZ];
-	int savfc, savtc, savlc;
-	Tchar rchar;
-	int savepos;
+	int i, j, length, ws, npad, temp, type, savepos, savfc, savtc, savlc;
 	static Tchar wbuf[] = { WORDSP, 0};
 
 	if (x == tabch) 
 		rchar = tabc | chbits;
-	else if (x ==  ldrch) 
+	else if (x == ldrch) 
 		rchar = dotc | chbits;
+	else
+		rchar = 0;
 	temp = npad = ws = 0;
 	savfc = fc;
 	savtc = tabch;

@@ -1,7 +1,17 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "gc.h"
 
 /* ,x/^(print|prtree)\(/i/\/\/ */
 int castup(Type*, Type*);
+void checkmask(Node*, Node*);
 
 void
 cgen(Node *n, Node *nn)
@@ -257,6 +267,8 @@ cgen(Node *n, Node *nn)
 				break;
 			}
 		}
+		if(n->op == OAND)
+			checkmask(n, r);
 		if(r->addable >= INDEXED && !hardconst(r)) {
 			regalloc(&nod, l, nn);
 			cgen(l, &nod);
@@ -521,6 +533,8 @@ cgen(Node *n, Node *nn)
 			goto asbitop;
 		if(typefd[l->type->etype] || typefd[r->type->etype])
 			goto asfop;
+		if(o == OASAND)
+			checkmask(n, r);
 		if(l->complex >= r->complex) {
 			if(hardleft)
 				reglcgen(&nod, l, Z);
@@ -1596,7 +1610,7 @@ copy:
 		regsalloc(&nod2, nn);
 		nn->type = t;
 
-		gins(AMOVL, &nod1, &nod2);
+		gins(AMOVQ, &nod1, &nod2);
 		regfree(&nod1);
 
 		nod2.type = typ(TIND, t);
@@ -1697,7 +1711,7 @@ copy:
 	c = 0;
 	if(n->complex > nn->complex) {
 		t = n->type;
-		n->type = types[TLONG];
+		n->type = types[TIND];
 		nodreg(&nod1, n, D_SI);
 		if(reg[D_SI]) {
 			gins(APUSHQ, &nod1, Z);
@@ -1708,7 +1722,7 @@ copy:
 		n->type = t;
 
 		t = nn->type;
-		nn->type = types[TLONG];
+		nn->type = types[TIND];
 		nodreg(&nod2, nn, D_DI);
 		if(reg[D_DI]) {
 warn(Z, "DI botch");
@@ -1720,7 +1734,7 @@ warn(Z, "DI botch");
 		nn->type = t;
 	} else {
 		t = nn->type;
-		nn->type = types[TLONG];
+		nn->type = types[TIND];
 		nodreg(&nod2, nn, D_DI);
 		if(reg[D_DI]) {
 warn(Z, "DI botch");
@@ -1732,7 +1746,7 @@ warn(Z, "DI botch");
 		nn->type = t;
 
 		t = n->type;
-		n->type = types[TLONG];
+		n->type = types[TIND];
 		nodreg(&nod1, n, D_SI);
 		if(reg[D_SI]) {
 			gins(APUSHQ, &nod1, Z);
@@ -1861,6 +1875,22 @@ castup(Type *t1, Type *t2)
 		return ft == TULONG || ft == TUINT || ft == TUSHORT;
 	}
 	return 0;
+}
+
+/*
+ * vl &= ~ul or vl & ~ul
+ * create a ul mask with top bits zero, which is usually wrong
+ */
+void
+checkmask(Node *n, Node *r)
+{
+	Node *rl;
+
+	if((n->op == OAND || n->op == OASAND) &&
+	   r->op == OCAST &&
+	   (rl = r->left)->op == OCOM &&
+	   typesuv[n->type->etype] && typeu[rl->type->etype] && typechl[rl->type->etype])
+		warn(n, "32-bit mask zero-extended to 64 bits");
 }
 
 void

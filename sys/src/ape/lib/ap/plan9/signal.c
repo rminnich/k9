@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "lib.h"
 #include "sys9.h"
 #include <signal.h>
@@ -37,8 +46,10 @@ static struct {
 
 void	(*_sighdlr[MAXSIG+1])(int, char*, Ureg*); /* 0 initialized: SIG_DFL */
 
+/* must match signal.h: extern void (*signal(int, void (*)()))(); */
+//void (*signal(int sig, void (*func)(int, char*, Ureg*)))(int, char*, Ureg*)
 void
-(*signal(int sig, void (*func)(int, char*, Ureg*)))(int, char*, Ureg*)
+(*signal(int sig, void (*func)()))()
 {
 	void(*oldf)(int, char*, Ureg*);
 
@@ -88,7 +99,7 @@ sigaction(int sig, struct sigaction *act, struct sigaction *oact)
 
 /* this is registered in _envsetup */
 int
-_notehandler(Ureg *u, char *msg)
+_notehandler(void *u, char *msg)
 {
 	int i;
 	void(*f)(int, char*, Ureg*);
@@ -106,7 +117,7 @@ _notehandler(Ureg *u, char *msg)
 				/* notetramp is machine-dependent; doesn't return to here */
 			}
 			_NOTED(0); /* NCONT */
-			return;
+			return 0;
 		}
 	}
 	_doatexits();

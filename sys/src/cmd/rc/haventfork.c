@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "rc.h"
 #include "getflags.h"
 #include "exec.h"
@@ -14,7 +23,7 @@ rcargv(char *s)
 	word *p;
 
 	p = vlook("*")->val;
-	argv = malloc((count(p)+6)*sizeof(char*));
+	argv = emalloc((count(p)+6)*sizeof(char*));
 	argc = 0;
 	argv[argc++] = argv0;
 	if(flag['e'])

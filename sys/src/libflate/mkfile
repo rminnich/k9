@@ -1,7 +1,6 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
-LIB=$NXM/$objtype/lib/libflate.a
+LIB=/$objtype/lib/libflate.a
 OFILES=\
 	deflate.$O\
 	deflatezlib.$O\
@@ -16,13 +15,13 @@ OFILES=\
 	adler.$O\
 
 HFILES=\
-	$NXM/sys/include/flate.h\
+	/sys/include/flate.h\
 	zlib.h\
 
 UPDATE=\
 	mkfile\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
-	${LIB:$NXM/$objtype/%=/386/%}\
+	${LIB:/$objtype/%=/386/%}\
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib

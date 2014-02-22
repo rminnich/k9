@@ -1,7 +1,6 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
-LIB=$NXM/$objtype/lib/libauthsrv.a
+LIB=/$objtype/lib/libauthsrv.a
 OFILES=\
 	_asgetticket.$O\
 	_asrdresp.$O\
@@ -20,12 +19,12 @@ OFILES=\
 	readnvram.$O\
 
 HFILES=\
-	$NXM/sys/include/authsrv.h\
+	/sys/include/authsrv.h\
 
 UPDATE=\
 	mkfile\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
-	${LIB:$NXM/$objtype/%=/386/%}\
+	${LIB:/$objtype/%=/386/%}\
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib

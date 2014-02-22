@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "gc.h"
 
 void
@@ -9,7 +18,7 @@ swit1(C1 *q, int nc, long def, Node *n)
 
 	if(nc < 5) {
 		for(i=0; i<nc; i++) {
-			if(debug['W'])
+			if(debug['K'])
 				print("case = %.8llux\n", q->val);
 			gcmp(OEQ, n, q->val);
 			patch(p, q->label);
@@ -21,7 +30,7 @@ swit1(C1 *q, int nc, long def, Node *n)
 	}
 	i = nc / 2;
 	r = q+i;
-	if(debug['W'])
+	if(debug['K'])
 		print("case > %.8llux\n", r->val);
 	gcmp(OGT, n, r->val);
 	sp = p;
@@ -30,7 +39,7 @@ swit1(C1 *q, int nc, long def, Node *n)
 	patch(p, r->label);
 	swit1(q, i, def, n);
 
-	if(debug['W'])
+	if(debug['K'])
 		print("case < %.8llux\n", r->val);
 	patch(sp, pc);
 	swit1(r+1, nc-i-1, def, n);
@@ -125,23 +134,6 @@ outstring(char *s, long n)
 		n--;
 	}
 	return r;
-}
-
-void
-sextern(Sym *s, Node *a, long o, long w)
-{
-	long e, lw;
-
-	for(e=0; e<w; e+=NSNAME) {
-		lw = NSNAME;
-		if(w-e < lw)
-			lw = w-e;
-		gpseudo(ADATA, s, nodconst(0L));
-		p->from.offset += o+e;
-		p->from.scale = lw;
-		p->to.type = D_SCONST;
-		memmove(p->to.sval, a->cstring+e, lw);
-	}
 }
 
 void
@@ -523,8 +515,8 @@ align(long i, Type *t, int op)
 long
 maxround(long max, long v)
 {
-	v += SZ_VLONG-1;
+	v = round(v, SZ_VLONG);
 	if(v > max)
-		max = round(v, SZ_VLONG);
+		return v;
 	return max;
 }

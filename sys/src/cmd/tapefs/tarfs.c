@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * File system for tar archives (read-only)
  */
@@ -144,10 +153,12 @@ populate(char *name)
 		}
 		f.mode &= DMDIR | 0777;
 
-		/* make file name safe and canonical */
+		/* make file name safe, canonical and free of . and .. */
 		while (fname[0] == '/')		/* don't allow absolute paths */
 			++fname;
 		cleanname(fname);
+		while (strncmp(fname, "../", 3) == 0)
+			fname += 3;
 
 		/* reject links */
 		linkflg = hp->linkflag == LF_SYMLINK1 ||

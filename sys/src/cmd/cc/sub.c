@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include	"cc.h"
 
 Node*
@@ -85,7 +94,10 @@ prtree1(Node *n, int d, int f)
 		break;
 
 	case OLSTRING:
-		print(" \"%S\"", n->rstring);
+		if(sizeof(TRune) == sizeof(Rune))
+			print(" \"%S\"", (Rune*)n->rstring);
+		else
+			print(" \"...\"");
 		i = 0;
 		break;
 
@@ -1187,12 +1199,15 @@ warn(Node *n, char *fmt, ...)
 	char buf[STRINGSZ];
 	va_list arg;
 
-	if(debug['w']) {
-		Bprint(&diagbuf, "warning: ");
+	if(debug['w'] || debug['W']) {
 		va_start(arg, fmt);
 		vseprint(buf, buf+sizeof(buf), fmt, arg);
 		va_end(arg);
-		Bprint(&diagbuf, "%L %s\n", (n==Z)? nearln: n->lineno, buf);
+		if(debug['W']) {
+			diag(n, "%s", buf);
+			return;
+		}
+		Bprint(&diagbuf, "warning: %L %s\n", (n==Z)? nearln: n->lineno, buf);
 
 		if(n != Z)
 		if(debug['v'])

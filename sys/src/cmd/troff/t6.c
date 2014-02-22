@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * t6.c
  * 
@@ -214,7 +223,6 @@ void xbits(Tchar i, int bitf)
 
 Tchar t_setch(int c)
 {
-	int j;
 	char temp[50];
 	char *s;
 
@@ -232,6 +240,8 @@ Tchar t_setch(int c)
 	return chadd(temp, Troffchar, Install) | chbits; /* add name even if haven't seen it */
 #else
 	if (NROFF) {
+		int j;
+
 		j = chadd(temp, Troffchar, Lookup);
 		if ( j == -1)
 			return 0;
@@ -397,6 +407,7 @@ void t_setps(void)
 	int i, j;
 
 	i = cbits(getch());
+	j = i;				/* make compiler happy */
 	if (isdigit(i)) {		/* \sd or \sdd */
 		i -= '0';
 		if (i == 0)		/* \s0 */
@@ -705,7 +716,7 @@ char *strdupl(const char *s)	/* make a copy of s */
 
 setfp(int pos, int f, char *truename, int print)	/* mount font f at position pos[0...nfonts] */
 {
-	char pathname[NS], shortname[NS], *sl;
+	char pathname[NS], shortname[NS];
 
 	zapwcache(0);
 	if (truename)
@@ -785,7 +796,7 @@ void casebd(void)
 		return;
 	}
 	zapwcache(0);
-	k = 0;
+	j = k = 0;
 bd0:
 	if (skip() || !(i = getrq()) || (j = findft(i)) == -1) {
 		if (k)

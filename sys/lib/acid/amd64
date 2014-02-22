@@ -9,7 +9,7 @@ defn acidinit()
 		"./",
 		"/sys/src/libc/port/",
 		"/sys/src/libc/9sys/",
-		"/sys/src/libc/" + objtype + "/"
+		"/sys/src/libc/amd64/"
 	};
 
 	srcfiles = {};		// list of loaded files
@@ -115,11 +115,6 @@ defn pstop(pid)
 	}
 }
 
-defn linkreg(addr)
-{
-	return 0;
-}
-
 defn lstk()				// trace with locals
 {
 	_stk(*PC, *SP, 0, 1);
@@ -192,6 +187,4 @@ Ureg(addr) {
 };
 sizeofUreg = 184;
 
-objchar = "6";
-objtype = "amd64";
 print("/sys/lib/acid/amd64");

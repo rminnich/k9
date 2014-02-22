@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <bio.h>
@@ -77,14 +86,17 @@ nproc(char **argv)
 		write(fd, "hang", 4);
 		close(fd);
 
-		for(i = 0; i < NFD; i++)
+		close(0);
+		close(1);
+		close(2);
+		for(i = 3; i < NFD; i++)
 			close(i);
 
 		open("/dev/cons", OREAD);
 		open("/dev/cons", OWRITE);
 		open("/dev/cons", OWRITE);
 		exec(argv[0], argv);
-		fatal("new: exec %s: %r", argv[0]);
+		fatal("new: exec %s: %r");
 	default:
 		install(pid);
 		msg(pid, "waitstop");

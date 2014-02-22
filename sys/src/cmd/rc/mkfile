@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=rc
 COMMONOFILES=\
@@ -34,7 +33,7 @@ HFILES=rc.h\
 
 YFILES=syn.y
 
-BIN=$NXM/$objtype/bin
+BIN=/$objtype/bin
 
 UPDATE=\
 	mkfile\
@@ -43,9 +42,9 @@ UPDATE=\
 	${UNIXOFILES:%.$O=%.c}\
 	${PLAN9OFILES:%.$O=%.c}\
 	$YFILES\
-	${TARG:%=$NXM/386/bin/%}\
+	${TARG:%=/386/bin/%}\
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 
 x.tab.h: y.tab.h
 	cmp -s x.tab.h y.tab.h || cp y.tab.h x.tab.h

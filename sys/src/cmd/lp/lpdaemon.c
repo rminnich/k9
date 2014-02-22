@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -299,14 +308,14 @@ getjobinfo(int fd)
 				strncpy(info.host, "unknown", NAMELEN);
 			else
 				strncpy(info.host, (const char *)&ap[1], NAMELEN);
-			info.host[strlen(info.host)] = '\0';
+			info.host[NAMELEN] = '\0';
 			break;
 		case 'P':
 			if (ap[1] == '\0')
 				strncpy(info.user, "unknown", NAMELEN);
 			else
 				strncpy(info.user, (const char *)&ap[1], NAMELEN);
-			info.user[strlen(info.user)] = '\0';
+			info.user[NAMELEN] = '\0';
 			break;
 		}
 	}

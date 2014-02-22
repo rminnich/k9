@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=9660srv
 
@@ -11,14 +10,14 @@ OFILES=\
 	data.$O\
 
 HFILES=dat.h fns.h
-BIN=$NXM/$objtype/bin
+BIN=/$objtype/bin
 
 UPDATE=\
 	mkfile\
 	${OFILES:%.$O=%.c}\
 	$HFILES\
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 
 $O.out:
 

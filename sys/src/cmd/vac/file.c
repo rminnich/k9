@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "stdinc.h"
 #include "vac.h"
 #include "dat.h"
@@ -1284,8 +1293,6 @@ vacfilecreate(VacFile *fp, char *elem, ulong mode)
 	 * Okay, time to actually create something.  Lock the two
 	 * halves of the directory and create a file.
 	 */
-	if (chattyventi)
-		fprint(2, "vacfilecreate: about to lock two halves, create file\n");
 	if(vtfilelock2(fp->source, fp->msource, -1) < 0)
 		goto Err1;
 	ff = filealloc(fp->fs);

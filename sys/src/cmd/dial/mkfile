@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=expect\
 	pass\
@@ -8,7 +7,7 @@ TARG=expect\
 
 OFILES=
 
-BIN=$NXM/$objtype/bin/dial
+BIN=/$objtype/bin/dial
 
 UPDATE=\
 	mkfile\
@@ -17,5 +16,5 @@ UPDATE=\
 	${TARG:%=%.c}\
 	/sys/man/1/con\
 
-<$NXM/sys/src/cmd/mkmany
+</sys/src/cmd/mkmany
 

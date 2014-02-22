@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=plot
 OFILES=plot.$O\
@@ -8,8 +7,8 @@ HFILES=plot.h\
 
 LIB=libplot.a$O
 
-BIN=$NXM/$objtype/bin
-<$NXM/sys/src/cmd/mkone
+BIN=/$objtype/bin
+</sys/src/cmd/mkone
 
 $LIB:
 	cd libplot

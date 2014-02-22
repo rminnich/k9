@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <venti.h>
@@ -180,7 +189,9 @@ vtgetreq(VtSrv *srv)
 	VtReq *r;
 	
 	r = _vtqrecv(srv->q);
-	vtlog(VtServerLog, "<font size=-1>%T %s:</font> vtgetreq %F<br>\n", ((VtSconn*)r->sc)->c->addr, &r->tx);
+	if (r != nil)
+		vtlog(VtServerLog, "<font size=-1>%T %s:</font> vtgetreq %F<br>\n",
+			((VtSconn*)r->sc)->c->addr, &r->tx);
 	return r;
 }
 

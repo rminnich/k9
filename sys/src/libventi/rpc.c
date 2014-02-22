@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * Multiplexed Venti client.  It would be nice if we 
  * could turn this into a generic library routine rather
@@ -36,6 +45,12 @@ _vtrpc(VtConn *z, Packet *p, VtFcall *tx)
 	int i;
 	uchar tag, buf[2], *top;
 	Rwait *r, *rr;
+
+	if(z == nil){
+		werrstr("not connected");
+		packetfree(p);
+		return nil;
+	}
 
 	/* must malloc because stack could be private */
 	r = vtmallocz(sizeof(Rwait));

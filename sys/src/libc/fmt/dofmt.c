@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include "fmtdef.h"
@@ -517,13 +526,12 @@ _flagfmt(Fmt *f)
 int
 _badfmt(Fmt *f)
 {
-	char x[2+UTFmax];
-	int n;
+	Rune x[3];
 
 	x[0] = '%';
-	n = 1 + runetochar(x+1, (Rune*)&f->r);
-	x[n++] = '%';
-	f->prec = n;
-	_fmtcpy(f, x, n, n);
+	x[1] = f->r;
+	x[2] = '%';
+	f->prec = 3;
+	_fmtrcpy(f, x, 3);
 	return 0;
 }

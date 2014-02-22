@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 
@@ -10,23 +19,22 @@ typedef struct Objtype {
 	char	*oname;
 } Objtype;
 
+/* sync with /sys/src/ape/cmd/cc.c */
 Objtype objtype[] = {
 	{"spim",	"0c", "0l", "0", "0.out"},
-	{"68000",	"1c", "1l", "1", "1.out"},
-	{"68020",	"2c", "2l", "2", "2.out"},
 	{"arm",		"5c", "5l", "5", "5.out"},
 	{"amd64",	"6c", "6l", "6", "6.out"},
-	{"alpha",	"7c", "7l", "7", "7.out"},
 	{"386",		"8c", "8l", "8", "8.out"},
 	{"power64",	"9c", "9l", "9", "9.out"},
 	{"sparc",	"kc", "kl", "k", "k.out"},
 	{"power",	"qc", "ql", "q", "q.out"},
 	{"mips",	"vc", "vl", "v", "v.out"},
 };
+char	*allos = "05689kqv";
 
 enum {
 	Nobjs = (sizeof objtype)/(sizeof objtype[0]),
-	Maxlist = 500,
+	Maxlist = 2000,
 };
 
 typedef struct List {
@@ -36,7 +44,6 @@ typedef struct List {
 
 List	srcs, objs, cpp, cc, ld, ldargs;
 int	cflag, vflag, Eflag, Pflag;
-char	*allos = "01245678kqv";
 
 void	append(List *, char *);
 char	*changeext(char *, char *);
@@ -86,6 +93,7 @@ main(int argc, char *argv[])
 		case 'S':
 		case 'T':
 		case 'V':
+		case 'W':
 			append(&cc, smprint("-%c", ARGC()));
 			break;
 		case 's':
@@ -110,6 +118,16 @@ main(int argc, char *argv[])
 			break;
 		case 'p':
 			append(&ldargs, "-p");
+			break;
+		case 'f':
+			if(strcmp(ot->name, "arm") == 0)
+				append(&ldargs, "-f");
+			break;
+		case 'x':
+			s = ARGF();
+			if(s == nil || *s == '-')
+				fatal("no -x argument");
+			append(&ldargs, smprint("-x %s", s));
 			break;
 		case 'a':
 			/* hacky look inside ARGBEGIN insides, to see if we have -aa */

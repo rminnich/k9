@@ -1,8 +1,7 @@
-MKSHELL=rc
-APE=$NXM/sys/src/ape
+APE=/sys/src/ape
 <$APE/config
 
-LIB=$NXM/$objtype/lib/ape/libfmt.a
+LIB=/$objtype/lib/ape/libfmt.a
 
 NUM=\
 	charstod.$O\
@@ -46,9 +45,9 @@ OFILES=\
 
 HFILES=\
 	fmtdef.h\
-	$NXM/sys/include/ape/fmt.h\
+	/sys/include/ape/fmt.h\
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib
 
 $NAN.$O: nan.h
 strtod.$O: nan.h
@@ -57,4 +56,4 @@ test: $LIB test.$O
 	$CC -o test test.$O $LIB -L$PLAN9/lib -lutf
 
 
-CFLAGS=-c $CFLAGS -D_POSIX_SOURCE -D_PLAN9_SOURCE -D_BSD_EXTENSION
+CFLAGS=$CFLAGS -c -D_POSIX_SOURCE -D_PLAN9_SOURCE -D_BSD_EXTENSION

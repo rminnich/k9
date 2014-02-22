@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=lex
 OFILES=lmain.$O\
@@ -12,7 +11,7 @@ HFILES=ldefs.h\
 
 YFILES=parser.y\
 
-BIN=$NXM/$objtype/bin
+BIN=/$objtype/bin
 UPDATE=\
 	mkfile\
 	$HFILES\
@@ -20,9 +19,9 @@ UPDATE=\
 	sub1.c\
 	sub2.c\
 	header.c\
-	${TARG:%=$NXM/386/bin/%}\
+	${TARG:%=/386/bin/%}\
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 
 installall:V:
 	for(objtype in $CPUS)

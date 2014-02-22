@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #define  _BSDTIME_EXTENSION
 #define _LOCK_EXTENSION
 #include "lib.h"
@@ -50,8 +59,8 @@ static int copynotehandler(void *, char *);
 int
 _startbuf(int fd)
 {
-	long i, n, slot;
-	int pid, sid;
+	long i, slot;
+	int pid;
 	Fdinfo *f;
 	Muxbuf *b;
 
@@ -264,7 +273,7 @@ goteof:
 int
 select(int nfds, fd_set *rfds, fd_set *wfds, fd_set *efds, struct timeval *timeout)
 {
-	int n, i, tmp, t, slots, fd, err;
+	int n, i, t, slots, fd, err;
 	Fdinfo *f;
 	Muxbuf *b;
 
@@ -289,15 +298,8 @@ select(int nfds, fd_set *rfds, fd_set *wfds, fd_set *efds, struct timeval *timeo
 		if((rfds && FD_ISSET(i, rfds)) || (efds && FD_ISSET(i, efds))){
 			f = &_fdinfo[i];
 			if(!(f->flags&FD_BUFFERED))
-				if(_startbuf(i) != 0) {
+				if(_startbuf(i) != 0)
 					return -1;
-				}
-			b = f->buf;
-			if(rfds && FD_ISSET(i,rfds) && b->eof && b->n == 0)
-			if(efds == 0 || !FD_ISSET(i,efds)) {
-				errno = EBADF;		/* how X tells a client is gone */
-				return -1;
-			}
 		}
 
 	/* check wfds;  for now, we'll say they are all ready */
@@ -375,7 +377,7 @@ static int timerreset;
 static int timerpid;
 
 static void
-alarmed(int v)
+alarmed(int)
 {
 	timerreset = 1;
 }
@@ -461,11 +463,8 @@ _detachbuf(void)
 }
 
 static int
-copynotehandler(void *u, char *msg)
+copynotehandler(void *, char *)
 {
-	int i;
-	void(*f)(int);
-
 	if(_finishing)
 		_finish(0, 0);
 	_NOTED(1);

@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * obj.c
  * routines universal to all object files
@@ -25,8 +34,9 @@ int	_is2(char*),		/* in [$OS].c */
 	_is6(char*),
 	_is7(char*),
 	_is8(char*),
+	_is9(char*),
 	_isk(char*),
-//	_isq(char*),
+	_isq(char*),
 	_isv(char*),
 	_isu(char*),
 	_read2(Biobuf*, Prog*),
@@ -36,7 +46,7 @@ int	_is2(char*),		/* in [$OS].c */
 	_read8(Biobuf*, Prog*),
 	_read9(Biobuf*, Prog*),
 	_readk(Biobuf*, Prog*),
-//	_readq(Biobuf*, Prog*),
+	_readq(Biobuf*, Prog*),
 	_readv(Biobuf*, Prog*),
 	_readu(Biobuf*, Prog*);
 
@@ -58,9 +68,10 @@ static Obj	obj[] =
 	[ObjAlpha]	"alpha .7",	_is7, _read7,
 	[Obj386]	"386 .8",	_is8, _read8,
 	[ObjSparc]	"sparc .k",	_isk, _readk,
-//	[ObjPower]	"power .q",	_isq, _readq,
+	[ObjPower]	"power .q",	_isq, _readq,
 	[ObjMips]	"mips .v",	_isv, _readv,
 	[ObjSparc64]	"sparc64 .u",	_isu, _readu,
+	[ObjPower64]	"power64 .9",	_is9, _read9,
 	[Maxobjtype]	0, 0
 };
 

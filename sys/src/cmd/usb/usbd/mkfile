@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=usbd
 OFILES=\
@@ -22,10 +21,10 @@ UPDATE=\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
 	mkfile\
-	$NXM/sys/g/man/3/usb\
+	/sys/man/3/usb\
 
-BIN=$NXM/$objtype/bin/usb
-<$NXM/sys/src/cmd/mkone
+BIN=/$objtype/bin/usb
+</sys/src/cmd/mkone
 
 CFLAGS=-I../lib $CFLAGS
 CLEANFILES=devtab.c
@@ -36,5 +35,5 @@ $LIBU:
 	mk clean
 
 devtab.c: usbdb ../lib/usb.h mkdev
-	rc mkdev >$target
+	./mkdev >$target
 

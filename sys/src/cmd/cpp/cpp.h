@@ -1,6 +1,15 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #define	INS	32768		/* input buffer */
 #define	OBS	4096		/* outbut buffer */
-#define	NARG	32		/* Max number arguments to a macro */
+#define	NARG	128		/* Max number arguments to a macro */
 #define	NINCLUDE 64		/* Max number of include directories (-I) */
 #define	NIF	32		/* depth of nesting of #if */
 #ifndef EOF

@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include "regexp.h"
@@ -25,7 +34,6 @@ rregexec1(Reprog *progp,	/* program to run */
 	wchar_t *s;
 	int i, checkstart;
 	wchar_t r, *rp, *ep;
-	int n;
 	Relist* tl;		/* This list, next list */
 	Relist* nl;
 	Relist* tle;		/* ends of this and next list */

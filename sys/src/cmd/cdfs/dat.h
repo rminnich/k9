@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 enum {
 	Maxtrack	= 200,
 	Ntrack		= Maxtrack+1,
@@ -5,6 +14,8 @@ enum {
 	BScdda		= 2352,
 	BScdxa		= 2336,
 	BSmax		= 2352,
+
+	Maxfeatures	= 512,
 
 	/* scsi peripheral device types, SPC-3 §6.4.2 */
 	TypeDA		= 0,		/* Direct Access (SBC) */
@@ -99,7 +110,7 @@ enum {
 	Wtraw,
 	Wtlayerjump,
 
-	/* track modes (TODO: also track types?) */
+	/* track modes (determine: are these also track types?) */
 	Tmcdda	= 0,		/* audio cdda */
 	Tm2audio,		/* 2 audio channels */
 	Tmunintr = 4,		/* data, recorded uninterrupted */
@@ -132,6 +143,7 @@ enum {
 	CDNblock = 12,		/* chosen for CD */
 	DVDNblock = 16,		/* DVD ECC block is 16 sectors */
 	BDNblock = 32,		/* BD ECC block (`cluster') is 32 sectors */
+				/* BD-R are write-once in increments of 64KB */
 	/*
 	 * make a single transfer fit in a 9P rpc.  if we don't do this,
 	 * remote access (e.g., via /mnt/term/dev/sd*) fails mysteriously.
@@ -213,11 +225,13 @@ struct Drive
 	/* disc characteristics */
 	int	mmctype;		/* cd, dvd, or bd */
 	char	*dvdtype;		/* name of dvd flavour */
+	char	*laysfx;		/* layer suffix (e.g., -dl) */
 	int	firsttrack;
 	int	invistrack;
 	int	ntrack;
 	int	nchange;		/* compare with the members in Scsi */
 	ulong	changetime;		/* " */
+	int	relearn;		/* need to re-learn the disc? */
 	int	nameok;
 	int	writeok;		/* writable disc? */
 	/*
@@ -228,6 +242,7 @@ struct Drive
 	Tristate erasable;		/* writable after erasing? */
 
 	Track	track[Ntrack];
+	ulong	end;			/* # of blks on current disc */
 	ulong	cap;			/* drive capabilities */
 	uchar	blkbuf[BScdda];
 
@@ -236,6 +251,8 @@ struct Drive
 	int	readspeed;
 	int	writespeed;
 	Dev;
+
+	uchar	features[Maxfeatures/8];
 
 	void *aux;		/* kept by driver */
 };

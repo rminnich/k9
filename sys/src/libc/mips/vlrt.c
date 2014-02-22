@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 typedef	unsigned long	ulong;
 typedef	unsigned int	uint;
 typedef	unsigned short	ushort;
@@ -30,6 +39,7 @@ void	abort(void);
 
 /* needed by profiler; can't be profiled. */
 #pragma profile off
+
 void
 _addv(Vlong *r, Vlong a, Vlong b)
 {
@@ -55,8 +65,6 @@ _subv(Vlong *r, Vlong a, Vlong b)
 	r->lo = lo;
 	r->hi = hi;
 }
-
-#pragma profile on
 
 void
 _d2v(Vlong *y, double d)

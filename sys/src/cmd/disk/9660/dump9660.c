@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <bio.h>
@@ -23,9 +32,13 @@ void
 usage(void)
 {
 	if(mk9660)
-		fprint(2, "usage: disk/mk9660 [-D:] [-9cjr] [-b bootfile] [-o offset blocksize] [-p proto] [-s src] cdimage\n");
+		fprint(2, "usage: disk/mk9660 [-D:] [-9cjr] "
+			"[-[bB] bootfile] [-o offset blocksize] "
+			"[-p proto] [-s src] cdimage\n");
 	else
-		fprint(2, "usage: disk/dump9660 [-D:] [-9cjr] [-m maxsize] [-n now] [-p proto] [-s src] cdimage\n");
+		fprint(2, "usage: disk/dump9660 [-D:] [-9cjr] "
+			"[-m maxsize] [-n now] "
+			"[-p proto] [-s src] cdimage\n");
 	exits("usage");
 }
 
@@ -318,11 +331,10 @@ Dofix:
 		 * Patch in root directories.
 		 */
 		setroot(cd, cd->iso9660pvd, iroot.block, iroot.length);
-		setvolsize(cd, cd->iso9660pvd, (vlong)cd->nextblock * Blocksize);
+		setvolsize(cd, cd->iso9660pvd, cd->nextblock);
 		if(cd->flags & CDjoliet){
 			setroot(cd, cd->jolietsvd, jroot.block, jroot.length);
-			setvolsize(cd, cd->jolietsvd,
-				(vlong)cd->nextblock * Blocksize);
+			setvolsize(cd, cd->jolietsvd, cd->nextblock);
 		}
 	}else{
 		/*
@@ -352,11 +364,10 @@ Dofix:
 		 * Patch in new root directory entry.
 		 */
 		setroot(cd, cd->iso9660pvd, idumproot.block, idumproot.length);
-		setvolsize(cd, cd->iso9660pvd, (vlong)cd->nextblock * Blocksize);
+		setvolsize(cd, cd->iso9660pvd, cd->nextblock);
 		if(cd->flags & CDjoliet){
 			setroot(cd, cd->jolietsvd, jdumproot.block, jdumproot.length);
-			setvolsize(cd, cd->jolietsvd,
-				(vlong)cd->nextblock * Blocksize);
+			setvolsize(cd, cd->jolietsvd, cd->nextblock);
 		}
 	}
 	writepathtables(cd);	

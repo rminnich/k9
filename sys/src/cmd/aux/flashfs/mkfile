@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=\
 	mkflashfs\
@@ -20,21 +19,21 @@ ALLOBJ=\
 HFILES=\
 	flashfs.h
 
-LIB=$NXM/$objtype/lib/lib9p.a
-BIN=$NXM/$objtype/bin/aux
+LIB=/$objtype/lib/lib9p.a
+BIN=/$objtype/bin/aux
 
-<$NXM/sys/src/cmd/mkmany
+</sys/src/cmd/mkmany
 
 $O.mkflashfs: mkfs.$O devfs.$O utils.$O
-	$LD $LDFLAGS -o $target $prereq
+	$LD -o $target $prereq
 
 $O.testldfs: testld.$O journal.$O entry.$O errors.$O devfs.$O conv.$O utils.$O
-	$LD $LDFLAGS -o $target $prereq
+	$LD -o $target $prereq
 
 $O.dummyfs: dummy.$O dreq.$O entry.$O errors.$O devfs.$O utils.$O
-	$LD $LDFLAGS -o $target $prereq
+	$LD -o $target $prereq
 
 $O.flashfs: flash.$O journal.$O entry.$O errors.$O request.$O devfs.$O conv.$O utils.$O
-	$LD $LDFLAGS -o $target $prereq
+	$LD -o $target $prereq
 
 $ALLOBJ: $HFILES

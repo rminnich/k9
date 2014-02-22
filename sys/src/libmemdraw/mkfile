@@ -1,10 +1,8 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
-LIB=$NXM/$objtype/lib/libmemdraw.a
+LIB=/$objtype/lib/libmemdraw.a
 OFILES=\
 	alloc.$O\
-	addr.$O\
 	arc.$O\
 	cload.$O\
 	cmap.$O\
@@ -17,7 +15,6 @@ OFILES=\
 	iprint.$O\
 	line.$O\
 	load.$O\
-	memsetchan.$O\
 	openmemsubfont.$O\
 	poly.$O\
 	read.$O\
@@ -31,7 +28,7 @@ UPDATE=\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib
 
 $O.drawtime: drawtime.$O $LIB
 	$LD -o $target $prereq

@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <tos.h>
 #include <libc.h>
@@ -10,24 +19,6 @@
 #include <keyboard.h>
 #include "trace.h"
 
-#define	GBIT8(p)	((p)[0])
-#define	GBIT16(p)	((p)[0]|((p)[1]<<8))
-#define	GBIT32(p)	((p)[0]|((p)[1]<<8)|((p)[2]<<16)|((p)[3]<<24))
-#define	GBIT64(p)	((u32int)((p)[0]|((p)[1]<<8)|((p)[2]<<16)|((p)[3]<<24)) |\
-				((vlong)((p)[4]|((p)[5]<<8)|((p)[6]<<16)|((p)[7]<<24)) << 32))
-
-#define	PBIT8(p,v)	(p)[0]=(v)
-#define	PBIT16(p,v)	(p)[0]=(v);(p)[1]=(v)>>8
-#define	PBIT32(p,v)	(p)[0]=(v);(p)[1]=(v)>>8;(p)[2]=(v)>>16;(p)[3]=(v)>>24
-#define	PBIT64(p,v)	(p)[0]=(v);(p)[1]=(v)>>8;(p)[2]=(v)>>16;(p)[3]=(v)>>24;\
-			(p)[4]=(v)>>32;(p)[5]=(v)>>40;(p)[6]=(v)>>48;(p)[7]=(v)>>56
-
-#define	BIT8SZ		1
-#define	BIT16SZ		2
-#define	BIT32SZ		4
-#define	BIT64SZ		8
-
-#pragma	varargck	type	"t"		uvlong
 #pragma	varargck	type	"t"		vlong
 #pragma	varargck	type	"U"		uvlong
 
@@ -87,7 +78,6 @@ Event	*event;
 void drawtrace(void);
 int schedparse(char*, char*, char*);
 int timeconv(Fmt*);
-static void tracefile(int);
 
 char *schedstatename[] = {
 	[SAdmit] =	"Admit",
@@ -104,7 +94,6 @@ char *schedstatename[] = {
 	[SInte] =	"Inte",
 	[SUser] = 	"User",
 	[SYield] =	"Yield",
-	[SLock] =	"Lock",
 };
 
 struct {
@@ -145,26 +134,18 @@ char*profdev = "/proc/trace";
 static void
 usage(void)
 {
-	fprint(2, "Usage: %s [-f file [-g]] [-d profdev] [-w] [-v] [-t triggerproc] [processes]\n", argv0);
+	fprint(2, "Usage: %s [-d profdev] [-w] [-v] [-t triggerproc] [processes]\n", argv0);
 	exits(nil);
 }
 
 void
 threadmain(int argc, char **argv)
 {
-	int fd, i, justfile, graph;
+	int fd, i;
 	char fname[80];
 
 	fmtinstall('t', timeconv);
-	justfile = graph = 0;
 	ARGBEGIN {
-	case 'f':
-		justfile = 1;
-		profdev = EARGF(usage());
-		break;
-	case 'g':
-		graph = 1;
-		break;
 	case 'd':
 		profdev = EARGF(usage());
 		break;
@@ -181,13 +162,7 @@ threadmain(int argc, char **argv)
 		usage();
 	}
 	ARGEND;
-	if(justfile){
-		if(argc != 0)
-		usage();
-		tracefile(graph);
-		exits(nil);
-	}
-	
+
 	fname[sizeof fname - 1] = 0;
 	for(i = 0; i < argc; i++){
 		snprint(fname, sizeof fname - 2, "/proc/%s/ctl", 
@@ -205,118 +180,6 @@ threadmain(int argc, char **argv)
 	}
 
 	drawtrace();
-}
-
-static
-struct{
-	int pid;
-	int state;
-}graphs[64];
-
-static void
-addtograph(Traceevent *t)
-{
-	int i, dead;
-
-	dead = -1;
-	for(i = 0; i < nelem(graphs); i++){
-		if(graphs[i].pid == t->pid){
-			/*
-			 * dead procs might get some sleep/wakeup events, keep them dead.
-			 */
-			if(graphs[i].state == SDead)
-				return;
-			break;
-		}
-		if(graphs[i].state == SDead)
-			dead = i;
-		if(graphs[i].pid == 0 || i == nelem(graphs)-1){
-			if(dead >= 0)
-				i = dead;
-			graphs[i].pid = t->pid;
-			break;
-		}
-	}
-	if(i == nelem(graphs))
-		return;
-	graphs[i].state = t->etype;
-}
-
-static void
-printgraph(Biobuf *bout, int pid, int core, uvlong time, char *sname)
-{
-	int i;
-	static char *schar[] = {
-	[SAdmit] =	"!a",
-	[SSleep] =	".s",
-	[SDead] =	"xd",
-	[SDeadline] =	"??",
-	[SEdf] =	"??",
-	[SExpel] =	"??",
-	[SReady] =	"!r",
-	[SRelease] =	"??",
-	[SRun] =	"|R",
-	[SSlice] =	"??",
-	[SInts] =	"!i",
-	[SInte] =	"|e",
-	[SUser] = 	"|u",
-	[SYield] =	"!y",
-	[SLock] =	"!l",
-	};
-
-	Bprint(bout, "%20.20lld %02d %4d", time, core, pid);
-	for(i = 0; i < nelem(graphs); i++){
-		if(graphs[i].pid == 0)
-			break;
-		if(graphs[i].pid != pid && graphs[i].state == SDead)
-			Bprint(bout, "\t ");
-		else
-			Bprint(bout, "\t%c", schar[graphs[i].state][0]);
-		if(graphs[i].pid == pid)
-			Bputc(bout, schar[graphs[i].state][1]);
-	}
-	Bprint(bout, "\t%s\n", sname);
-}
-
-static void
-tracefile(int graph)
-{
-	int logfd;
-	Traceevent t;
-	Biobuf bout;
-	uchar buf[BIT32SZ+BIT32SZ+BIT64SZ+BIT32SZ];
-	uvlong t0;
-
-	if((logfd = open(profdev, OREAD)) < 0)
-		sysfatal("%s: open: %r", profdev);
-	if(Binit(&bout, 1, OWRITE) < 0)
-		sysfatal("stdout: Binit: %r");
-	if(graph)
-		Bprint(&bout, "#time               core pid  states\n");
-	t0 = 0;
-	while(read(logfd, buf, sizeof buf) == sizeof buf){
-		t.pid = GBIT32(buf);
-		t.etype = GBIT32(buf+BIT32SZ);
-		t.time = GBIT64(buf+BIT32SZ+BIT32SZ);
-		t.core = GBIT32(buf+BIT32SZ+BIT32SZ+BIT64SZ);
-		if(t.pid == 0)
-			continue;
-		if(t.etype >= nelem(schedstatename) || schedstatename[t.etype] == nil){
-			fprint(2, "unknown state %ud\n", t.etype);
-			continue;
-		}
-		if(graph == 0)
-			Bprint(&bout, "%ud\t%-10.10s\t%ulld\t%ud\n",
-				t.pid, schedstatename[t.etype], t.time, t.core);
-		else{
-			addtograph(&t);
-			if(t0 == 0)
-				t0 = t.time;
-			printgraph(&bout, t.pid, t.core, t.time-t0, schedstatename[t.etype]);
-		}
-	}
-	Bterm(&bout);
-	close(logfd);
 }
 
 static void
@@ -409,8 +272,8 @@ redraw(int scaleno)
 		s = now - t->tstart;
 		if(t->tevents[SRelease])
 			snprint(buf, sizeof(buf), " per %t — avg: %t max: %t",
-				(uvlong)(s/t->tevents[SRelease]),
-				(uvlong)(t->runtime/t->tevents[SRelease]),
+				(vlong)(s/t->tevents[SRelease]),
+				(vlong)(t->runtime/t->tevents[SRelease]),
 				t->runmax);
 		else if((s /=1000000000LL) != 0)
 			snprint(buf, sizeof(buf), " per 1s — avg: %t total: %t",
@@ -684,7 +547,7 @@ doevent(Task *t, Traceevent *ep)
 		}
 		break;
 	case SDead:
-print("task died %d %t %s\n", event->pid, event->time, schedstatename[event->etype & 0xffff]);
+print("task died %ld %t %s\n", event->pid, event->time, schedstatename[event->etype & 0xffff]);
 		free(t->events);
 		free(t->name);
 		ntasks--;
@@ -841,12 +704,12 @@ drawtrace(void)
 				nevents = n / sizeof(Traceevent);
 				for (ep = eventbuf; ep < eventbuf + nevents; ep++){
 					if ((ep->etype & 0xffff) >= Nevent){
-						print("%ud %t Illegal event %ud\n",
+						print("%ld %t Illegal event %ld\n",
 							ep->pid, ep->time, ep->etype & 0xffff);
 						continue;
 					}
 					if (verbose)
-						print("%ud %t %s\n",
+						print("%ld %t %s\n",
 							ep->pid, ep->time, schedstatename[ep->etype & 0xffff]);
 
 					for(i = 0; i < ntasks; i++)

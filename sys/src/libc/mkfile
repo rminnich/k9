@@ -1,10 +1,9 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 PORTDIRS=9sys 9syscall fmt port
 DIRS=$PORTDIRS $CPUS
-OLDCPUS=68000 68020 sparc
-CPUS=amd64
+OLDCPUS=sparc
+
 all install:V:
 	for(i in $PORTDIRS $objtype)@{
 		echo $i
@@ -44,9 +43,9 @@ installall:V:
 	for(objtype in $CPUS) mk $MKFLAGS install
 
 everything:V:
-	rm -f */*.[012456789kqvxz]
+	rm -f */*.[0245689kqv]
 	for(objtype in $CPUS $OLDCPUS)@{
 		echo $objtype
 		mk $MKFLAGS install
 	}
-	rm -f */*.[012456789kqvxz]
+	rm -f */*.[0245689kqv]

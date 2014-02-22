@@ -1,4 +1,4 @@
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 LIB=cc.a$O
 OFILES=\
@@ -23,10 +23,10 @@ HFILES=cc.h\
 
 YFILES=cc.y\
 
-CURCC=6c 8c qc vc
-OTHERCC=1c 2c 5c 7c kc
+CURCC=5c 6c 8c qc vc
+OTHERCC=kc
 
-<$NXM/sys/src/cmd/mklib
+</sys/src/cmd/mklib
 
 install:V:	$LIB
 	date

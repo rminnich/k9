@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "gc.h"
 
 void
@@ -701,7 +710,7 @@ boolgen(Node *n, int true, Node *nn)
 		if(true)
 			o = comrel[relindex(o)];
 		if(typefd[n->type->etype]) {
-			gopcode(o, nodfconst(0), &nod, Z);
+			gopcode(true ? o | BTRUE : o, nodfconst(0), &nod, Z);
 		} else
 			gopcode(o, nodconst(0), &nod, Z);
 		regfree(&nod);
@@ -800,14 +809,14 @@ boolgen(Node *n, int true, Node *nn)
 			regalloc(&nod, r, nn);
 			cgenrel(r, &nod, 1);
 			o = invrel[relindex(o)];
-			gopcode(o, l, &nod, Z);
+			gopcode(true ? o | BTRUE : o, l, &nod, Z);
 			regfree(&nod);
 			goto com;
 		}
 		if(sconst(r)) {
 			regalloc(&nod, l, nn);
 			cgenrel(l, &nod, 1);
-			gopcode(o, r, &nod, Z);
+			gopcode(true ? o | BTRUE : o, r, &nod, Z);
 			regfree(&nod);
 			goto com;
 		}
@@ -822,7 +831,7 @@ boolgen(Node *n, int true, Node *nn)
 			regalloc(&nod1, l, Z);
 			cgenrel(l, &nod1, 1);
 		}
-		gopcode(o, &nod, &nod1, Z);
+		gopcode(true ? o | BTRUE : o, &nod, &nod1, Z);
 		regfree(&nod);
 		regfree(&nod1);
 

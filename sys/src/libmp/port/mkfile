@@ -1,7 +1,6 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
-LIB=$NXM/$objtype/lib/libmp.a
+LIB=/$objtype/lib/libmp.a
 FILES=\
 	mpaux\
 	mpfmt\
@@ -39,8 +38,8 @@ ALLOFILES=${FILES:%=%.$O}
 OFILES=	`{rc ./reduce $O $objtype $ALLOFILES}
 
 HFILES=\
-	$NXM/$objtype/include/u.h\
-	$NXM/sys/include/mp.h\
+	/$objtype/include/u.h\
+	/sys/include/mp.h\
 	dat.h\
 
 CFILES=${FILES:%=%.c}
@@ -50,4 +49,4 @@ UPDATE=mkfile\
 	$HFILES\
 	$CFILES\
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib

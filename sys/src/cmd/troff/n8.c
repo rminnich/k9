@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "tdef.h"
 #include "fns.h"
 #include "ext.h"
@@ -306,12 +315,11 @@ Tchar *chkvow(Tchar *w)
 
 void digram(void)
 {
-	Tchar *w;
-	int val;
-	Tchar *nhyend, *maxw;
-	int maxval;
+	int maxval, val;
+	Tchar *nhyend, *maxw, *w;
 	extern char bxh[26][13], bxxh[26][13], xxh[26][13], xhx[26][13], hxx[26][13];
 
+	maxw = 0;
 again:
 	if (!(w = chkvow(hyend + 1)))
 		return;

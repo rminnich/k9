@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <draw.h>
@@ -144,6 +153,8 @@ fsysproc(void *)
 	Fid *f;
 	Fcall t;
 	uchar *buf;
+
+	threadsetname("fsysproc");
 
 	x = nil;
 	for(;;){
@@ -323,7 +334,8 @@ fsysversion(Xfid *x, Fid*)
 
 	if(x->msize < 256)
 		return respond(x, &t, "version: message size too small");
-	messagesize = x->msize;
+	if(x->msize < messagesize)
+		messagesize = x->msize;
 	t.msize = messagesize;
 	if(strncmp(x->version, "9P2000", 6) != 0)
 		return respond(x, &t, "unrecognized 9P version");
@@ -625,7 +637,7 @@ fsysread(Xfid *x, Fid *f)
 			for(j=0; j<row.ncol; j++){
 				c = row.col[j];
 				for(k=0; k<c->nw; k++){
-					ids = realloc(ids, (nids+1)*sizeof(int));
+					ids = erealloc(ids, (nids+1)*sizeof(int));
 					ids[nids++] = c->w[k]->id;
 				}
 			}

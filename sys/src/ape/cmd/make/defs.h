@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /* defs 4.2 85/10/28 */
 #define _POSIX_SOURCE
 #define _RESEARCH_SOURCE
@@ -27,12 +36,14 @@ typedef char flag;	/* represent a few bit flag */
 #define NLEFTS	512
 #define NCHARS	500
 #define NINTS	250
-#define INMAX	20000
-#define OUTMAX	20000
-#define QBUFMAX	20000
-#define MAXDIR	10
-#define MAXPROC	100
-#define MAXINCLUDE	17
+
+/* cranked these up, we're not on the pdp-11 any more */
+#define INMAX	80000
+#define OUTMAX	80000
+#define QBUFMAX	80000
+#define MAXDIR	30
+#define MAXPROC	200
+#define MAXINCLUDE	32
 #define PROCLIMIT	3
 
 #define ALLDEPS	1
@@ -196,7 +207,7 @@ extern char	*copys(char *);
 extern char	*concat(char *, char *, char *);
 extern int	suffix(char *, char *, char *);
 extern int	*ckalloc(int);
-extern char	*subst(char *, char *);
+extern char	*subst(char *, char *, char *);
 extern void	setvar(char *, char *, int);
 extern void	set3var(char *, char *);
 extern int	eqsign(char *);

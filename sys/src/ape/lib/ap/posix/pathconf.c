@@ -1,13 +1,20 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include	<unistd.h>
 #include	<limits.h>
 #include	<errno.h>
 #include	<sys/limits.h>
 
 long
-pathconf(const char *path, int name)
+pathconf(const char *, int name)
 {
-#pragma ref path
-
 	switch(name)
 	{
 	case _PC_LINK_MAX:
@@ -46,10 +53,8 @@ pathconf(const char *path, int name)
 }
 
 long
-fpathconf(int fd, int name)
+fpathconf(int, int name)
 {
-#pragma ref fd
-
 	return pathconf(0, name);
 }
 

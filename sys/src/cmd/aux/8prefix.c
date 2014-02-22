@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * Pre-resolve references inside an object file.
  * Mark such functions static so that linking with
@@ -7,7 +16,7 @@
 #include <u.h>
 #include <libc.h>
 #include <bio.h>
-#include "../8c/8.out.h"
+#include "/sys/src/cmd/8c/8.out.h"
 
 typedef struct Sym Sym;
 struct Sym

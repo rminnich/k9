@@ -1,8 +1,7 @@
 objtype=arm
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
-LIB=$NXM/$objtype/lib/libc.a
+LIB=/$objtype/lib/libc.a
 SFILES=\
 	argv0.s\
 	atom.s\
@@ -25,7 +24,7 @@ CFILES=\
 	notejmp.c\
 	vlrt.c\
 
-HFILES=$NXM/sys/include/libc.h
+HFILES=/sys/include/libc.h
 
 OFILES=${CFILES:%.c=%.$O} ${SFILES:%.s=%.$O}
 
@@ -34,4 +33,4 @@ UPDATE=mkfile\
 	$CFILES\
 	$SFILES\
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib

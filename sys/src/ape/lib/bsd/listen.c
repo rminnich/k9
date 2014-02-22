@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /* posix */
 #include <sys/types.h>
 #include <unistd.h>
@@ -46,6 +55,9 @@ listenproc(Rock *r, int fd)
 		break;
 	case SOCK_STREAM:
 		net = "tcp";
+		break;
+	default:
+		net = "gok";
 		break;
 	}
 
@@ -113,9 +125,7 @@ listenproc(Rock *r, int fd)
 }
 
 int
-listen(fd, backlog)
-	int fd;
-	int backlog;
+listen(int fd, int)
 {
 	Rock *r;
 	int n, cfd;
@@ -137,7 +147,7 @@ listen(fd, backlog)
 			return -1;
 		}
 		lip = (struct sockaddr_in*)&r->addr;
-		if(lip->sin_port >= 0) {
+		if(1 || lip->sin_port >= 0) {	/* sin_port is unsigned */
 			if(write(cfd, "bind 0", 6) < 0) {
 				errno = EGREG;
 				close(cfd);

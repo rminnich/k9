@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=page
 
@@ -16,19 +15,19 @@ OFILES=\
 	util.$O\
 	view.$O\
 
-LIB=$NXM/$objtype/lib/libdraw.a
+LIB=/$objtype/lib/libdraw.a
 
 UPDATE=\
 	mkfile\
 	${OFILES:%.$O=%.c}\
 	pdfprolog.ps\
 	$HFILES\
-	$NXM/sys/man/1/page\
-	$NXM/$objtype/bin/page\
+	/sys/man/1/page\
+	/386/bin/page\
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 
-BIN=$NXM/$objtype/bin
+BIN=/$objtype/bin
 
 pdfprolog.c: pdfprolog.ps
 	cat pdfprolog.ps | sed 's/.*/"&\\n"/g' >pdfprolog.c

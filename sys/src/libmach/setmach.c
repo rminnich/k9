@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include	<u.h>
 #include	<libc.h>
 #include	<bio.h>
@@ -17,11 +26,9 @@ struct machtab
 };
 
 extern	Mach		mmips, msparc, m68020, mi386, mamd64,
-			marm, mmips2be, mmips2le, mpower, malpha, msparc64;
-//			marm, mmips2be, mmips2le, mpower, mpower64, malpha, msparc64;
+			marm, mmips2be, mmips2le, mpower, mpower64, malpha, msparc64;
 extern	Machdata	mipsmach, mipsmachle, sparcmach, m68020mach, i386mach,
-			armmach, mipsmach2le, alphamach, sparc64mach;
-//			armmach, mipsmach2le, powermach, alphamach, sparc64mach;
+			armmach, mipsmach2le, powermach, alphamach, sparc64mach;
 
 /*
  *	machine selection table.  machines with native disassemblers should
@@ -108,18 +115,18 @@ Machtab	machines[] =
 		AARM,
 		&marm,
 		&armmach,	},
-//	{	"power",			/*PowerPC*/
-//		FPOWER,
-//		FPOWERB,
-//		APOWER,
-//		&mpower,
-//		&powermach,	},
-//	{	"power64",			/*PowerPC*/
-//		FPOWER64,
-//		FPOWER64B,
-//		APOWER64,
-//		&mpower64,
-//		&powermach,	},
+	{	"power",			/*PowerPC*/
+		FPOWER,
+		FPOWERB,
+		APOWER,
+		&mpower,
+		&powermach,	},
+	{	"power64",			/*PowerPC*/
+		FPOWER64,
+		FPOWER64B,
+		APOWER64,
+		&mpower64,
+		&powermach,	},
 	{	"alpha",			/*Alpha*/
 		FALPHA,
 		FALPHAB,

@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 typedef struct Hub Hub;
 typedef struct Port Port;
 typedef struct DHub DHub;
@@ -52,9 +61,7 @@ enum
 	Pconfiged,
 
 	/* Delays, timeouts (ms) */
-//	Spawndelay	= 1000,		/* how often may we re-spawn a driver */
-	Spawndelay	= 250,		/* how often may we re-spawn a driver */
-//	Connectdelay	= 1000,		/* how much to wait after a connect */
+	Spawndelay	= 100,		/* how often may we re-spawn a driver */
 	Connectdelay	= 500,		/* how much to wait after a connect */
 	Resetdelay	= 20,		/* how much to wait after a reset */
 	Enabledelay	= 20,		/* how much to wait after an enable */
@@ -122,6 +129,7 @@ struct Devtab
 	int	did;
 	char	*args;
 	uvlong	devmask;
+	int	noauto;
 };
 
 

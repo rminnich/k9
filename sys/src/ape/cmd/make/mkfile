@@ -1,5 +1,4 @@
-MKSHELL=rc
-APE=$NXM/sys/src/ape
+APE=/sys/src/ape
 <$APE/config
 
 TARG=make
@@ -15,9 +14,9 @@ HFILES=defs.h
 YFILES=gram.y
 
 BIN=$APEBIN
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 
-CFLAGS=-c $CFLAGS -DSHELLCOM'="/bin/sh"'
+CFLAGS=-c -DSHELLCOM'="/bin/sh"'
 YFLAGS=-S
 
 gram.c:	y.tab.c

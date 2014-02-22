@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * Asix USB ether adapters
  * I got no documentation for it, thus the bits
@@ -234,8 +243,11 @@ ctlrinit(Ether *ether)
 
 	d = ether->dev;
 	switch(ether->cid){
-	default:
+	case A8817x:
+	case A88179:
 		fprint(2, "%s: card known but not implemented\n", argv0);
+		/* fall through */
+	default:
 		return -1;
 
 	case A88178:
@@ -422,7 +434,7 @@ asixpromiscuous(Ether *e, int on)
 {
 	int rxctl;
 
-	deprint(2, "%s: aixprompiscuous %d\n", argv0, on);
+	deprint(2, "%s: asixpromiscuous %d\n", argv0, on);
 	rxctl = getrxctl(e->dev);
 	if(on != 0)
 		rxctl |= Rxctlprom;
@@ -467,11 +479,13 @@ asixreset(Ether *ether)
 		if(ip->vid == dev->usb->vid && ip->did == dev->usb->did){
 			ether->cid = ip->cid;
 			if(ctlrinit(ether) < 0){
-				deprint(2, "%s: init failed: %r\n", argv0);
+				deprint(2, "%s: asix init failed: %r\n", argv0);
 				return -1;
 			}
 			deprint(2, "%s: asix reset done\n", argv0);
+			ether->name = "asix";
 			ether->aux = emallocz(sizeof(Buf), 1);
+			ether->bufsize = Hdrsize+Maxpkt;
 			ether->bread = asixbread;
 			ether->bwrite = asixbwrite;
 			ether->free = asixfree;

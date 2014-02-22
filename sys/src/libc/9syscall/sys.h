@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #define	SYSR1		0
 #define	_ERRSTR		1
 #define	BIND		2
@@ -33,7 +42,7 @@
 #define	SEGFREE		32
 #define	SEGFLUSH	33
 #define	RENDEZVOUS	34
-#define	UNMOUNT	35
+#define	UNMOUNT		35
 #define	_WAIT		36
 #define	SEMACQUIRE	37
 #define	SEMRELEASE	38
@@ -49,12 +58,3 @@
 #define	PREAD		50
 #define	PWRITE		51
 #define	TSEMACQUIRE	52
-#define	SEMWAKEUP	53
-#define	SEMALT		54
-#define	EXECAC		55
-#define	NIXSYSCALL	56
-#define	ZIOPREAD	57
-#define	ZIOPWRITE	58
-#define	ZIOFREE		59
-#define	NANOTIME	60
-#define	SETTLS		128

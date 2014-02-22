@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <thread.h>
@@ -55,8 +64,8 @@ getbits(void *p, Chain *ch, int nbits)
 int
 parsereportdesc(HidRepTempl *temp, uchar *repdesc, int repsz)
 {
-	int i, j, l, n, isptr, hasxy, hasbut, nk, ncoll;
-	int ks[MaxVals];
+	int i, j, l, n, isptr, hasxy, hasbut, nk, ncoll, dsize;
+	uchar ks[MaxVals+1];
 	HidInterface *ifs;
 
 	ifs = temp->ifcs;
@@ -66,11 +75,15 @@ parsereportdesc(HidRepTempl *temp, uchar *repdesc, int repsz)
 	n = 0;
 	nk = 0;
 	memset(ifs, 0, sizeof *ifs * MaxIfc);
-	for(i = 0; i < repsz; i += 2){
+	for(i = 0; i < repsz; i += dsize+1){
+		dsize = (1 << (repdesc[i] & 03)) >> 1;
+		if(nk > MaxVals){
+			fprint(2, "bad report: too many input types\n");
+			return -1;
+		}
 		if(n == MaxIfc)
 			break;
 		if(repdesc[i] == HidEnd){
-			i--;
 			ncoll--;
 			if(ncoll == 0)
 				break;
@@ -79,7 +92,7 @@ parsereportdesc(HidRepTempl *temp, uchar *repdesc, int repsz)
 		switch(repdesc[i]){
 		case HidReportId:
 			switch(repdesc[i+1]){
-			case HidReportApp:
+			case HidReportIdPtr:
 				temp->id = repdesc[i+1];
 				break;
 			default:
@@ -97,6 +110,9 @@ parsereportdesc(HidRepTempl *temp, uchar *repdesc, int repsz)
 			case HidY:
 				hasxy++;
 				ks[nk++] = KindY;
+				break;
+			case HidZ:
+				ks[nk++] = KindPad;
 				break;
 			case HidWheel:
 				ks[nk++] = KindWheel;
@@ -121,6 +137,10 @@ parsereportdesc(HidRepTempl *temp, uchar *repdesc, int repsz)
 			ifs[n].count = repdesc[i+1];
 			break;
 		case HidInput:
+			if(ifs[n].count > MaxVals){
+				fprint(2, "bad report: input count too big\n");
+				return -1;
+			}
 			for(j = 0; j <nk; j++)
 				ifs[n].kind[j] = ks[j];
 			if(nk != 0 && nk < ifs[n].count)
@@ -130,9 +150,9 @@ parsereportdesc(HidRepTempl *temp, uchar *repdesc, int repsz)
 			if(n < MaxIfc){
 				ifs[n].count = ifs[n-1].count;	/* inherit values */
 				ifs[n].nbits = ifs[n-1].nbits;
+				if(ifs[n].nbits == 0)
+					ifs[n].nbits = 1;
 			}
-			if(ifs[n].nbits == 0)
-				ifs[n].nbits = 1;
 			nk = 0;
 			break;
 		case HidCollection:

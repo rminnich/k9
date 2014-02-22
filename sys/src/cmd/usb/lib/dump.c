@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <thread.h>
@@ -133,11 +142,11 @@ Ufmt(Fmt *f)
 	s = seprint(s, e, "%s", d->dir);
 	ud = d->usb;
 	if(ud == nil)
-		return fmtprint(f, "%s %d refs\n", buf, d->ref);
+		return fmtprint(f, "%s %ld refs\n", buf, d->ref);
 	s = seprint(s, e, " csp %s.%uld.%uld",
 		classname(Class(ud->csp)), Subclass(ud->csp), Proto(ud->csp));
 	s = seprint(s, e, " vid %#ux did %#ux", ud->vid, ud->did);
-	s = seprint(s, e, " refs %d\n", d->ref);
+	s = seprint(s, e, " refs %ld\n", d->ref);
 	s = seprint(s, e, "\t%s %s %s\n", ud->vendor, ud->product, ud->serial);
 	for(i = 0; i < Nconf; i++){
 		if(ud->conf[i] == nil)

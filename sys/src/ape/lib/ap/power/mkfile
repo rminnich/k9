@@ -1,8 +1,8 @@
-MKSHELL=rc
-APE=$NXM/sys/src/ape
+APE=/sys/src/ape
 <$APE/config
-LIB=$NXM/$objtype/lib/ape/libap.a
+LIB=/$objtype/lib/ape/libap.a
 OFILES=\
+	atom.$O\
 	cycles.$O\
 	getfcr.$O\
 	lock.$O\
@@ -18,7 +18,7 @@ OFILES=\
 	vlop.$O\
 	vlrt.$O\
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib
 
-CFLAGS=-c $CFLAGS -D_POSIX_SOURCE -D_PLAN9_SOURCE
+CFLAGS=$CFLAGS -c -D_POSIX_SOURCE -D_PLAN9_SOURCE
 

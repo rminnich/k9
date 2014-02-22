@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * See PNG 1.2 spec, also RFC 2083.
  */
@@ -79,7 +88,7 @@ zread(void *va, void *buf, int n)
 	pixwid = z->pixwid;
 	b = buf;
 	e = b+n;
-	while(b+pixwid <= e){
+	while(b+pixwid < e){	/* one less for filter alg byte */
 		if(z->y >= z->dy)
 			break;
 		if(z->x == 0)

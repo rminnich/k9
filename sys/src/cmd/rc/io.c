@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "rc.h"
 #include "exec.h"
 #include "io.h"
@@ -77,6 +86,35 @@ rchr(io *b)
 	if(b->bufp==b->ebuf)
 		return emptybuf(b);
 	return *b->bufp++;
+}
+
+int
+rutf(io *b, char *buf, Rune *r)
+{
+	int n, i, c;
+
+	c = rchr(b);
+	if(c == EOF)
+		return EOF;
+	*buf = c;
+	if(c < Runesync){
+		*r = c;
+		return 1;
+	}
+	for(i = 1; (c = rchr(b)) != EOF; ){
+		buf[i++] = c;
+		buf[i] = 0;
+		if(fullrune(buf, i)){
+			n = chartorune(r, buf);
+			b->bufp -= i - n;	/* push back unconsumed bytes */
+			assert(b->fd == -1 || b->bufp > b->buf);
+			return n;
+		}
+	}
+	/* at eof */
+	b->bufp -= i - 1;			/* consume 1 byte */
+	*r = Runeerror;
+	return runetochar(buf, r);
 }
 
 void

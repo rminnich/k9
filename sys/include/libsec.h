@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #pragma	lib	"libsec.a"
 #pragma	src	"/sys/src/libsec"
 
@@ -275,6 +284,8 @@ RSApriv*	rsaprivalloc(void);
 void		rsaprivfree(RSApriv*);
 RSApub*		rsaprivtopub(RSApriv*);
 RSApub*		X509toRSApub(uchar*, int, char*, int);
+uchar*		RSApubtoasn1(RSApub*, int*);
+RSApub*		asn1toRSApub(uchar*, int);
 RSApriv*	asn1toRSApriv(uchar*, int);
 void		asn1dump(uchar *der, int len);
 uchar*		decodePEM(char *s, char *type, int *len, char **new_s);

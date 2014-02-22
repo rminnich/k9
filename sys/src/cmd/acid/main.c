@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <bio.h>
@@ -43,13 +52,15 @@ main(int argc, char *argv[])
 	mtype = 0;
 	ARGBEGIN{
 	case 'm':
-		mtype = EARGF(usage());
+		mtype = ARGF();
 		break;
 	case 'w':
 		wtflag = 1;
 		break;
 	case 'l':
-		s = EARGF(usage());
+		s = ARGF();
+		if(s == 0)
+			usage();
 		lm[nlm++] = s;
 		break;
 	case 'k':
@@ -170,7 +181,7 @@ attachfiles(char *aout, int pid)
 			text = open(aout, OREAD);
 
 		if(text < 0)
-			error("%s: can't open %s: %r", argv0, aout);
+			error("%s: can't open %s: %r\n", argv0, aout);
 		readtext(aout);
 	}
 	if(pid)					/* pid given */

@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include	"l.h"
 
 uchar	ynone[] =
@@ -15,8 +24,10 @@ uchar	ynop[] =
 	Ynone,	Ynone,	Zpseudo,1,
 	Ynone,	Yml,	Zpseudo,1,
 	Ynone,	Yrf,	Zpseudo,1,
+	Ynone,	Yxr,	Zpseudo,1,
 	Yml,	Ynone,	Zpseudo,1,
 	Yrf,	Ynone,	Zpseudo,1,
+	Yxr,	Ynone,	Zpseudo,1,
 	0
 };
 uchar	yxorb[] =
@@ -762,7 +773,7 @@ Optab optab[] =
 	{ AMOVLPD,	yxmov,	Pe, 0x12,0x13 },
 	{ AMOVLPS,	yxmov,	Pm, 0x12,0x13 },
 	{ AMOVLQSX,	yml_rl,	Pw, 0x63 },
-	{ AMOVLQZX,	yml_rl,	Px, 0x63 },
+	{ AMOVLQZX,	yml_rl,	Px, 0x8b },
 	{ AMOVMSKPD,	yxrrl,	Pq, 0x50 },
 	{ AMOVMSKPS,	yxrrl,	Pm, 0x50 },
 	{ AMOVNTO,	yxr_ml,	Pe, 0xe7 },

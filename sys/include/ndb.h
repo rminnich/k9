@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #pragma	src	"/sys/src/libndb"
 #pragma	lib	"libndb.a"
 
@@ -33,7 +42,6 @@ struct Ndb
 	Qid		qid;		/* qid of db file */
 	char		file[128];/* path name of db file */
 	ulong		length;		/* length of db file */
-	int		isopen;	/* true if the file is open */
 
 	int		nohash;		/* don't look for hash files */
 	Ndbhf		*hf;		/* open hash files */

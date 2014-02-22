@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * tee-- pipe fitting
  */
@@ -7,7 +16,7 @@
 
 int	uflag;
 int	aflag;
-int	openf[100];
+int	*openf;
 
 char in[8192];
 
@@ -38,7 +47,10 @@ main(int argc, char **argv)
 		exits("usage");
 	} ARGEND
 
-	USED(argc);
+	openf = malloc((1+argc)*sizeof(int));
+	if(openf == nil)
+		sysfatal("out of memory: %r");
+
 	n = 0;
 	while(*argv) {
 		if(aflag) {

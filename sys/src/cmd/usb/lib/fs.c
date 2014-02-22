@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * Framework for USB devices that provide a file tree.
  * The main process (usbd or the driver's main proc)
@@ -336,6 +345,7 @@ fsioproc(void* a)
 	Fcall *t, *r;
 	Fid *fid;
 
+	threadsetname("fsioproc");
 	dprint(2, "%s: fsioproc pid %d\n", argv0, getpid());
 	while((rpc = recvp(p)) != nil){
 		t = &rpc->t;
@@ -542,6 +552,7 @@ outproc(void*)
 
 	if(once++ != 0)
 		sysfatal("more than one outproc");
+	threadsetname("outproc");
 	for(;;){
 		do
 			rpc = recvp(outc);
@@ -580,6 +591,7 @@ usbfs(void*)
 	if(once++ != 0)
 		sysfatal("more than one usbfs proc");
 
+	threadsetname("usbfs");
 	outc = chancreate(sizeof(Rpc*), 1);
 	procc = chancreate(sizeof(Channel*), 0);
 	endc = chancreate(sizeof(Channel*), 0);

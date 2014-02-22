@@ -1,8 +1,7 @@
-MKSHELL=rc
-APE=$NXM/sys/src/ape
+APE=/sys/src/ape
 <$APE/config
 
-LIB=$NXM/$objtype/lib/ape/libbsd.a
+LIB=/$objtype/lib/ape/libbsd.a
 OFILES=\
 	accept.$O\
 	bcopy.$O\
@@ -45,12 +44,11 @@ OFILES=\
 	strncasecmp.$O\
 	socket.$O\
 	socketpair.$O\
-	strdup.$O\
 	pty.$O\
 	writev.$O\
 	
 HFILES=priv.h
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib
 
-CFLAGS=-c $CFLAGS -D_POSIX_SOURCE -D_BSD_EXTENSION -D_PLAN9_SOURCE -I../ap/plan9
+CFLAGS=$CFLAGS -c -D_POSIX_SOURCE -D_BSD_EXTENSION -D_PLAN9_SOURCE -I../ap/plan9

@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 NPROC=3
 
 OBJ=main.$O font.$O \

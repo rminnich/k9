@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <auth.h>
@@ -604,6 +613,8 @@ copyUCmd(char *tg, char *cmd, int uids)
 		Bprint(&bout, "%s NO %s%s bad mailbox\r\n", tg, uid, cmd);
 		return;
 	}
+	if(cistrcmp(mbox, "inbox") == 0)
+		mbox = "mbox";
 	if(!cdExists(mboxDir, mbox)){
 		check();
 		Bprint(&bout, "%s NO [TRYCREATE] %s mailbox does not exist\r\n", tg, cmd);

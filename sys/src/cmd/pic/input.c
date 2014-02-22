@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -252,6 +261,7 @@ nextchar(void)
 {
 	register int c;
 
+	c = 0;
   loop:
 	switch (srcp->type) {
 	case Free:	/* free string */
@@ -482,7 +492,11 @@ void eprint(void)	/* try to print context around error */
 	ep = ebuf;
 }
 
-void yywrap(void) {}
+int
+yywrap(void)
+{
+	return 1;		/* read eof; did not switch inputs */
+}
 
 char	*newfile = 0;		/* filename for file copy */
 char	*untilstr = 0;		/* string that terminates a thru */

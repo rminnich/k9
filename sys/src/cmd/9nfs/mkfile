@@ -1,6 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
-CFLAGS=-FVw $CFLAGS
+</$objtype/mkfile
 
 TARG=nfsserver\
 	portmapper\
@@ -27,7 +25,7 @@ NFSSERVER=9p.$O\
 	nfsmount.$O\
 	xfile.$O
 
-BIN=$NXM/$objtype/bin/aux
+BIN=/$objtype/bin/aux
 
 all:V:
 
@@ -39,7 +37,7 @@ UPDATE=\
 	${NFSSERVER:%.$O=%.c}\
 	${TARG:%=%.c}\
 
-<$NXM/sys/src/cmd/mkmany
+</sys/src/cmd/mkmany
 
 $O.nfsserver: $NFSSERVER
 

@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /* posix */
 #include <sys/types.h>
 #include <unistd.h>
@@ -6,6 +15,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <string.h>
+#include <sys/stat.h>
 
 /* bsd extensions */
 #include <sys/uio.h>
@@ -23,7 +33,7 @@ accept(int fd, void *a, int *alen)
 	struct sockaddr_in *ip;
 	char name[Ctlsize];
 	char file[8+Ctlsize+1];
-	char *p, *net;
+	char *net;
 
 	r = _sock_findrock(fd, 0);
 	if(r == 0){
@@ -39,6 +49,9 @@ accept(int fd, void *a, int *alen)
 			break;
 		case SOCK_STREAM:
 			net = "tcp";
+			break;
+		default:
+			net = "gok";
 			break;
 		}
 

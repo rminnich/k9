@@ -1,5 +1,13 @@
-#include	<u.h>
-#include	<libc.h>
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
+#include	"/sys/src/cmd/lex/ldefs.h"
 #include	<stdio.h>
 
 extern	FILE*	yyout;
@@ -11,7 +19,7 @@ printable(int c)
 }
 
 void
-allprint(char c)
+allprint(int c)
 {
 
 	switch(c) {

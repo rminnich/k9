@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "gc.h"
 
 static int	doubleflag;
@@ -237,23 +246,6 @@ loop:
 	}
 	p += 2;
 	goto loop;
-}
-
-void
-sextern(Sym *s, Node *a, long o, long w)
-{
-	long e, lw;
-
-	for(e=0; e<w; e+=NSNAME) {
-		lw = NSNAME;
-		if(w-e < lw)
-			lw = w-e;
-		gpseudo(ADATA, s, nodconst(0));
-		p->from.offset += o+e;
-		p->reg = lw;
-		p->to.type = D_SCONST;
-		memmove(p->to.sval, a->cstring+e, lw);
-	}
 }
 
 void
@@ -657,8 +649,8 @@ maxround(long max, long v)
 	w = SZ_LONG;
 	if((debug['8'] || hasdoubled) && !debug['4'])
 		w = SZ_DOUBLE;
-	v += w-1;
+	v = round(v, w);
 	if(v > max)
-		max = round(v, w);
+		return v;
 	return max;
 }

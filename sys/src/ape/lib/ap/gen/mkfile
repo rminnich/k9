@@ -1,7 +1,6 @@
-MKSHELL=rc
-APE=$NXM/sys/src/ape
+APE=/sys/src/ape
 <$APE/config
-LIB=$NXM/$objtype/lib/ape/libap.a
+LIB=/$objtype/lib/ape/libap.a
 
 ALLOFILES=\
 	_assert.$O\
@@ -38,6 +37,7 @@ ALLOFILES=\
 	strcoll.$O\
 	strcpy.$O\
 	strcspn.$O\
+	strdup.$O\
 	strftime.$O\
 	strlen.$O\
 	strncat.$O\
@@ -59,6 +59,6 @@ ALLOFILES=\
 # cull things in the per-machine directories from this list
 OFILES=	`{rc ./reduce $O $objtype $ALLOFILES}
 
-<$NXM/sys/src/cmd/mksyslib
+</sys/src/cmd/mksyslib
 
-CFLAGS=-c $CFLAGS -D_POSIX_SOURCE
+CFLAGS=$CFLAGS -c -D_POSIX_SOURCE

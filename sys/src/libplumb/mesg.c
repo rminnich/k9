@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include "plumb.h"
@@ -110,8 +119,10 @@ plumbpackattr(Plumbattr *attr)
 	for(a=attr; a!=nil; a=a->next)
 		n += Strlen(a->name) + 1 + Strlen(quote(a->value, buf, bufe)) + 1;
 	s = malloc(n);
-	if(s == nil)
+	if(s == nil) {
+		free(buf);
 		return nil;
+	}
 	t = s;
 	*t = '\0';
 	for(a=attr; a!=nil; a=a->next){

@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 CFLAGS=$CFLAGS
 
@@ -96,11 +95,11 @@ TARG=\
 
 CFILES=${TARG:%=%.c} $LIBCFILES
 
-BIN=$NXM/$objtype/bin
+BIN=/$objtype/bin
 
 it:V: all
 
-<$NXM/sys/src/cmd/mkmany
+</sys/src/cmd/mkmany
 
 INC=
 CFLAGS=$INC $CFLAGS $XCFLAGS

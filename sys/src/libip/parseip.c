@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <ctype.h>
@@ -73,7 +82,8 @@ parseip(uchar *to, char *from)
 	for(i = 0; i < IPaddrlen && ipcharok(*p); i+=2){
 		op = p;
 		x = strtoul(p, &p, 16);
-		if(*p == '.' || (*p == 0 && i == 0)){	/* ends with v4? */
+		if((*p == '.' && i <= IPaddrlen-4) || (*p == 0 && i == 0)){
+			/* ends with v4 */
 			p = v4parseip(to+i, op);
 			i += 4;
 			break;

@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /*
  * dial - connect to a service (parallel version)
  */
@@ -45,7 +54,7 @@ struct Conn {
 
 	int	dfd;
 	int	cfd;
-	char	dir[NETPATHLEN];
+	char	dir[NETPATHLEN+1];
 	char	err[ERRMAX];
 };
 struct Dest {
@@ -184,7 +193,8 @@ notedeath(Dest *dp, char *exitsts)
 				closeopenfd(&conn->dfd);
 				closeopenfd(&conn->cfd);
 			}
-			strncpy(conn->err, fields[4], sizeof conn->err);
+			strncpy(conn->err, fields[4], sizeof conn->err - 1);
+			conn->err[sizeof conn->err - 1] = '\0';
 			conn->dead = 1;
 			return;
 		}
@@ -224,8 +234,10 @@ fillinds(DS *ds, Dest *dp)
 	conn = &dp->conn[dp->winner];
 	if (ds->cfdp)
 		*ds->cfdp = conn->cfd;
-	if (ds->dir)
+	if (ds->dir) {
 		strncpy(ds->dir, conn->dir, NETPATHLEN);
+		ds->dir[NETPATHLEN-1] = '\0';
+	}
 	return conn->dfd;
 }
 
@@ -249,7 +261,8 @@ connectwait(Dest *dp, char *besterr)
 	for (conn = dp->conn; conn < dp->connend; conn++)
 		if (conn - dp->conn != dp->winner && conn->dead &&
 		    conn->err[0]) {
-			strncpy(besterr, conn->err, ERRMAX);
+			strncpy(besterr, conn->err, ERRMAX-1);
+			besterr[ERRMAX-1] = '\0';
 			break;
 		}
 	return dp->winner;
@@ -261,8 +274,15 @@ parsecs(Dest *dp, char **clonep, char **destp)
 	char *dest, *p;
 
 	dest = strchr(dp->nextaddr, ' ');
-	if(dest == nil)
+	if(dest == nil) {
+		p = strchr(dp->nextaddr, '\n');
+		if(p)
+			*p = '\0';
+		werrstr("malformed clone cmd from cs `%s'", dp->nextaddr);
+		if(p)
+			*p = '\n';
 		return -1;
+	}
 	*dest++ = '\0';
 	p = strchr(dest, '\n');
 	if(p == nil)
@@ -283,13 +303,10 @@ pickuperr(char *besterr, char *err)
 		strcpy(besterr, err);
 }
 
-static void
+static int
 catcher(void *, char *s)
 {
-	if (strstr(s, "alarm") != nil)
-		noted(NCONT);
-	else
-		noted(NDFLT);
+	return strstr(s, "alarm") != nil;
 }
 
 /*
@@ -302,7 +319,7 @@ dialmulti(DS *ds, Dest *dp)
 {
 	int rv, kid, kidme;
 	char *clone, *dest;
-	char err[ERRMAX], besterr[ERRMAX];
+	char besterr[ERRMAX];
 
 	dp->winner = -1;
 	dp->nkid = 0;
@@ -313,8 +330,10 @@ dialmulti(DS *ds, Dest *dp)
 		if (kid < 0)
 			--dp->nkid;
 		else if (kid == 0) {
+			char err[ERRMAX];
+
 			/* only in kid, to avoid atnotify callbacks in parent */
-			notify(catcher);
+			atnotify(catcher, 1);
 
 			*besterr = '\0';
 			rv = call(clone, dest, ds, dp, &dp->conn[kidme]);
@@ -323,11 +342,10 @@ dialmulti(DS *ds, Dest *dp)
 			_exits(besterr);	/* avoid atexit callbacks */
 		}
 	}
+	*besterr = '\0';
 	rv = connectwait(dp, besterr);
-	if(rv < 0 && *besterr)
-		werrstr("%s", besterr);
-	else
-		werrstr("%s", err);
+	if(rv < 0)
+		werrstr("%s", (*besterr? besterr: "unknown error"));
 	return rv;
 }
 
@@ -340,6 +358,7 @@ csdial(DS *ds)
 	char buf[Maxstring], clone[Maxpath], err[ERRMAX], besterr[ERRMAX];
 	Dest *dp;
 
+	werrstr("");
 	dp = mallocz(sizeof *dp, 1);
 	if(dp == nil)
 		return -1;
@@ -366,6 +385,7 @@ csdial(DS *ds)
 
 	/*
 	 *  ask connection server to translate
+	 *  e.g., net!cs.bell-labs.com!smtp
 	 */
 	snprint(buf, sizeof(buf), "%s!%s", ds->proto, ds->rem);
 	if(write(fd, buf, strlen(buf)) < 0){
@@ -375,7 +395,11 @@ csdial(DS *ds)
 	}
 
 	/*
-	 *  read all addresses from the connection server.
+	 *  read all addresses from the connection server:
+	 *  /net/tcp/clone 135.104.9.78!25
+	 *  /net/tcp/clone 2620:0:dc0:1805::29!25
+	 *
+	 *  assumes that we'll get one record per read.
 	 */
 	seek(fd, 0, 0);
 	addrs = 0;
@@ -388,6 +412,8 @@ csdial(DS *ds)
 		addrp += n;
 		bleft -= n;
 	}
+	*addrp = '\0';
+
 	/*
 	 * if we haven't read all of cs's output, assume the last line might
 	 * have been truncated and ignore it.  we really don't expect this
@@ -521,7 +547,8 @@ _dial_string_parse(char *str, DS *ds)
 			ds->netdir = 0;
 			ds->proto = ds->buf;
 		} else {
-			for(p2 = p; *p2 != '/'; p2--)
+			/* expecting /net.alt/tcp!foo or #I1/tcp!foo */
+			for(p2 = p; p2 > ds->buf && *p2 != '/'; p2--)
 				;
 			*p2++ = 0;
 			ds->netdir = ds->buf;

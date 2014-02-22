@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include	"l.h"
 
 long	OFFSET;
@@ -80,6 +89,7 @@ asmb(void)
 	case 1:
 	case 2:
 	case 5:
+	case 7:
 		OFFSET = HEADR+textsize;
 		seek(cout, OFFSET, 0);
 		break;
@@ -123,6 +133,8 @@ asmb(void)
 		case 6:	/* no header, padded segments */
 			OFFSET += rnd(datsize, 4096);
 			seek(cout, OFFSET, 0);
+			break;
+		case 7:
 			break;
 		}
 		if(!debug['s'])
@@ -212,6 +224,10 @@ asmb(void)
 		lputl(0xe3300000);		/* nop */
 		lputl(0xe3300000);		/* nop */
 		break;
+	case 7:	/* elf */
+		debug['S'] = 1;			/* symbol table */
+		elf32(ARM, ELFDATA2LSB, 0, nil);
+		break;
 	}
 	cflush();
 }
@@ -250,6 +266,18 @@ wput(long l)
 }
 
 void
+wputl(long l)
+{
+
+	cbp[0] = l;
+	cbp[1] = l>>8;
+	cbp += 2;
+	cbc -= 2;
+	if(cbc <= 0)
+		cflush();
+}
+
+void
 lput(long l)
 {
 
@@ -275,6 +303,20 @@ lputl(long l)
 	cbc -= 4;
 	if(cbc <= 0)
 		cflush();
+}
+
+void
+llput(vlong v)
+{
+	lput(v>>32);
+	lput(v);
+}
+
+void
+llputl(vlong v)
+{
+	lputl(v);
+	lputl(v>>32);
 }
 
 void
@@ -426,12 +468,12 @@ asmlc(void)
 		if(p->line == oldlc || p->as == ATEXT || p->as == ANOP) {
 			if(p->as == ATEXT)
 				curtext = p;
-			if(debug['L'])
+			if(debug['V'])
 				Bprint(&bso, "%6lux %P\n",
 					p->pc, p);
 			continue;
 		}
-		if(debug['L'])
+		if(debug['V'])
 			Bprint(&bso, "\t\t%6ld", lcsize);
 		v = (p->pc - oldpc) / MINLC;
 		while(v) {
@@ -439,7 +481,7 @@ asmlc(void)
 			if(v < 127)
 				s = v;
 			cput(s+128);	/* 129-255 +pc */
-			if(debug['L'])
+			if(debug['V'])
 				Bprint(&bso, " pc+%ld*%d(%ld)", s, MINLC, s+128);
 			v -= s;
 			lcsize++;
@@ -453,7 +495,7 @@ asmlc(void)
 			cput(s>>16);
 			cput(s>>8);
 			cput(s);
-			if(debug['L']) {
+			if(debug['V']) {
 				if(s > 0)
 					Bprint(&bso, " lc+%ld(%d,%ld)\n",
 						s, 0, s);
@@ -468,14 +510,14 @@ asmlc(void)
 		}
 		if(s > 0) {
 			cput(0+s);	/* 1-64 +lc */
-			if(debug['L']) {
+			if(debug['V']) {
 				Bprint(&bso, " lc+%ld(%ld)\n", s, 0+s);
 				Bprint(&bso, "%6lux %P\n",
 					p->pc, p);
 			}
 		} else {
 			cput(64-s);	/* 65-128 -lc */
-			if(debug['L']) {
+			if(debug['V']) {
 				Bprint(&bso, " lc%ld(%ld)\n", s, 64-s);
 				Bprint(&bso, "%6lux %P\n",
 					p->pc, p);
@@ -488,7 +530,7 @@ asmlc(void)
 		cput(s);
 		lcsize++;
 	}
-	if(debug['v'] || debug['L'])
+	if(debug['v'] || debug['V'])
 		Bprint(&bso, "lcsize = %ld\n", lcsize);
 	Bflush(&bso);
 }
@@ -1308,6 +1350,53 @@ PP = p;
 		else if(p->as == AMOVH)
 			o2 ^= (1<<6);
 		break;
+
+	/* VFP ops: */
+	case 74:	/* vfp floating point arith */
+		o1 = opvfprrr(p->as, p->scond);
+		rf = p->from.reg;
+		if(p->from.type == D_FCONST) {
+			diag("invalid floating-point immediate\n%P", p);
+			rf = 0;
+		}
+		rt = p->to.reg;
+		r = p->reg;
+		if(r == NREG)
+			r = rt;
+		o1 |= rt<<12;
+		if(((o1>>20)&0xf) == 0xb)
+			o1 |= rf<<0;
+		else
+			o1 |= r<<16 | rf<<0;
+		break;
+	case 75:	/* vfp floating point compare */
+		o1 = opvfprrr(p->as, p->scond);
+		rf = p->from.reg;
+		if(p->from.type == D_FCONST) {
+			if(p->from.ieee->h != 0 || p->from.ieee->l != 0)
+				diag("invalid floating-point immediate\n%P", p);
+			o1 |= 1<<16;
+			rf = 0;
+		}
+		rt = p->reg;
+		o1 |= rt<<12 | rf<<0;
+		o2 = 0x0ef1fa10;	/* MRS APSR_nzcv, FPSCR */
+		o2 |= (p->scond & C_SCOND) << 28;
+		break;
+	case 76:	/* vfp floating point fix and float */
+		o1 = opvfprrr(p->as, p->scond);
+		rf = p->from.reg;
+		rt = p->to.reg;
+		if(p->from.type == D_REG) {
+			o2 = o1 | rt<<12 | rt<<0;
+			o1 = 0x0e000a10;	/* VMOV F,R */
+			o1 |= (p->scond & C_SCOND) << 28 | rt<<16 | rf<<12;
+		} else {
+			o1 |= FREGTMP<<12 | rf<<0;
+			o2 = 0x0e100a10;	/* VMOV R,F */
+			o2 |= (p->scond & C_SCOND) << 28 | FREGTMP<<16 | rt<<12;
+		}
+		break;
 	}
 
 	if(debug['a'] > 1)
@@ -1432,6 +1521,40 @@ oprrr(int a, int sc)
 	case AMOVDW:	return o | (0xe<<24) | (1<<20) | (1<<8) | (1<<4) | (1<<7);
 	}
 	diag("bad rrr %d", a);
+	prasm(curp);
+	return 0;
+}
+
+long
+opvfprrr(int a, int sc)
+{
+	long o;
+
+	o = (sc & C_SCOND) << 28;
+	if(sc & (C_SBIT|C_PBIT|C_WBIT))
+		diag(".S/.P/.W on vfp instruction");
+	o |= 0xe<<24;
+	switch(a) {
+	case AMOVWD:	return o | 0xb<<8 | 0xb<<20 | 1<<6 | 0x8<<16 | 1<<7;
+	case AMOVWF:	return o | 0xa<<8 | 0xb<<20 | 1<<6 | 0x8<<16 | 1<<7;
+	case AMOVDW:	return o | 0xb<<8 | 0xb<<20 | 1<<6 | 0xD<<16 | 1<<7;
+	case AMOVFW:	return o | 0xa<<8 | 0xb<<20 | 1<<6 | 0xD<<16 | 1<<7;
+	case AMOVFD:	return o | 0xa<<8 | 0xb<<20 | 1<<6 | 0x7<<16 | 1<<7;
+	case AMOVDF:	return o | 0xb<<8 | 0xb<<20 | 1<<6 | 0x7<<16 | 1<<7;
+	case AMOVF:	return o | 0xa<<8 | 0xb<<20 | 1<<6 | 0x0<<16 | 0<<7;
+	case AMOVD:	return o | 0xb<<8 | 0xb<<20 | 1<<6 | 0x0<<16 | 0<<7;
+	case ACMPF:	return o | 0xa<<8 | 0xb<<20 | 1<<6 | 0x4<<16 | 0<<7;
+	case ACMPD:	return o | 0xb<<8 | 0xb<<20 | 1<<6 | 0x4<<16 | 0<<7;
+	case AADDF:	return o | 0xa<<8 | 0x3<<20;
+	case AADDD:	return o | 0xb<<8 | 0x3<<20;
+	case ASUBF:	return o | 0xa<<8 | 0x3<<20 | 1<<6;
+	case ASUBD:	return o | 0xb<<8 | 0x3<<20 | 1<<6;
+	case AMULF:	return o | 0xa<<8 | 0x2<<20;
+	case AMULD:	return o | 0xb<<8 | 0x2<<20;
+	case ADIVF:	return o | 0xa<<8 | 0x8<<20;
+	case ADIVD:	return o | 0xb<<8 | 0x8<<20;
+	}
+	diag("bad vfp rrr %d", a);
 	prasm(curp);
 	return 0;
 }
@@ -1571,10 +1694,45 @@ olhrr(int i, int b, int r, int sc)
 }
 
 long
+ovfpmem(int a, int r, long v, int b, int sc, Prog *p)
+{
+	long o;
+
+	if(sc & (C_SBIT|C_PBIT|C_WBIT))
+		diag(".S/.P/.W on VLDR/VSTR instruction");
+	o = (sc & C_SCOND) << 28;
+	o |= 0xd<<24 | (1<<23);
+	if(v < 0) {
+		v = -v;
+		o ^= 1 << 23;
+	}
+	if(v & 3)
+		diag("odd offset for floating point op: %ld\n%P", v, p);
+	else if(v >= (1<<10))
+		diag("literal span too large: %ld\n%P", v, p);
+	o |= (v>>2) & 0xFF;
+	o |= b << 16;
+	o |= r << 12;
+	switch(a) {
+	default:
+		diag("bad fst %A", a);
+	case AMOVD:
+		o |= 0xb<<8;
+		break;
+	case AMOVF:
+		o |= 0xa<<8;
+		break;
+	}
+	return o;
+}
+
+long
 ofsr(int a, int r, long v, int b, int sc, Prog *p)
 {
 	long o;
 
+	if(vfp)
+		return ovfpmem(a, r, v, b, sc, p);
 	if(sc & C_SBIT)
 		diag(".S on FLDR/FSTR instruction");
 	o = (sc & C_SCOND) << 28;
@@ -1646,6 +1804,8 @@ chipfloat(Ieee *e)
 	Ieee *p;
 	int n;
 
+	if(vfp)
+		return -1;
 	for(n = sizeof(chipfloats)/sizeof(chipfloats[0]); --n >= 0;){
 		p = &chipfloats[n];
 		if(p->l == e->l && p->h == e->h)

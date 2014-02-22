@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include	"l.h"
 
 void
@@ -37,7 +46,7 @@ span(void)
 	Sym *setext, *s;
 	Optab *o;
 	int m, bflag, i;
-	long c, otxt, v;
+	vlong c, otxt, v;
 
 	if(debug['v'])
 		Bprint(&bso, "%5.2f span\n", cputime());
@@ -154,7 +163,7 @@ span(void)
 	if(INITRND)
 		INITDAT = rnd(c, INITRND);
 	if(debug['v'])
-		Bprint(&bso, "tsize = %lux\n", textsize);
+		Bprint(&bso, "tsize = %llux\n", textsize);
 	Bflush(&bso);
 }
 		

@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 
@@ -17,7 +26,7 @@ frexp(double d, int *ep)
 	FPdbleword x, a;
 
 	*ep = 0;
-	// order matters: only isNaN can operate on NaN
+	/* order matters: only isNaN can operate on NaN */
 	if(isNaN(d) || isInf(d, 0) || d == 0)
 		return d;
 	x.x = d;
@@ -89,6 +98,16 @@ modf(double d, double *ip)
 	FPdbleword x;
 	int e;
 
+	x.x = d;
+	e = (x.hi >> SHIFT) & MASK;
+	if(e == MASK){
+		*ip = d;
+		if(x.lo != 0 || (x.hi & 0xfffffL) != 0)	/* NaN */
+			return d;
+		/* ±Inf */
+		x.hi &= 0x80000000L;
+		return x.x;
+	}
 	if(d < 1) {
 		if(d < 0) {
 			x.x = modf(-d, ip);
@@ -98,8 +117,7 @@ modf(double d, double *ip)
 		*ip = 0;
 		return d;
 	}
-	x.x = d;
-	e = ((x.hi >> SHIFT) & MASK) - BIAS;
+	e -= BIAS;
 	if(e <= SHIFT+1) {
 		x.hi &= ~(0x1fffffL >> e);
 		x.lo = 0;

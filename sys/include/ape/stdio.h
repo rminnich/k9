@@ -1,6 +1,15 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #ifndef	_STDIO_H_
 #define	_STDIO_H_
-#pragma lib "ape/libap.a"
+#pragma lib "/$M/lib/ape/libap.a"
 
 /*
  * pANS stdio.h
@@ -88,14 +97,14 @@ extern int fscanf(FILE *, const char *, ...);
 extern int printf(const char *, ...);
 extern int scanf(const char *, ...);
 extern int sprintf(char *, const char *, ...);
-#ifdef _C99_SNPRINTF_EXTENSION /* user knows about c99 out-of-bounds returns */
+
+/*
+ * NB: C99 now *requires *snprintf to return the number of characters
+ * that would have been written, had there been room.
+ */
 extern int snprintf(char *, size_t, const char *, ...);
 extern int vsnprintf(char *, size_t, const char *, va_list);
-#else
-/* draw errors on any attempt to use *snprintf value so old code gets changed */
-extern void snprintf(char *, size_t, const char *, ...);
-extern void vsnprintf(char *, size_t, const char *, va_list);
-#endif
+
 extern int sscanf(const char *, const char *, ...);
 extern int vfprintf(FILE *, const char *, va_list);
 extern int vprintf(const char *, va_list);
@@ -145,7 +154,7 @@ extern char *ctermid_r(char *);
 #endif
 
 #ifdef _BSD_EXTENSION
-#pragma lib "ape/libbsd.a"
+#pragma lib "/$M/lib/ape/libbsd.a"
 extern FILE *popen(char *, char *);
 extern int	pclose(FILE *);
 #endif

@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <ctype.h>
@@ -82,6 +91,7 @@ Goobie gtab[] =
 	"dd",		g_ignore,	g_unexpected,
 	"dfn",		g_ignore,	g_ignore,
 	"dir",		g_list,		g_listend,
+	"div",		g_ignore,		g_br,
 	"dl",		g_indent,	g_exdent,
 	"dt",		g_dt,		g_unexpected,
 	"em",		g_ignore,	g_ignore,
@@ -114,7 +124,9 @@ Goobie gtab[] =
 	"plaintext",	g_ignore,	g_unexpected,
 	"pre",		g_pre,		g_displayend,
 	"samp",		g_ignore,	g_ignore,
+	"script",	g_ignore,	g_ignore,
 	"select",	g_ignore,	g_ignore,
+	"span",		g_ignore,	g_ignore,
 	"strong",	g_ignore,	g_ignore,
 	"table",	g_table,	g_tableend,
 	"textarea",	g_ignore,	g_ignore,
@@ -147,6 +159,7 @@ Entity pl_entity[]=
 "aring",  L'å', "atilde", L'ã', "auml",   L'ä', "ccedil", L'ç', "eacute", L'é',
 "ecirc",  L'ê', "egrave", L'è', "eth",    L'ð', "euml",   L'ë', "gt",     L'>',
 "iacute", L'í', "icirc",  L'î', "igrave", L'ì', "iuml",   L'ï', "lt",     L'<',
+"nbsp", L' ',
 "ntilde", L'ñ', "oacute", L'ó', "ocirc",  L'ô', "ograve", L'ò', "oslash", L'ø',
 "otilde", L'õ', "ouml",   L'ö', "szlig",  L'ß', "thorn",  L'þ', "uacute", L'ú',
 "ucirc",  L'û', "ugrave", L'ù', "uuml",   L'ü', "yacute", L'ý', "yuml",   L'ÿ',

@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include	"cc.h"
 #include	"y.tab.h"
 
@@ -36,8 +45,8 @@
 void
 main(int argc, char *argv[])
 {
-	char *defs[50], *p;
-	int nproc, nout, status, i, c, ndef;
+	char **defs, **np, *p;
+	int nproc, nout, status, i, c, ndef, maxdef;
 
 	memset(debug, 0, sizeof(debug));
 	tinit();
@@ -47,9 +56,11 @@ main(int argc, char *argv[])
 
 	profileflg = 1;	/* #pragma can turn it off */
 	tufield = simplet((1L<<tfield->etype) | BUNSIGNED);
+	maxdef = 0;
 	ndef = 0;
 	outfile = 0;
-	include[ninclude++] = ".";
+	defs = nil;
+	setinclude(".");
 	ARGBEGIN {
 	default:
 		c = ARGC();
@@ -73,6 +84,13 @@ main(int argc, char *argv[])
 	case 'D':
 		p = ARGF();
 		if(p) {
+			if(ndef >= maxdef){
+				maxdef += 50;
+				np = alloc(maxdef * sizeof *np);
+				if(defs != nil)
+					memmove(np, defs, (maxdef - 50) * sizeof *np);
+				defs = np;
+			}
 			defs[ndef++] = p;
 			dodefine(p);
 		}
@@ -80,7 +98,8 @@ main(int argc, char *argv[])
 
 	case 'I':
 		p = ARGF();
-		setinclude(p);
+		if(p)
+			setinclude(p);
 		break;
 	} ARGEND
 	if(argc < 1 && outfile == 0) {
@@ -152,7 +171,7 @@ int
 compile(char *file, char **defs, int ndef)
 {
 	char ofile[400], incfile[20];
-	char *p, *av[100], opt[256];
+	char *p, **av, opt[256];
 	int i, c, fd[2];
 	static int first = 1;
 
@@ -240,16 +259,13 @@ compile(char *file, char **defs, int ndef)
 			close(fd[0]);
 			mydup(fd[1], 1);
 			close(fd[1]);
+			av = alloc((3 + ndef + ninclude + 2) * sizeof *av);
 			av[0] = CPP;
 			i = 1;
-			if(debug['.']){
-				sprint(opt, "-.");
-				av[i++] = strdup(opt);
-			}
-			if(debug['+']) {
-				sprint(opt, "-+");
-				av[i++] = strdup(opt);
-			}
+			if(debug['.'])
+				av[i++] = strdup("-.");
+			/* 1999 ANSI C requires recognising // comments */
+			av[i++] = strdup("-+");
 			for(c = 0; c < ndef; c++) {
 				sprint(opt, "-D%s", defs[c]);
 				av[i++] = strdup(opt);
@@ -410,7 +426,7 @@ syminit(Sym *s)
 
 #define	EOF	(-1)
 #define	IGN	(-2)
-#define	ESC	(1<<20)
+#define	ESC	(Runemask+1)		/* Rune flag: a literal byte */
 #define	GETC()	((--fi.c < 0)? filbuf(): (*fi.p++ & 0xff))
 
 enum
@@ -543,15 +559,15 @@ l1:
 			c = escchar('"', 1, 0);
 			if(c == EOF)
 				break;
-			cp = allocn(cp, c1, sizeof(Rune));
-			*(Rune*)(cp + c1) = c;
-			c1 += sizeof(Rune);
+			cp = allocn(cp, c1, sizeof(TRune));
+			*(TRune*)(cp + c1) = c;
+			c1 += sizeof(TRune);
 		}
 		yylval.sval.l = c1;
 		do {
-			cp = allocn(cp, c1, sizeof(Rune));
-			*(Rune*)(cp + c1) = 0;
-			c1 += sizeof(Rune);
+			cp = allocn(cp, c1, sizeof(TRune));
+			*(TRune*)(cp + c1) = 0;
+			c1 += sizeof(TRune);
 		} while(c1 & MAXALIGN);
 		yylval.sval.s = cp;
 		return LLSTRING;
@@ -1525,23 +1541,26 @@ void
 setinclude(char *p)
 {
 	int i;
-	char *e;
+	char *e, **np;
 
 	while(*p != 0) {
 		e = strchr(p, ' ');
 		if(e != 0)
 			*e = '\0';
 
-		for(i=1; i < ninclude; i++)
+		for(i=0; i < ninclude; i++)
 			if(strcmp(p, include[i]) == 0)
 				break;
 
-		if(i >= ninclude)
+		if(i >= ninclude){
+			if(i >= maxinclude){
+				maxinclude += 20;
+				np = alloc(maxinclude * sizeof *np);
+				if(include != nil)
+					memmove(np, include, (maxinclude - 20) * sizeof *np);
+				include = np;
+			}
 			include[ninclude++] = p;
-
-		if(ninclude > nelem(include)) {
-			diag(Z, "ninclude too small %d", nelem(include));
-			exits("ninclude");
 		}
 
 		if(e == 0)

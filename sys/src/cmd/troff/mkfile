@@ -1,6 +1,4 @@
-MKSHELL=rc
-APE=$NXM/sys/src/ape
-<$APE/config
+</$objtype/mkfile
 
 TARG=troff
 OFILES=n1.$O\
@@ -27,9 +25,10 @@ HFILES=tdef.h\
 	dwbinit.h\
 
 
-BIN=$NXM/$objtype/bin
-<$NXM/sys/src/cmd/mkone
-CFLAGS=-c $CFLAGS -DSTRICT -DUNICODE
+BIN=/$objtype/bin
+</sys/src/cmd/mkone
+CFLAGS=-FTV -c -DSTRICT -DUNICODE
+CC=pcc
 
 TMACDIR='"sys/lib/tmac/tmac."'
 FONTDIR="sys/lib/troff/font"
@@ -40,7 +39,7 @@ TDEVNAME='"utf"'
 NDEVNAME='"utf"'
 
 $O.out:	$OFILES
-	$CC $LDFLAGS -o $target $prereq
+	pcc -o $target $prereq
 
 ni.$O:	ni.c $HFILES
 	$CC $CFLAGS -DTMACDIR'='$TMACDIR ni.c

@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=dhcpd\
 	dhcpleases\
@@ -17,7 +16,7 @@ IOFILES=\
 
 HFILES=dat.h ../dhcp.h ../icmp.h
 
-BIN=$NXM/$objtype/bin/ip
+BIN=/$objtype/bin/ip
 
 UPDATE=\
 	mkfile\
@@ -25,14 +24,14 @@ UPDATE=\
 	${DOFILES:%.$O=%.c}\
 	${IOFILES:%.$O=%.c}\
 
-<$NXM/sys/src/cmd/mkmany
+</sys/src/cmd/mkmany
 
 $O.dhcpd: $DOFILES
-	$LD $LDFLAGS -o $target $DOFILES
+	$LD -o $target $DOFILES
 
 $O.dhcpleases: $IOFILES
-	$LD $LDFLAGS -o $target $IOFILES
+	$LD -o $target $IOFILES
 
 $O.testping: testping.$O ping.$O
-	$LD $LDFLAGS -o $target $prereq
+	$LD -o $target $prereq
 

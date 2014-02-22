@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=disk
 OFILES=\
@@ -22,9 +21,9 @@ LIB=\
 	$LIBD\
 	$LIBU\
 
-BIN=$NXM/$objtype/bin/usb
+BIN=/$objtype/bin/usb
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 CFLAGS=-I../lib $CFLAGS
 CLEANFILES=scsierrs.c
 
@@ -37,6 +36,6 @@ $LIBD:V: $LIBDOFILES
 	ar vu $LIBD $newprereq
 	rm $newprereq
 
-scsierrs.c: $NXM/sys/lib/scsicodes mkscsierrs
-	rc mkscsierrs >scsierrs.c
+scsierrs.c: /sys/lib/scsicodes mkscsierrs
+	mkscsierrs >scsierrs.c
 

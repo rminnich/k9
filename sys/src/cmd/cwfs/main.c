@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 /* cached-worm file server */
 #include "all.h"
 #include "io.h"
@@ -149,7 +158,7 @@ confinit(void)
 }
 
 /*
- * compute BUFSIZE*(NDBLOCK+INDPERBUF+INDPERBUF²+INDPERBUF³+INDPERBUF⁴)
+ * compute BUFSIZE*(NDBLOCK+INDPERBUF+INDPERBUF⁲+INDPERBUF⁳+INDPERBUF⁴)
  * while watching for overflow; in that case, return 0.
  */
 
@@ -191,8 +200,8 @@ maxsize(void)
 }
 
 enum {
-	INDPERBUF² = ((uvlong)INDPERBUF *INDPERBUF),
-	INDPERBUF⁴ = ((uvlong)INDPERBUF²*INDPERBUF²),
+	INDPERBUF⁲ = ((uvlong)INDPERBUF *INDPERBUF),
+	INDPERBUF⁴ = ((uvlong)INDPERBUF⁲*INDPERBUF⁲),
 };
 
 static void
@@ -210,9 +219,9 @@ printsizes(void)
 			max = offlim - 1;
 		print("max file size = %,llud\n", (Wideoff)max);
 	}
-	if (INDPERBUF²/INDPERBUF != INDPERBUF)
-		print("overflow computing INDPERBUF²\n");
-	if (INDPERBUF⁴/INDPERBUF² != INDPERBUF²)
+	if (INDPERBUF⁲/INDPERBUF != INDPERBUF)
+		print("overflow computing INDPERBUF⁲\n");
+	if (INDPERBUF⁴/INDPERBUF⁲ != INDPERBUF⁲)
 		print("overflow computing INDPERBUF⁴\n");
 	print("\tINDPERBUF = %d, INDPERBUF^4 = %,lld, ", INDPERBUF,
 		(Wideoff)INDPERBUF⁴);

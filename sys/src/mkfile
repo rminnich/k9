@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 LIBS=\
 	lib9p\
@@ -14,7 +13,6 @@ LIBS=\
 	libcontrol\
 	libdisk\
 	libdraw\
-	liberror\
 	libflate\
 	libframe\
 	libgeometry\
@@ -22,6 +20,7 @@ LIBS=\
 	libhttpd\
 	libip\
 	liblex\
+	libmach\
 	libmemdraw\
 	libmemlayer\
 	libmp\
@@ -29,24 +28,19 @@ LIBS=\
 	liboventi\
 	libplumb\
 	libregexp\
+	libscribble\
 	libsec\
-	libseg\
 	libstdio\
 	libsunrpc\
 	libthread\
-	libtube\
 	libventi\
-	libworker\
-	libmach\
 
-NO=\
-	games\
 
 CMDS=cmd\
+	games\
 
 SUBSYS=ape\
-
-NOSUBSYS=/acme\
+	/acme\
 
 none:VQ:
 	echo mk all, install, clean, nuke, release, kernels, or libs
@@ -55,7 +49,6 @@ all install clean nuke:VQ:
 	date
 	for (i in $LIBS $SUBSYS $CMDS) @{
 		cd $i
-		echo cd $i
 		mk $target
 	}
 	date
@@ -65,17 +58,16 @@ installall:V:
 
 release:V:
 	mk nuke
-	rm -f $NXM/$objtype/lib/ape/*.a
-	rm -f $NXM/$objtype/lib/*.a
+	rm -f /$objtype/lib/ape/*.a
+	rm -f /$objtype/lib/*.a
 	mk install
 	mk clean
 
 kernels:V:
-	for (i in nxm/k10 ) @{
+	for (i in 9 boot) @{
 		cd $i
 		mk clean
 		mk install
-		mk all
 		mk clean
 	}
 

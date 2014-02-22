@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include <u.h>
 #include <libc.h>
 #include <bio.h>
@@ -12,7 +21,6 @@ Channel *out;
 Channel *quit;
 Channel *forkc;
 int nread = 0;
-int trace = 2; /* trace out fd */
 
 typedef struct Str Str;
 struct Str {
@@ -91,14 +99,12 @@ reader(void *v)
 			char *rf;
 
 			rf = strdup(s->buf);
-         		if (tokenize(rf, a, 8) == 4 &&
-			    strtoul(a[3], 0, 16) & RFPROC){
+         		if (tokenize(rf, a, 8) == 5 &&
+			    strtoul(a[4], 0, 16) & RFPROC)
 				forking = 1;
-			}
 			free(rf);
-		} else if (strstr(s->buf, " Exits") != nil){
+		} else if (strstr(s->buf, " Exits") != nil)
 			exiting = 1;
-		}
 
 		sendp(out, s);	/* print line from /proc/$child/syscall */
 		if (exiting) {
@@ -144,7 +150,7 @@ writer(void *)
 			break;
 		case 1:			/* out */
 			/* it's a nice null terminated thing */
-			fprint(trace, "%s", s->buf);
+			fprint(2, "%s", s->buf);
 			free(s);
 			break;
 		case 2:			/* forkc */
@@ -159,7 +165,7 @@ done:
 void
 usage(void)
 {
-	fprint(2, "Usage: ratrace [-o tracefile] [-c cmd [arg...]] | [pid]\n");
+	fprint(2, "Usage: ratrace [-c cmd [arg...]] | [pid]\n");
 	exits("usage");
 }
 
@@ -185,7 +191,6 @@ threadmain(int argc, char **argv)
 	int pid;
 	char *cmd = nil;
 	char **args = nil;
-	char *tracefile = nil;
 
 	/*
 	 * don't bother with fancy arg processing, because it picks up options
@@ -202,26 +207,11 @@ threadmain(int argc, char **argv)
 			cmd = strdup(argv[2]);
 			args = &argv[2];
 			break;
-		case 'o':
-			if (!argv[1][2]) {
-				tracefile = argv[2];
-				++argv;
-				--argc;
-			} else
-				tracefile = &argv[1][2];
-			break;
-		
 		default:
 			usage();
 		}
 		++argv;
 		--argc;
-	}
-	
-	if (tracefile) {
-		trace = create(tracefile, OWRITE, 0666);
-		if (trace < 0)
-			sysfatal("%s: %r", tracefile);
 	}
 
 	/* run a command? */

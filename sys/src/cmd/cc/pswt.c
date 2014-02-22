@@ -1,3 +1,12 @@
+/* 
+ * This file is part of the UCB release of Plan 9. It is subject to the license
+ * terms in the LICENSE file found in the top-level directory of this
+ * distribution and at http://akaros.cs.berkeley.edu/files/Plan9License. No
+ * part of the UCB release of Plan 9, including this file, may be copied,
+ * modified, propagated, or distributed except according to the terms contained
+ * in the LICENSE file.
+ */
+
 #include "gc.h"
 
 int
@@ -57,7 +66,7 @@ doswit(Node *n)
 		q++;
 	}
 	qsort(iq, nc, sizeof(C1), swcmp);
-	if(debug['W'])
+	if(debug['K'])
 	for(i=0; i<nc; i++)
 		print("case %2ld: = %.8llux\n", i, (vlong)iq[i].val);
 	dup = 0;
@@ -132,28 +141,29 @@ casf(void)
 }
 
 long
-outlstring(Rune *s, long n)
+outlstring(TRune *s, long n)
 {
-	char buf[UTFmax];
-	int c, i;
+	char buf[sizeof(TRune)];
+	uint c;
+	int i;
 	long r;
 
 	if(suppress)
 		return nstring;
-	while(nstring & (sizeof(Rune)-1))
+	while(nstring & (sizeof(TRune)-1))
 		outstring("", 1);
 	r = nstring;
 	while(n > 0) {
 		c = *s++;
 		if(align(0, types[TCHAR], Aarg1)) {
-			for(i = 0; i < sizeof(Rune); i++)
-				buf[i] = c>>8*(sizeof(Rune) - i - 1);
+			for(i = 0; i < sizeof(TRune); i++)
+				buf[i] = c>>(8*(sizeof(TRune) - i - 1));
 		} else {
-			for(i = 0; i < sizeof(Rune); i++)
-				buf[i] = c>>8*i;
+			for(i = 0; i < sizeof(TRune); i++)
+				buf[i] = c>>(8*i);
 		}
-		outstring(buf, sizeof(Rune));
-		n -= sizeof(Rune);
+		outstring(buf, sizeof(TRune));
+		n -= sizeof(TRune);
 	}
 	return r;
 }

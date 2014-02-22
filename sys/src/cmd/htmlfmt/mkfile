@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=htmlfmt
 OFILES=\
@@ -9,21 +8,21 @@ OFILES=\
 
 HFILES=\
 	dat.h\
-	$NXM/sys/include/html.h\
+	/sys/include/html.h\
 
 LIB=
 
-BIN=$NXM/$objtype/bin
+BIN=/$objtype/bin
 
 UPDATE=\
 	mkfile\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
-	${TARG:%=$NXM/386/bin/%}\
+	${TARG:%=/386/bin/%}\
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 
 CFLAGS=$CFLAGS
 
 $O.out: $OFILES
-	$LD $LDFLAGS -o $target  $LDFLAGS $OFILES
+	$LD -o $target  $LDFLAGS $OFILES

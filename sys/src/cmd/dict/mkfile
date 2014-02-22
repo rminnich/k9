@@ -1,5 +1,4 @@
-MKSHELL=rc
-<$NXM/$objtype/mkfile
+</$objtype/mkfile
 
 TARG=dict
 LFILES=oed.$O ahd.$O pcollins.$O pcollinsg.$O movie.$O slang.$O robert.$O\
@@ -11,14 +10,14 @@ OFILES=dict.$O\
 
 HFILES=dict.h kuten.h
 
-BIN=$NXM/$objtype/bin
+BIN=/$objtype/bin
 
 UPDATE=\
 	mkfile\
 	$HFILES\
 	${OFILES:%.$O=%.c}\
 
-<$NXM/sys/src/cmd/mkone
+</sys/src/cmd/mkone
 
 mkindex: mkindex.$O $LFILES utils.$O
 	$LD $LDFLAGS -o $target $prereq
